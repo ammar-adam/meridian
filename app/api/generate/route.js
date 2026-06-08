@@ -1,6 +1,8 @@
 import { buildSystemPrompt } from '@/lib/system-prompt'
 import { runQualityGate } from '@/lib/quality-gate'
 
+export const maxDuration = 120
+
 const INDUSTRY_IMAGES = {
   fintech: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80',
   health: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',

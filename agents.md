@@ -196,6 +196,16 @@ export const SAGARD_CONTEXT = {
 - [x] Improvement 5: Memo library in localStorage with home page drawer
 - [ ] Improvement 6: Playwright PDF route (TODO in app/api/generate/route.js)
 
+## V3 — Behavioral Data Layer
+
+- [x] Inline editing on memo fields (data-field + contenteditable)
+- [x] Pursue/Pass signal with undo
+- [x] Edit tracker (lib/edit-tracker.js) — localStorage, thesis edit flagging
+- [x] Internal insights page at /insights (not linked from main UI)
+- [x] Edit persistence to sessionStorage + memo library upsert by memoId
+- [x] Prompt feedback export (lib/prompt-feedback.js) on /insights
+- [x] API health check (/api/health) with home page warning
+
 Check off each step before moving to the next.
 
 ---

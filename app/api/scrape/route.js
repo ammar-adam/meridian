@@ -1,3 +1,5 @@
+export const maxDuration = 30
+
 function normalizeUrl(url) {
   let normalized = url.trim()
   if (!normalized) return null
