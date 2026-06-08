@@ -1,10 +1,8 @@
 function normalizeUrl(url) {
-  const trimmed = url.trim()
-  if (!trimmed) return null
-  if (!/^https?:\/\//i.test(trimmed)) {
-    return `https://${trimmed}`
-  }
-  return trimmed
+  let normalized = url.trim()
+  if (!normalized) return null
+  if (!normalized.startsWith('http')) normalized = 'https://' + normalized
+  return normalized.replace(/\/+$/, '')
 }
 
 export async function POST(req) {

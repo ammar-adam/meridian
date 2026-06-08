@@ -1,4 +1,13 @@
-import { SYSTEM_PROMPT } from '@/lib/system-prompt'
+import { buildSystemPrompt } from '@/lib/system-prompt'
+import { runQualityGate } from '@/lib/quality-gate'
+
+const INDUSTRY_IMAGES = {
+  fintech: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1200&q=80',
+  health: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1200&q=80',
+  enterprise: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80',
+  government: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&q=80',
+  default: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80',
+}
 
 export async function POST(req) {
   const { research, scraped, fundContext } = await req.json()
@@ -6,6 +15,12 @@ export async function POST(req) {
   if (!process.env.ANTHROPIC_API_KEY) {
     return Response.json({ error: 'ANTHROPIC_API_KEY is not configured' }, { status: 500 })
   }
+
+  const portfolioSummary = Object.entries(fundContext.portfolio ?? {})
+    .map(([arm, companies]) =>
+      `${arm}: ${companies.map(c => `${c.name} (${c.description})`).join(', ')}`
+    )
+    .join('\n')
 
   const userMessage = `
 Here is the raw research on the company:
@@ -18,7 +33,15 @@ Here is additional data scraped from their website:
 - Domain: ${scraped.domain}
 
 The fund reviewing this deal is: ${fundContext.fundName}
-Fund thesis and portfolio context: ${fundContext.thesis}
+
+Fund thesis:
+${fundContext.thesis}
+
+Portfolio companies:
+${portfolioSummary}
+
+Thesis writing instructions:
+${fundContext.thesisInstructions}
 
 Generate the memo JSON now.
   `
@@ -33,7 +56,7 @@ Generate the memo JSON now.
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 4000,
-      system: SYSTEM_PROMPT,
+      system: buildSystemPrompt(fundContext),
       messages: [{ role: 'user', content: userMessage }],
     }),
   })
@@ -59,12 +82,24 @@ Generate the memo JSON now.
     return Response.json({ error: 'Failed to parse Claude response' }, { status: 500 })
   }
 
-  memoData.FUND_NAME = fundContext.fundName
+  memoData.FUND_NAME = fundContext.fundFooterName || fundContext.fundName
   memoData.FUND_LOGO_URL = ''
-  memoData.HERO_IMAGE_URL = scraped.ogImage || memoData.HERO_IMAGE_URL || ''
   memoData.COMPANY_LOGO_URL = scraped.favicon || ''
 
-  console.log('[generate] memo for', memoData.COMPANY_NAME)
+  const industryTag = memoData.INDUSTRY_TAG || 'default'
+  const heroUrl = scraped.ogImage || INDUSTRY_IMAGES[industryTag] || INDUSTRY_IMAGES.default
+  memoData.HERO_IMAGE_URL = heroUrl
 
-  return Response.json({ memoData })
+  delete memoData.INDUSTRY_TAG
+
+  const qualityGate = runQualityGate(memoData)
+
+  console.log('[generate] memo for', memoData.COMPANY_NAME, 'qg:', qualityGate.passed)
+
+  return Response.json({ memoData, qualityGate })
 }
+
+// TODO V1.5: /api/export route
+// POST { memoHtml } → Playwright headless render → returns PDF buffer
+// Deploy Playwright service on Railway (too heavy for Vercel serverless)
+// Until then: window.print() from the memo page is sufficient for demos

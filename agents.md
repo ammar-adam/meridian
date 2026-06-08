@@ -187,6 +187,15 @@ export const SAGARD_CONTEXT = {
 - [x] Step 4: generate route returns populated JSON from Claude
 - [x] Step 5: full pipeline works end to end, URL in, memo renders
 
+## V2 Improvements
+
+- [x] Improvement 1: Rich Sagard fund context + buildSystemPrompt for thesis band
+- [x] Improvement 2: Quality gates before render (warnings banner, error blocking)
+- [x] Improvement 3: Parallel scrape + research with step loading UI + 90s timeout
+- [x] Improvement 4: URL normalization, industry hero fallback via INDUSTRY_TAG
+- [x] Improvement 5: Memo library in localStorage with home page drawer
+- [ ] Improvement 6: Playwright PDF route (TODO in app/api/generate/route.js)
+
 Check off each step before moving to the next.
 
 ---
