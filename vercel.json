@@ -16,7 +16,7 @@
       "maxDuration": 120
     },
     "app/api/pdf/route.js": {
-      "maxDuration": 60
+      "maxDuration": 120
     },
     "app/api/share/route.js": {
       "maxDuration": 30

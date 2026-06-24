@@ -3,7 +3,7 @@ import { renderMemoHtml } from '@/lib/render-memo-html'
 import { cacheGet, cacheSet, CACHE_TTL, stableHash } from '@/lib/server-cache'
 import { isServerPdfEnabled } from '@/lib/pdf-config'
 
-export const maxDuration = 60
+export const maxDuration = 120
 
 export async function POST(req) {
   if (!isServerPdfEnabled()) {
