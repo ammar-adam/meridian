@@ -23,9 +23,16 @@ const isPublicRoute = createRouteMatcher([
   '/api/share(.*)',
 ])
 
+const isApiRoute = createRouteMatcher(['/api(.*)'])
+
 const clerkHandler = clerkMiddleware(async (auth, req) => {
-  if (!isPublicRoute(req)) {
-    await auth.protect()
+  if (isPublicRoute(req) || isApiRoute(req)) return
+
+  const { userId } = await auth()
+  if (!userId) {
+    const signIn = new URL('/sign-in', req.url)
+    signIn.searchParams.set('redirect_url', req.url)
+    return NextResponse.redirect(signIn)
   }
 })
 
