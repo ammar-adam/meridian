@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    serverComponentsExternalPackages: ['@sparticuz/chromium', 'playwright-core', 'playwright'],
+    serverComponentsExternalPackages: ['@sparticuz/chromium-min', 'playwright-core', 'playwright'],
+    outputFileTracingIncludes: {
+      '/api/pdf': ['./node_modules/@sparticuz/chromium-min/**'],
+    },
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals = [...(config.externals || []), '@sparticuz/chromium', 'playwright-core', 'playwright']
+      config.externals = [...(config.externals || []), '@sparticuz/chromium-min', 'playwright-core', 'playwright']
     }
     return config
   },
