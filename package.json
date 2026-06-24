@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "npx playwright install chromium || true",
+    "postinstall": "node scripts/fetch-chromium-pack.js || true && npx playwright install chromium || true",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio"
   },
