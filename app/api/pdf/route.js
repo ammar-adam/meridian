@@ -38,7 +38,7 @@ export async function POST(req) {
     const { launchPdfBrowser } = await import('@/lib/pdf-browser')
     browser = await launchPdfBrowser()
     const page = await browser.newPage()
-    await page.setContent(html, { waitUntil: 'networkidle' })
+    await page.setContent(html, { waitUntil: 'domcontentloaded', timeout: 20_000 })
     const pdfBuffer = await page.pdf({
       format: 'A4',
       printBackground: true,
