@@ -1,10 +1,29 @@
+import { MODELS } from '@/lib/api-models'
+import { enforceRateLimit } from '@/lib/api-guard'
+import { cacheGet, cacheSet, CACHE_TTL } from '@/lib/server-cache'
+import { extractDomain } from '@/lib/url-utils'
+
 export const maxDuration = 300
 
 export async function POST(req) {
-  const { url } = await req.json()
+  const limited = enforceRateLimit(req, 'research')
+  if (limited) return limited
+
+  const { url, forceRegenerate } = await req.json()
 
   if (!process.env.PERPLEXITY_API_KEY) {
     return Response.json({ error: 'PERPLEXITY_API_KEY is not configured' }, { status: 500 })
+  }
+
+  const domain = extractDomain(url)
+  const cacheKey = `research:${domain}`
+
+  if (!forceRegenerate && domain) {
+    const cached = await cacheGet(cacheKey)
+    if (cached) {
+      console.log('[research] cache hit', domain)
+      return Response.json({ research: cached, cached: true })
+    }
   }
 
   const query = `
@@ -22,11 +41,11 @@ export async function POST(req) {
   const res = await fetch('https://api.perplexity.ai/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer ${process.env.PERPLEXITY_API_KEY}`,
+      Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'sonar-deep-research',
+      model: MODELS.perplexityResearch,
       messages: [{ role: 'user', content: query }],
     }),
   })
@@ -40,7 +59,11 @@ export async function POST(req) {
   const data = await res.json()
   const research = data.choices?.[0]?.message?.content ?? ''
 
+  if (domain && research) {
+    await cacheSet(cacheKey, research, CACHE_TTL.research)
+  }
+
   console.log('[research]', url, `${research.length} chars`)
 
-  return Response.json({ research })
+  return Response.json({ research, cached: false })
 }

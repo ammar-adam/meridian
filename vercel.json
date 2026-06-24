@@ -8,6 +8,27 @@
     },
     "app/api/generate/route.js": {
       "maxDuration": 120
+    },
+    "app/api/source/route.js": {
+      "maxDuration": 300
+    },
+    "app/api/fund-enrich/route.js": {
+      "maxDuration": 120
+    },
+    "app/api/pdf/route.js": {
+      "maxDuration": 60
+    },
+    "app/api/share/route.js": {
+      "maxDuration": 30
+    },
+    "app/api/share/[id]/route.js": {
+      "maxDuration": 15
+    },
+    "app/api/team/route.js": {
+      "maxDuration": 15
+    },
+    "app/api/workspace/route.js": {
+      "maxDuration": 30
     }
   }
 }

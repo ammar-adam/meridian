@@ -1,13 +1,19 @@
 'use client'
 
+import Link from 'next/link'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { populateTemplate } from '@/lib/populate-template'
-import { nationgraphData } from '@/lib/nationgraph-data'
-import { saveMemo } from '@/lib/memo-library'
-import { logEdit, logOutcome, getEditsForMemo } from '@/lib/edit-tracker'
-import { SAGARD_CONTEXT } from '@/lib/fund-context'
-
-const TRACKING_ID = SAGARD_CONTEXT.trackingId
+import { saveMemo, updateMemoMeta } from '@/lib/memo-library'
+import { logEdit, logOutcome, getEditsForMemo, removeOutcome, getOutcomeForMemo } from '@/lib/edit-tracker'
+import { getFundProfile, getTrackingId, getActiveStrategy } from '@/lib/fund-profile'
+import { readMemoMetaFromSession } from '@/lib/memo-context'
+import { getMemoById } from '@/lib/memo-library'
+import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-export'
+import { openDemoMemo } from '@/lib/demo-memo'
+import { incrementBriefCount } from '@/lib/onboarding'
+import FundSetupPrompt from '@/components/fund-setup-prompt'
+import { getTeamContext } from '@/lib/team-workspace'
+import { useRouter } from 'next/navigation'
 
 function stripHtml(s) {
   return (s ?? '').replace(/<[^>]+>/g, '').trim()
@@ -24,26 +30,48 @@ function captureMemoFromDom(container) {
 }
 
 export default function MemoPage() {
+  const router = useRouter()
+  const memoRef = useRef(null)
+  const memoDataRef = useRef(null)
   const [html, setHtml] = useState('')
   const [memoData, setMemoData] = useState(null)
   const [memoId, setMemoId] = useState('')
+  const [trackingId, setTrackingId] = useState('demo')
+  const [fundName, setFundName] = useState('')
   const [loading, setLoading] = useState(true)
   const [memoRendered, setMemoRendered] = useState(false)
   const [qualityGate, setQualityGate] = useState(null)
   const [bannerDismissed, setBannerDismissed] = useState(false)
-  const [blocked, setBlocked] = useState(false)
+  const [errorBannerDismissed, setErrorBannerDismissed] = useState(false)
   const [outcome, setOutcome] = useState(null)
   const [editCount, setEditCount] = useState(0)
-  const memoRef = useRef(null)
-  const memoDataRef = useRef(null)
+  const [empty, setEmpty] = useState(false)
+  const [showOutcomeNudge, setShowOutcomeNudge] = useState(false)
+  const [isDemo, setIsDemo] = useState(false)
+  const [shareCopied, setShareCopied] = useState(false)
+  const [shareUrl, setShareUrl] = useState('')
+  const [pdfLoading, setPdfLoading] = useState(false)
+  const [serverPdf, setServerPdf] = useState(false)
+  const [shareEnabled, setShareEnabled] = useState(false)
+  const pendingNavRef = useRef(null)
+
+  useEffect(() => {
+    fetch('/api/health').then(r => r.json()).then(h => {
+      setServerPdf(!!h.features?.serverPdf)
+      setShareEnabled(!!h.features?.shareLinks)
+    }).catch(() => {})
+  }, [])
 
   useEffect(() => {
     memoDataRef.current = memoData
   }, [memoData])
 
   useEffect(() => {
-    let data = nationgraphData
-    let source = 'demo'
+    const profile = getFundProfile()
+    const sessionMeta = readMemoMetaFromSession()
+
+    let data = null
+    let source = null
     let qg = null
     let id = sessionStorage.getItem('memoId')
 
@@ -59,7 +87,13 @@ export default function MemoPage() {
         setQualityGate(qg)
       }
     } catch {
-      // fall back to demo data
+      // ignore parse errors
+    }
+
+    if (!data) {
+      setEmpty(true)
+      setLoading(false)
+      return
     }
 
     if (!id) {
@@ -68,19 +102,51 @@ export default function MemoPage() {
       sessionStorage.setItem('memoId', id)
     }
 
-    if (source === 'pipeline') {
-      saveMemo(data, id)
+    const existing = getMemoById(id)
+    const meta = sessionMeta || (existing ? {
+      fundId: existing.fundId,
+      fundName: existing.fundName,
+      strategyId: existing.strategyId,
+      strategyName: existing.strategyName,
+      trackingId: existing.trackingId,
+      searchThesis: existing.sourceThesis,
+      companyDomain: existing.companyDomain,
+    } : null)
+
+    if (profile) {
+      const strategy = getActiveStrategy(profile)
+      const tid = meta?.trackingId || getTrackingId(profile, strategy)
+      setTrackingId(tid)
+      const label = meta?.strategyName && meta.strategyName !== 'Primary'
+        ? `${profile.fundName} · ${meta.strategyName}`
+        : profile.fundName
+      setFundName(meta?.fundName || label)
+    } else if (meta?.trackingId) {
+      setTrackingId(meta.trackingId)
+      setFundName(meta.fundName || '')
     }
+
+    if (source === 'pipeline') {
+      const saveMeta = meta || (profile ? {
+        ...sessionMeta,
+        trackingId: getTrackingId(profile, getActiveStrategy(profile)),
+        fundId: profile.id,
+        fundName: profile.fundName,
+      } : {})
+      saveMemo(data, id, {
+        ...saveMeta,
+        qualityPassed: qg?.passed ?? null,
+        qualityWarnCount: qg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
+      })
+      incrementBriefCount()
+    }
+
+    setIsDemo(source === 'demo')
 
     setMemoId(id)
     setMemoData(data)
     setEditCount(getEditsForMemo(id).filter(e => e.fieldName !== '_outcome').length)
-
-    if (qg && !qg.passed) {
-      setBlocked(true)
-      setLoading(false)
-      return
-    }
+    setOutcome(getOutcomeForMemo(id))
 
     fetch('/memo-template.html')
       .then((res) => res.text())
@@ -111,7 +177,7 @@ export default function MemoPage() {
       memoId,
       companyName: current.COMPANY_NAME,
       fundName: current.FUND_NAME,
-      trackingId: TRACKING_ID,
+      trackingId,
       fieldName,
       originalValue,
       newValue,
@@ -119,8 +185,10 @@ export default function MemoPage() {
 
     const updated = { ...current, [fieldName]: newValue }
     persistMemoData(updated)
-    setEditCount(c => c + 1)
-  }, [memoId, persistMemoData])
+    const newEditCount = editCount + 1
+    setEditCount(newEditCount)
+    updateMemoMeta(memoId, { editCount: newEditCount })
+  }, [memoId, persistMemoData, trackingId, editCount])
 
   useEffect(() => {
     if (!memoRendered || !memoRef.current || !memoData) return
@@ -180,6 +248,17 @@ export default function MemoPage() {
     return () => cleanups.forEach(fn => fn())
   }, [memoRendered, memoData, onFieldEdit])
 
+  useEffect(() => {
+    if (!outcome) {
+      const onBeforeUnload = (e) => {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+      window.addEventListener('beforeunload', onBeforeUnload)
+      return () => window.removeEventListener('beforeunload', onBeforeUnload)
+    }
+  }, [outcome])
+
   function handleOutcome(selected) {
     const captured = captureMemoFromDom(memoRef.current)
     const current = memoDataRef.current
@@ -196,53 +275,149 @@ export default function MemoPage() {
       memoId,
       companyName: current.COMPANY_NAME,
       fundName: current.FUND_NAME,
-      trackingId: TRACKING_ID,
+      trackingId,
       outcome: selected,
       editCount: edits,
     })
+    updateMemoMeta(memoId, { outcome: selected, editCount: edits })
+    setShowOutcomeNudge(false)
+    if (pendingNavRef.current) {
+      const href = pendingNavRef.current
+      pendingNavRef.current = null
+      window.location.href = href
+    }
+  }
+
+  function tryNavigate(href) {
+    if (!outcome) {
+      pendingNavRef.current = href
+      setShowOutcomeNudge(true)
+      return
+    }
+    window.location.href = href
+  }
+
+  function handleUndoOutcome() {
+    if (memoId) {
+      removeOutcome(memoId)
+      updateMemoMeta(memoId, { outcome: null })
+    }
+    setOutcome(null)
   }
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-gray-500">
-        Loading memo…
+      <div className="m-loader flex min-h-screen items-center justify-center">
+        <span className="text-[13px]" style={{ color: 'var(--m-muted)' }}>Loading…</span>
       </div>
     )
   }
 
-  if (blocked && qualityGate && !qualityGate.passed) {
-    const errors = qualityGate.flags.filter(f => f.severity === 'error')
+  if (empty) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-6">
-        <div className="max-w-md rounded-lg border border-red-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-2 text-sm font-semibold text-red-800">
-            Memo failed quality checks
-          </h2>
-          <p className="mb-4 text-xs text-gray-500">
-            This memo has errors that must be resolved before showing to a GP.
+      <div className="flex min-h-screen flex-col items-center justify-center px-6" style={{ background: 'var(--m-bg)' }}>
+        <div className="m-empty max-w-md text-center">
+          <p className="m-kicker mb-2">No brief loaded</p>
+          <p className="text-[14px]" style={{ color: 'var(--m-muted)' }}>
+            Paste a company URL on Brief — or open the NationGraph demo to see the quality bar instantly.
           </p>
-          <ul className="space-y-2">
-            {errors.map((flag, i) => (
-              <li key={i} className="text-xs text-red-700">
-                <span className="font-medium">{flag.field}:</span> {flag.message}
-              </li>
-            ))}
-          </ul>
-          <a href="/" className="mt-6 inline-block text-xs text-gray-600 underline hover:text-gray-900">
-            ← Try another company
-          </a>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link href="/brief" className="m-btn-primary">Generate a brief</Link>
+            <button type="button" onClick={() => openDemoMemo(router)} className="m-btn-secondary">
+              Open demo brief
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
+  async function handleCopyShare() {
+    const captured = captureMemoFromDom(memoRef.current)
+    const merged = { ...memoDataRef.current, ...captured }
+    await copyMemoShare(merged, { outcome, editCount })
+    setShareCopied(true)
+    setTimeout(() => setShareCopied(false), 2000)
+  }
+
+  async function handleCreateShareLink() {
+    if (!shareEnabled) {
+      window.alert('Share links need DATABASE_URL configured on the server. Use Copy text for now.')
+      return
+    }
+    const captured = captureMemoFromDom(memoRef.current)
+    const merged = { ...memoDataRef.current, ...captured }
+    const team = getTeamContext()
+    const url = await createShareLink(merged, {
+      outcome,
+      editCount,
+      fundName: merged.FUND_NAME,
+      teamId: team?.teamId,
+      createdBy: team?.memberName,
+    })
+    setShareUrl(url)
+    await navigator.clipboard.writeText(url)
+    setShareCopied(true)
+    setTimeout(() => setShareCopied(false), 2000)
+  }
+
+  async function handleDownloadPdf() {
+    const captured = captureMemoFromDom(memoRef.current)
+    const merged = { ...memoDataRef.current, ...captured }
+    if (!serverPdf) {
+      window.print()
+      return
+    }
+    setPdfLoading(true)
+    try {
+      await downloadMemoPdf(merged)
+    } catch {
+      window.print()
+    } finally {
+      setPdfLoading(false)
+    }
+  }
+
   const warnings = qualityGate?.flags?.filter(f => f.severity === 'warn') ?? []
-  const bannerOffset = warnings.length > 0 && !bannerDismissed
+  const errors = qualityGate?.flags?.filter(f => f.severity === 'error') ?? []
+  const showErrorBanner = errors.length > 0 && !errorBannerDismissed
+  const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner
+  const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
+  const topOffset = (showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
   return (
     <div>
-      {bannerOffset && (
-        <div className="no-print fixed inset-x-0 top-0 z-50 border-b border-amber-200 bg-amber-50 px-4 py-2">
+      <div className="m-toolbar-bar no-print fixed inset-x-0 top-0 z-40">
+        <button type="button" onClick={() => tryNavigate('/brief')} className="text-[12px] transition hover:opacity-80" style={{ color: 'var(--m-muted)' }}>
+          ← Brief
+        </button>
+        <div className="flex items-center gap-2 text-[13px] font-medium">
+          <span className="flex h-6 w-6 items-center justify-center rounded-md border text-[10px] font-semibold" style={{ borderColor: 'var(--m-border)' }}>M</span>
+          {fundName || 'Meridian'}
+        </div>
+        <div className="w-10" />
+      </div>
+
+      {showErrorBanner && (
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-200 bg-red-50 px-4 py-2">
+          <div className="mx-auto flex max-w-3xl items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium text-red-900">Verify before forwarding — quality issues detected</p>
+              <ul className="mt-1 space-y-0.5">
+                {errors.map((flag, i) => (
+                  <li key={i} className="text-xs text-red-800">{flag.message}</li>
+                ))}
+              </ul>
+            </div>
+            <button onClick={() => setErrorBannerDismissed(true)} className="shrink-0 text-xs font-medium text-red-700 hover:text-red-900">
+              Dismiss
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showWarnBanner && (
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-amber-200 bg-amber-50 px-4 py-2">
           <div className="mx-auto flex max-w-3xl items-start justify-between gap-4">
             <div>
               <p className="text-xs font-medium text-amber-800">Verify before sharing</p>
@@ -259,60 +434,114 @@ export default function MemoPage() {
         </div>
       )}
 
+      {isGuestFund && (
+        <div className="no-print fixed right-4 top-14 z-50 max-w-[200px] rounded-md border border-violet-200 bg-violet-50 px-3 py-2 text-[10px] text-violet-900">
+          Generic fund context — <Link href="/fund/setup" className="font-medium underline">personalize</Link> before GP forward
+        </div>
+      )}
+
+      {isDemo && (
+        <div className="no-print fixed left-4 top-14 z-50 rounded-md border border-blue-200 bg-blue-50 px-3 py-1.5 text-[11px] font-medium text-blue-800">
+          Demo brief · NationGraph
+        </div>
+      )}
+
       {editCount > 0 && (
-        <div className="no-print fixed left-4 top-4 z-50 rounded-lg border border-stone-200 bg-white px-3 py-1.5 text-xs text-stone-500 shadow-sm">
+        <div className="m-badge no-print fixed left-4 top-16 z-50" style={{ marginTop: isDemo ? '2rem' : 0 }}>
           {editCount} edit{editCount !== 1 ? 's' : ''} saved
         </div>
       )}
 
       <div
         ref={memoRef}
-        style={{ width: '210mm', margin: '0 auto', paddingTop: bannerOffset ? '3rem' : 0 }}
+        style={{ width: '210mm', margin: '0 auto', paddingTop: topOffset }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
 
-      <div className="no-print fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
-        {!outcome && (
-          <div className="flex gap-2">
-            <button
-              onClick={() => handleOutcome('pass')}
-              className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-500 shadow-sm transition-all hover:border-gray-400"
-            >
-              Pass
-            </button>
-            <button
-              onClick={() => handleOutcome('pursue')}
-              className="rounded-lg bg-[#8B1A1A] px-4 py-2 text-xs font-medium text-white shadow-sm transition-all hover:bg-[#7a1616]"
-            >
-              Pursue
-            </button>
-          </div>
-        )}
+      {outcome && <div className="no-print mx-auto max-w-3xl px-4 pb-2"><FundSetupPrompt /></div>}
 
-        {outcome && (
-          <div className="rounded-lg border border-gray-100 bg-white px-4 py-2 text-xs text-gray-400 shadow-sm">
-            Marked as {outcome}
-            {editCount > 0 && ` · ${editCount} edits logged`} ·{' '}
-            <button onClick={() => setOutcome(null)} className="underline hover:text-gray-600">
-              undo
-            </button>
+      <div className="no-print fixed inset-x-0 bottom-0 z-50 border-t bg-white/95 px-4 py-4 backdrop-blur-sm" style={{ borderColor: 'var(--m-border)' }}>
+        <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="min-w-0">
+            {!outcome ? (
+              <>
+                <p className="text-[13px] font-medium">Pursue or pass?</p>
+                <p className="text-[11px]" style={{ color: 'var(--m-muted)' }}>
+                  Your signal improves the next brief&apos;s thesis band.
+                </p>
+              </>
+            ) : (
+              <p className="text-[13px]" style={{ color: 'var(--m-muted)' }}>
+                Marked <span className="font-medium" style={{ color: 'var(--m-text)' }}>{outcome}</span>
+                {editCount > 0 && ` · ${editCount} edits`}
+                {' · '}
+                <button onClick={handleUndoOutcome} className="hover:underline" style={{ color: 'var(--m-accent)' }}>undo</button>
+              </p>
+            )}
           </div>
-        )}
 
-        <button
-          onClick={() => {
-            const captured = captureMemoFromDom(memoRef.current)
-            if (memoDataRef.current && Object.keys(captured).length) {
-              persistMemoData({ ...memoDataRef.current, ...captured })
-            }
-            // TODO V1.5: replace with /api/export Playwright PDF route
-            window.print()
-          }}
-          className="rounded-lg border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-600 shadow-sm transition-all hover:border-gray-400"
-        >
-          Save as PDF
-        </button>
+          <div className="flex shrink-0 flex-wrap items-center gap-2">
+            <button type="button" onClick={handleCopyShare} className="m-btn-ghost m-btn-sm">
+              {shareCopied && !shareUrl ? 'Copied!' : 'Copy text'}
+            </button>
+            {shareEnabled && (
+              <button type="button" onClick={handleCreateShareLink} className="m-btn-ghost m-btn-sm">
+                {shareCopied && shareUrl ? 'Link copied!' : 'Share link'}
+              </button>
+            )}
+            {!outcome ? (
+              <>
+                <button onClick={() => handleOutcome('pass')} className="m-btn-secondary m-btn-sm px-5">
+                  Pass
+                </button>
+                <button onClick={() => handleOutcome('pursue')} className="m-btn-accent m-btn-sm px-5">
+                  Pursue
+                </button>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={handleDownloadPdf} disabled={pdfLoading} className="m-btn-secondary m-btn-sm">
+                  {pdfLoading ? 'PDF…' : serverPdf ? 'Download PDF' : 'Print / PDF'}
+                </button>
+                {serverPdf && (
+                  <button type="button" onClick={() => window.print()} className="m-btn-ghost m-btn-sm">
+                    Print
+                  </button>
+                )}
+                <Link href="/brief" className="m-btn-primary m-btn-sm">
+                  Next brief →
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
+
+      {showOutcomeNudge && (
+        <div className="no-print fixed inset-0 z-[60] flex items-end justify-center bg-black/30 p-4 sm:items-center">
+          <div className="m-card m-card-pad w-full max-w-sm shadow-xl">
+            <p className="text-[14px] font-medium">Mark this deal first?</p>
+            <p className="mt-1 text-[12px]" style={{ color: 'var(--m-muted)' }}>
+              Pursue/pass signals train your fund&apos;s thesis band. You can skip if you&apos;re not ready.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button onClick={() => { handleOutcome('pass'); setShowOutcomeNudge(false) }} className="m-btn-secondary m-btn-sm">Pass</button>
+              <button onClick={() => { handleOutcome('pursue'); setShowOutcomeNudge(false) }} className="m-btn-accent m-btn-sm">Pursue</button>
+              <button
+                onClick={() => {
+                  setShowOutcomeNudge(false)
+                  if (pendingNavRef.current) window.location.href = pendingNavRef.current
+                }}
+                className="m-btn-ghost m-btn-sm"
+              >
+                Skip for now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div style={{ height: '5rem' }} aria-hidden />
     </div>
   )
 }

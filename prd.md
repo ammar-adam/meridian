@@ -1,8 +1,8 @@
 # Meridian — Product Requirements Document
-**Version:** 0.2  
+**Version:** 0.3  
 **Author:** Ammar Adam  
 **Date:** June 2026  
-**Status:** Pre-build
+**Status:** Thesis-first rebuild shipped
 
 ---
 
@@ -39,8 +39,11 @@ evaluate 3x more companies per week has a structural sourcing advantage.
 
 ## Solution
 
-Paste a company URL. Get a finished, structured, beautiful one-page research
-brief in under 90 seconds.
+Thesis-native deal screening for investment firms.
+
+**Primary loop:** Configure fund → Discover companies by thesis → Brief the best matches → Learn from edits and pursue/pass.
+
+**Secondary loop:** Paste a company URL → get a mandate-specific one-page brief in under 90 seconds.
 
 The output covers:
 - What the company does in plain english
@@ -61,14 +64,12 @@ If yes, they go deeper. If no, they move on. Either way they did not spend
 Every other AI research tool stops at the generic summary. Market size, team,
 funding. That is commodity output.
 
-The section that made the NationGraph memo land was the last one: why Sagard
-specifically should care. Portfolio overlap mapped to specific fund arms. Canadian
-expansion as a thesis accelerant. Commercial pilot opportunity across portcos.
+The section that made the NationGraph memo land was the last one: why this fund
+specifically should care. Portfolio overlap, distribution paths, mandate fit.
 
-Meridian generates that section by learning the fund's thesis from public signals:
-past investments, why-we-invested memos, portfolio company websites, press. It
-understands not just what sectors a fund focuses on but how they actually think
-about deals. Every pursue/pass signal sharpens the model over time.
+Meridian generates that section from each firm's configured profile (thesis +
+portfolio). Auto-enrich pulls draft context from the fund website + web research.
+Every pursue/pass signal and thesis edit sharpens the model over time.
 
 That thesis intelligence layer is the moat. Not memo generation. The fund-specific
 signal that gets more accurate with usage and cannot be transferred to a competitor.
@@ -93,28 +94,30 @@ is a GP or Chief of Staff, not an IT department.
 
 ---
 
-## V1 Scope — Build This Summer
+## V1 Scope
 
-One thing done well. URL in, PDF out.
+Thesis-first deal screening. Firm-agnostic fund profile.
 
 | Feature | Description |
 |---|---|
-| URL input | Paste any company URL to trigger the pipeline |
+| Fund profile | Setup wizard + auto-enrich from fund URL; thesis + portfolio in localStorage |
+| Discover | Natural language thesis → PitchBook + Perplexity → ranked company table |
+| Batch brief | Select companies from Discover → sequential brief generation → Library |
+| Brief | Paste any company URL to trigger the pipeline |
 | File upload | Optional: attach a deck PDF or news articles as additional context |
 | Web scraper | Server-side fetch of company website, extracts og:image for hero, og:description for context |
 | Research pipeline | Perplexity sonar-deep-research for raw company intel |
 | Synthesis | Claude sonnet-4 structures Perplexity output into memo JSON |
 | HTML template | One opinionated template. No custom branding per firm in v1. |
 | PDF export | Browser print for now. Playwright on Railway in v1.5. |
-| Demo mode | NationGraph memo always renderable without API calls |
+| Empty memo state | /memo shows empty state when no brief is loaded |
+| Thesis dashboard | Pursue rate, thesis corrections, pursue/pass log at /thesis |
 
-**Explicitly out of scope for V1:**
+**Explicitly out of scope:**
 - Auth and user accounts
-- Custom firm branding per user
+- Multi-fund selector
 - CRM connectors
-- Memo library / save and retrieve
-- Thesis model training from pursue/pass signals
-- Multi-fund support (Sagard only in v1)
+- Server-side batch API
 - Mobile layout
 
 ---

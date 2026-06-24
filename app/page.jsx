@@ -1,320 +1,113 @@
-'use client'
+import Link from 'next/link'
+import Nav from '@/components/nav'
+import Footer from '@/components/footer'
+import HeroInput from '@/components/hero-input'
+import WorkspacePreview from '@/components/workspace-preview'
+import LandingBackground from '@/components/landing-background'
+import LandingDemoCta from '@/components/landing-demo-cta'
 
-import { useEffect, useRef, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { SAGARD_CONTEXT } from '@/lib/fund-context'
-import { getMemoLibrary } from '@/lib/memo-library'
-
-const STEPS = [
-  { id: 'scrape', label: 'Reading company website', estimate: '~5s' },
-  { id: 'research', label: 'Running deep research', estimate: '~60s' },
-  { id: 'generate', label: 'Writing memo', estimate: '~15s' },
-]
-
-const SLOW_THRESHOLD_MS = 90_000
-
-function formatElapsed(seconds) {
-  const m = Math.floor(seconds / 60)
-  const s = seconds % 60
-  return m > 0 ? `${m}m ${s}s` : `${s}s`
-}
-
-function stepProgress(stepStatus) {
-  const done = STEPS.filter(s => stepStatus[s.id] === 'done').length
-  const active = STEPS.some(s => stepStatus[s.id] === 'active')
-  const base = (done / STEPS.length) * 100
-  return active && done < STEPS.length ? Math.min(base + 8, 95) : base
-}
-
-export default function Home() {
-  const [url, setUrl] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [stepStatus, setStepStatus] = useState({})
-  const [error, setError] = useState('')
-  const [slowWarning, setSlowWarning] = useState(false)
-  const [elapsed, setElapsed] = useState(0)
-  const [libraryOpen, setLibraryOpen] = useState(false)
-  const [library, setLibrary] = useState([])
-  const [apiStatus, setApiStatus] = useState(null)
-  const router = useRouter()
-  const abortRef = useRef(null)
-  const timerRef = useRef(null)
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then(r => r.json())
-      .then(setApiStatus)
-      .catch(() => setApiStatus({ ok: false, anthropic: false, perplexity: false }))
-  }, [])
-
-  useEffect(() => {
-    if (!loading) {
-      setElapsed(0)
-      setSlowWarning(false)
-      if (timerRef.current) clearInterval(timerRef.current)
-      return
-    }
-
-    const start = Date.now()
-    timerRef.current = setInterval(() => {
-      const secs = Math.floor((Date.now() - start) / 1000)
-      setElapsed(secs)
-      if (secs * 1000 >= SLOW_THRESHOLD_MS) setSlowWarning(true)
-    }, 1000)
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current)
-    }
-  }, [loading])
-
-  function openLibrary() {
-    setLibrary(getMemoLibrary())
-    setLibraryOpen(true)
-  }
-
-  function viewMemo(id) {
-    const entry = getMemoLibrary().find(e => e.id === id)
-    if (!entry) return
-    sessionStorage.setItem('memoData', JSON.stringify(entry.data))
-    sessionStorage.setItem('memoSource', 'library')
-    sessionStorage.setItem('memoId', entry.id)
-    sessionStorage.removeItem('qualityGate')
-    router.push('/memo')
-  }
-
-  function handleCancel() {
-    abortRef.current?.abort()
-    abortRef.current = null
-    setLoading(false)
-    setStepStatus({})
-    setError('Generation cancelled.')
-  }
-
-  async function apiFetch(path, body, signal, onDone) {
-    const res = await fetch(path, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-      signal,
-    })
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}))
-      throw new Error(err.error || `Request failed (${path})`)
-    }
-    onDone?.()
-    return res.json()
-  }
-
-  async function handleGenerate(e) {
-    e.preventDefault()
-    if (!url.trim()) return
-
-    abortRef.current = new AbortController()
-    const { signal } = abortRef.current
-
-    setLoading(true)
-    setError('')
-    setSlowWarning(false)
-    setElapsed(0)
-    setStepStatus({ scrape: 'active', research: 'active', generate: 'pending' })
-
-    try {
-      const scrapePromise = apiFetch(
-        '/api/scrape',
-        { url },
-        signal,
-        () => setStepStatus(s => ({ ...s, scrape: 'done' }))
-      )
-
-      const researchPromise = apiFetch(
-        '/api/research',
-        { url },
-        signal,
-        () => setStepStatus(s => ({ ...s, research: 'done' }))
-      )
-
-      const [scraped, { research }] = await Promise.all([scrapePromise, researchPromise])
-
-      setStepStatus(s => ({ ...s, generate: 'active' }))
-
-      const { memoData, qualityGate } = await apiFetch(
-        '/api/generate',
-        { research, scraped, fundContext: SAGARD_CONTEXT },
-        signal,
-        () => setStepStatus(s => ({ ...s, generate: 'done' }))
-      )
-
-      const memoId = `${memoData.COMPANY_NAME?.toLowerCase().replace(/\s+/g, '_')}_${Date.now()}`
-      sessionStorage.setItem('memoData', JSON.stringify(memoData))
-      sessionStorage.setItem('qualityGate', JSON.stringify(qualityGate))
-      sessionStorage.setItem('memoSource', 'pipeline')
-      sessionStorage.setItem('memoId', memoId)
-      router.push('/memo')
-    } catch (err) {
-      if (err.name === 'AbortError') {
-        setError('Generation cancelled.')
-      } else {
-        setError(err.message || 'Something went wrong')
-      }
-      setLoading(false)
-      setStepStatus({})
-    } finally {
-      abortRef.current = null
-    }
-  }
-
-  const progress = stepProgress(stepStatus)
-
+export default function LandingPage() {
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center bg-stone-50 px-4">
-      {!loading && (
-        <button
-          onClick={openLibrary}
-          className="absolute right-4 top-4 rounded-lg p-2 text-stone-400 transition hover:bg-stone-200 hover:text-stone-600"
-          title="Memo library"
-          aria-label="Open memo library"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
-          </svg>
-        </button>
-      )}
+    <div className="m-landing">
+      <section className="relative flex min-h-[100svh] flex-col">
+        <LandingBackground />
+        <div className="relative z-10 flex flex-1 flex-col">
+          <Nav variant="landing" />
 
-      {libraryOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end">
-          <div className="absolute inset-0 bg-black/20" onClick={() => setLibraryOpen(false)} />
-          <div className="relative z-10 h-full w-80 overflow-y-auto bg-white p-5 shadow-xl">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-stone-900">Saved memos</h2>
-              <button onClick={() => setLibraryOpen(false)} className="text-stone-400 hover:text-stone-600">✕</button>
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-20 pt-8 lg:pb-28">
+            <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
+              <div className="max-w-xl">
+                <p className="m-landing-eyebrow">90-second first-pass briefs</p>
+                <h1 className="m-landing-headline">
+                  Paste a URL. Get a memo your GP can forward.
+                </h1>
+                <p className="m-landing-lead">
+                  Fund-native thesis band, not another generic AI summary. Pursue or pass — Meridian learns what you actually bet on.
+                </p>
+                <div className="mt-10">
+                  <HeroInput variant="landing" />
+                </div>
+                <p className="mt-4 text-[13px] text-zinc-500">
+                  <Link href="/fund/setup" className="text-zinc-400 transition hover:text-white">
+                    Personalize with your fund URL →
+                  </Link>
+                </p>
+              </div>
+
+              <WorkspacePreview />
             </div>
-            {library.length === 0 ? (
-              <p className="text-xs text-stone-400">No saved memos yet.</p>
-            ) : (
-              <ul className="space-y-3">
-                {library.map(entry => (
-                  <li key={entry.id} className="rounded-lg border border-stone-200 p-3">
-                    <div className="text-sm font-medium text-stone-900">{entry.companyName}</div>
-                    <div className="text-xs text-stone-400">{entry.round} · {entry.date}</div>
-                    <button
-                      onClick={() => viewMemo(entry.id)}
-                      className="mt-2 text-xs text-stone-600 underline hover:text-stone-900"
-                    >
-                      View
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
           </div>
         </div>
-      )}
+      </section>
 
-      {loading && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-stone-900/40 px-4 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
-            <div className="mb-1 flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-stone-900">Generating memo</h2>
-              <span className="font-mono text-xs text-stone-400">{formatElapsed(elapsed)}</span>
-            </div>
-            <p className="mb-5 truncate text-xs text-stone-500">{url}</p>
+      <section className="relative border-t border-zinc-200/80 bg-white py-20">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-14 text-center">
+            <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
+              Three steps. Under 90 seconds.
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed text-zinc-500">
+              Built for deal velocity — the memo a GP forwards without rewriting the thesis band.
+            </p>
+          </div>
 
-            <div className="mb-6 h-1.5 overflow-hidden rounded-full bg-stone-100">
-              <div
-                className="h-full rounded-full bg-[#8B1A1A] transition-all duration-500 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+          <div className="mb-16 grid gap-8 sm:grid-cols-3">
+            <Step num="01" title="Paste URL" desc="Any company website. No setup required — generic fund context works on day one." />
+            <Step num="02" title="Review & signal" desc="Inline edits, pursue or pass. Every signal trains the thesis band on your next brief." />
+            <Step num="03" title="Personalize fund" desc="Drop your fund URL when ready. Portfolio overlap and mandate fit kick in automatically." />
+          </div>
 
-            <ul className="mb-6 space-y-3">
-              {STEPS.map(step => {
-                const status = stepStatus[step.id]
-                return (
-                  <li key={step.id} className="flex items-center gap-3">
-                    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] ${
-                      status === 'done' ? 'bg-green-100 text-green-700' :
-                      status === 'active' ? 'bg-[#8B1A1A]/10 text-[#8B1A1A]' :
-                      'bg-stone-100 text-stone-400'
-                    }`}>
-                      {status === 'done' ? '✓' : status === 'active' ? '…' : '·'}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className={`text-xs ${
-                        status === 'active' ? 'font-medium text-stone-900' : 'text-stone-600'
-                      }`}>
-                        {step.label}
-                      </div>
-                      {status === 'active' && (
-                        <div className="text-[10px] text-stone-400">{step.estimate}</div>
-                      )}
-                    </div>
-                  </li>
-                )
-              })}
-            </ul>
+          <LandingDemoCta />
+        </div>
+      </section>
 
-            {slowWarning && (
-              <p className="mb-4 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
-                Research is taking longer than expected. Deep research can run up to 2 minutes — you can wait or cancel.
-              </p>
-            )}
+      <section className="relative border-t border-zinc-200/80 bg-zinc-50 py-24">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-12 max-w-lg">
+            <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
+              Brief first. Everything else follows.
+            </h2>
+            <p className="mt-3 text-[16px] leading-relaxed text-zinc-500">
+              One URL in, structured memo out. Review, pursue or pass, and your next brief gets sharper.
+            </p>
+          </div>
 
-            <button
-              onClick={handleCancel}
-              className="w-full rounded-lg border border-stone-200 px-4 py-2.5 text-sm text-stone-600 transition hover:border-stone-300 hover:bg-stone-50"
-            >
-              Cancel
-            </button>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-2">
+            <Link href="/brief" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
+              <span className="m-bento-icon">◇</span>
+              <h3 className="m-bento-title">Brief</h3>
+              <p className="m-bento-desc">Company URL in → fund-native one-pager out. The core loop. Usually under 90 seconds.</p>
+              <span className="m-bento-link">Generate a brief →</span>
+            </Link>
+
+            <Link href="/library" className="group m-bento lg:col-span-5">
+              <span className="m-bento-icon">◎</span>
+              <h3 className="m-bento-title">Review</h3>
+              <p className="m-bento-desc">Pursue/pass every brief. Signals compound into smarter thesis bands.</p>
+              <span className="m-bento-link">Open library →</span>
+            </Link>
+
+            <Link href="/discover" className="group m-bento lg:col-span-5">
+              <span className="m-bento-icon">◈</span>
+              <h3 className="m-bento-title">Discover</h3>
+              <p className="m-bento-desc">Thesis search when you need new names — not where you start.</p>
+              <span className="m-bento-link">Search →</span>
+            </Link>
           </div>
         </div>
-      )}
+      </section>
 
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <h1 className="mb-1 text-3xl font-semibold tracking-tight text-stone-900">
-            Meridian
-          </h1>
-          <p className="text-sm text-stone-500">
-            Investment memos in under 90 seconds
-          </p>
-        </div>
+      <Footer />
+    </div>
+  )
+}
 
-        <form onSubmit={handleGenerate} className="space-y-3">
-          <input
-            type="text"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste company URL — nationgraph.com"
-            disabled={loading}
-            className="w-full rounded-xl border border-stone-200 bg-white px-4 py-3.5 text-sm shadow-sm outline-none transition focus:border-[#8B1A1A] focus:ring-2 focus:ring-[#8B1A1A]/20 disabled:opacity-50"
-          />
-          <button
-            type="submit"
-            disabled={loading || !url.trim()}
-            className="w-full rounded-xl bg-[#8B1A1A] px-4 py-3.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#6d1414] disabled:opacity-50"
-          >
-            Generate memo
-          </button>
-        </form>
-
-        {error && !loading && (
-          <p className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-center text-sm text-red-700">
-            {error}
-          </p>
-        )}
-
-        {apiStatus && (!apiStatus.anthropic || !apiStatus.perplexity) && (
-          <p className="mt-4 rounded-lg bg-amber-50 px-3 py-2 text-center text-xs text-amber-800">
-            API keys missing — add ANTHROPIC_API_KEY and PERPLEXITY_API_KEY to .env.local
-          </p>
-        )}
-
-        <p className="mt-8 text-center text-xs text-stone-400">
-          <a href="/memo" className="underline decoration-stone-300 hover:text-stone-600">
-            View NationGraph demo memo
-          </a>
-        </p>
-      </div>
-    </main>
+function Step({ num, title, desc }) {
+  return (
+    <div className="text-center sm:text-left">
+      <span className="font-mono text-[11px] font-medium text-zinc-400">{num}</span>
+      <h3 className="mt-2 text-[17px] font-semibold text-zinc-900">{title}</h3>
+      <p className="mt-2 text-[14px] leading-relaxed text-zinc-500">{desc}</p>
+    </div>
   )
 }

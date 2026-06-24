@@ -1,18 +1,29 @@
+import { enforceRateLimit } from '@/lib/api-guard'
+import { cacheGet, cacheSet, CACHE_TTL } from '@/lib/server-cache'
+import { extractDomain, normalizeUrl } from '@/lib/url-utils'
+
 export const maxDuration = 30
 
-function normalizeUrl(url) {
-  let normalized = url.trim()
-  if (!normalized) return null
-  if (!normalized.startsWith('http')) normalized = 'https://' + normalized
-  return normalized.replace(/\/+$/, '')
-}
-
 export async function POST(req) {
-  const { url: rawUrl } = await req.json()
+  const limited = enforceRateLimit(req, 'scrape')
+  if (limited) return limited
+
+  const { url: rawUrl, forceRegenerate } = await req.json()
   const url = normalizeUrl(rawUrl)
 
   if (!url) {
     return Response.json({ error: 'URL is required' }, { status: 400 })
+  }
+
+  const domain = extractDomain(url)
+  const cacheKey = `scrape:${domain}`
+
+  if (!forceRegenerate && domain) {
+    const cached = await cacheGet(cacheKey)
+    if (cached) {
+      console.log('[scrape] cache hit', domain)
+      return Response.json({ ...cached, cached: true })
+    }
   }
 
   let html = ''
@@ -53,7 +64,11 @@ export async function POST(req) {
     domain: base.hostname,
   }
 
+  if (domain) {
+    await cacheSet(cacheKey, result, CACHE_TTL.scrape)
+  }
+
   console.log('[scrape]', url, result)
 
-  return Response.json(result)
+  return Response.json({ ...result, cached: false })
 }
