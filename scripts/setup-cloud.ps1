@@ -34,7 +34,7 @@ $existing["NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY"] = $clerkPk
 $existing["CLERK_SECRET_KEY"] = $clerkSk
 $existing["NEXT_PUBLIC_CLERK_SIGN_IN_URL"] = "/sign-in"
 $existing["NEXT_PUBLIC_CLERK_SIGN_UP_URL"] = "/sign-up"
-$existing["MERIDIAN_ENABLE_SERVER_PDF"] = "false"
+$existing["MERIDIAN_ENABLE_SERVER_PDF"] = "true"
 $existing["MERIDIAN_ENABLE_SHARE_LINKS"] = "true"
 
 $lines = @(
@@ -51,7 +51,7 @@ $lines = @(
   "CLERK_SECRET_KEY=$clerkSk",
   "NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in",
   "NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up",
-  "MERIDIAN_ENABLE_SERVER_PDF=false",
+  "MERIDIAN_ENABLE_SERVER_PDF=true",
   "MERIDIAN_ENABLE_SHARE_LINKS=true"
 )
 
@@ -87,7 +87,7 @@ $vars = @{
   "CLERK_SECRET_KEY" = $clerkSk
   "NEXT_PUBLIC_CLERK_SIGN_IN_URL" = "/sign-in"
   "NEXT_PUBLIC_CLERK_SIGN_UP_URL" = "/sign-up"
-  "MERIDIAN_ENABLE_SERVER_PDF" = "false"
+  "MERIDIAN_ENABLE_SERVER_PDF" = "true"
   "MERIDIAN_ENABLE_SHARE_LINKS" = "true"
 }
 

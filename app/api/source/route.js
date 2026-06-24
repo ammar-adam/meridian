@@ -1,5 +1,5 @@
 import { parseThesis } from '@/lib/thesis-parser'
-import { searchPitchbook } from '@/lib/pitchbook'
+import { searchPitchbook, isPitchbookConfigured } from '@/lib/pitchbook'
 import { SOURCE_RANK_PROMPT, buildRankUserBlocks } from '@/lib/source-prompt'
 import { MODELS } from '@/lib/api-models'
 import { callAnthropic, textBlock } from '@/lib/anthropic'
@@ -149,7 +149,7 @@ export async function POST(req) {
       fundId: fundContext.id,
       pitchbookCount: pitchbookResults.length,
       perplexityChars: perplexityResearch.length,
-      pitchbookConfigured: !!(process.env.PITCHBOOK_API_KEY && process.env.PITCHBOOK_API_KEY !== 'your_key_here'),
+      pitchbookConfigured: isPitchbookConfigured(),
     },
   }
 

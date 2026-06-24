@@ -1,10 +1,15 @@
 import { enforceRateLimit } from '@/lib/api-guard'
 import { renderMemoHtml } from '@/lib/render-memo-html'
 import { cacheGet, cacheSet, CACHE_TTL, stableHash } from '@/lib/server-cache'
+import { isServerPdfEnabled } from '@/lib/pdf-config'
 
 export const maxDuration = 60
 
 export async function POST(req) {
+  if (!isServerPdfEnabled()) {
+    return Response.json({ error: 'Server PDF is disabled' }, { status: 503 })
+  }
+
   const limited = enforceRateLimit(req, 'pdf')
   if (limited) return limited
 
@@ -28,13 +33,10 @@ export async function POST(req) {
 
   let browser
   try {
-    const { chromium } = await import('playwright')
     const html = await renderMemoHtml(memoData)
 
-    browser = await chromium.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    })
+    const { launchPdfBrowser } = await import('@/lib/pdf-browser')
+    browser = await launchPdfBrowser()
     const page = await browser.newPage()
     await page.setContent(html, { waitUntil: 'networkidle' })
     const pdfBuffer = await page.pdf({
