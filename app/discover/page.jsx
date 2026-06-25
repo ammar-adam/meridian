@@ -231,7 +231,7 @@ function DiscoverContent() {
   }
 
   const subtitle = meta
-    ? `${filtered.length} results · pitchbook ${meta.pitchbookConfigured ? meta.pitchbookCount : 'off'}${meta.cached ? ' · cached' : ''}`
+    ? `${filtered.length} results · startuphub ${meta.startuphubConfigured ? meta.startuphubCount : 'web'}${meta.cached ? ' · cached' : ''}`
     : fundProfile?.fundName || 'thesis search'
 
   return (
@@ -316,7 +316,7 @@ function DiscoverContent() {
         <div className="m-loader">
           <div className="m-loader-bar"><div /></div>
           <p className="text-[13px] font-medium">Running discover pipeline</p>
-          <p className="mt-1 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>parse → pitchbook → perplexity → rank</p>
+          <p className="mt-1 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>parse → startuphub → perplexity → rank</p>
         </div>
       )}
 

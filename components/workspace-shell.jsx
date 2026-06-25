@@ -112,6 +112,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                 {[
                   { key: 'anthropic', label: 'Claude' },
                   { key: 'perplexity', label: 'Research' },
+                  { key: 'startuphub', label: 'StartupHub' },
                   { key: 'pitchbook', label: 'PitchBook' },
                   { key: 'database', label: 'Database' },
                   { key: 'clerk', label: 'Auth' },

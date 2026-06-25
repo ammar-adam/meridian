@@ -1,5 +1,5 @@
 import { parseThesis } from '@/lib/thesis-parser'
-import { searchPitchbook, isPitchbookConfigured } from '@/lib/pitchbook'
+import { searchCompanyDatabase, getDatabaseSearchMeta } from '@/lib/company-search'
 import { SOURCE_RANK_PROMPT, buildRankUserBlocks } from '@/lib/source-prompt'
 import { MODELS } from '@/lib/api-models'
 import { callAnthropic, textBlock } from '@/lib/anthropic'
@@ -67,7 +67,8 @@ export async function POST(req) {
     return Response.json({ error: 'Failed to parse thesis' }, { status: 500 })
   }
 
-  const pitchbookResults = await searchPitchbook(parsed)
+  const dbSearch = await searchCompanyDatabase(parsed, thesis)
+  const { startuphub, pitchbook, all: databaseResults } = dbSearch
 
   const perplexityQuery = parsed.perplexityQuery ?? `
     Find companies matching this investment thesis: ${thesis}
@@ -100,7 +101,7 @@ export async function POST(req) {
   const perplexityData = await perplexityRes.json()
   const perplexityResearch = perplexityData.choices?.[0]?.message?.content ?? ''
 
-  const rankBlocks = buildRankUserBlocks(thesis, parsed, pitchbookResults, perplexityResearch, fundContext)
+  const rankBlocks = buildRankUserBlocks(thesis, parsed, databaseResults, perplexityResearch, fundContext)
 
   let raw
   try {
@@ -139,7 +140,9 @@ export async function POST(req) {
     fitScore: Number(c.fitScore) || 0,
   })).sort((a, b) => b.fitScore - a.fitScore)
 
-  console.log('[source]', thesis.slice(0, 60), `→ ${companies.length} companies (pb: ${pitchbookResults.length})`)
+  console.log('[source]', thesis.slice(0, 60), `→ ${companies.length} companies (hub: ${startuphub.length}, pb: ${pitchbook.length})`)
+
+  const dbMeta = getDatabaseSearchMeta(dbSearch)
 
   const payload = {
     companies,
@@ -147,9 +150,11 @@ export async function POST(req) {
       thesis,
       parsed,
       fundId: fundContext.id,
-      pitchbookCount: pitchbookResults.length,
+      ...dbMeta,
       perplexityChars: perplexityResearch.length,
-      pitchbookConfigured: isPitchbookConfigured(),
+      // legacy keys for cached responses
+      pitchbookCount: pitchbook.length,
+      pitchbookConfigured: dbMeta.pitchbookConfigured,
     },
   }
 
