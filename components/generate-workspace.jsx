@@ -3,18 +3,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { getFundProfile, resolveApiFundContext } from '@/lib/fund-profile'
+import { resolveApiFundContext } from '@/lib/fund-profile'
 import { buildMemoMeta, writeMemoMetaToSession } from '@/lib/memo-context'
 import { getMemoLibrary } from '@/lib/memo-library'
-import { findExistingBrief, runMemoPipeline } from '@/lib/memo-pipeline'
+import { findExistingBrief, runMemoPipeline, fetchScrapePreview } from '@/lib/memo-pipeline'
 import { formatBriefAge } from '@/lib/cost-estimate'
 import { RESEARCH_MODES } from '@/lib/research-mode'
-import { FundPersonalizeBanner } from '@/components/fund-gate'
+import BriefPreview from '@/components/brief-preview'
 import IntakeDropzone from '@/components/intake-dropzone'
 import BriefStarters from '@/components/brief-starters'
-import FundSetupPrompt from '@/components/fund-setup-prompt'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
-import { getTrackingId, getActiveStrategy } from '@/lib/fund-profile'
 import { learningAppliedMessage } from '@/lib/learning-preview'
 
 const STEPS = [
@@ -51,6 +49,9 @@ export default function GenerateWorkspace() {
   const [existingBrief, setExistingBrief] = useState(null)
   const [learningNote, setLearningNote] = useState('')
   const [researchMode, setResearchMode] = useState('quick')
+  const [apiHealth, setApiHealth] = useState(null)
+  const [previewScraped, setPreviewScraped] = useState(null)
+  const [scrapedCache, setScrapedCache] = useState(null)
   const router = useRouter()
   const abortRef = useRef(null)
   const timerRef = useRef(null)
@@ -62,8 +63,9 @@ export default function GenerateWorkspace() {
   }, [searchParams])
 
   useEffect(() => {
-    const profile = getFundProfile()
-    setExistingBrief(url.trim() ? findExistingBrief(url, profile?.id) : null)
+    setExistingBrief(url.trim() ? findExistingBrief(url, 'guest') : null)
+    setPreviewScraped(null)
+    setScrapedCache(null)
   }, [url])
 
   useEffect(() => { setLibrary(getMemoLibrary()) }, [])
@@ -98,7 +100,7 @@ export default function GenerateWorkspace() {
     router.push('/memo')
   }, [router])
 
-  const runPipeline = useCallback(async (forceRegenerate = false, { deep = false } = {}) => {
+  const runPipeline = useCallback(async (forceRegenerate = false, { deep = false, retryResearch = false } = {}) => {
     if (!url.trim()) return
 
     if (apiHealth && (!apiHealth.anthropic || !apiHealth.perplexity)) {
@@ -107,24 +109,14 @@ export default function GenerateWorkspace() {
     }
 
     const fundContext = resolveApiFundContext()
-    const profile = getFundProfile()
-    const strategy = profile ? getActiveStrategy(profile) : null
-    const tid = profile && strategy ? getTrackingId(profile, strategy) : 'guest'
-
-    if (!forceRegenerate && profile) {
-      const existing = findExistingBrief(url, profile.id)
-      if (existing) {
-        viewMemo(existing.id)
-        return
-      }
-    }
+    const tid = fundContext.trackingId || 'guest'
 
     abortRef.current = new AbortController()
     setLoading(true)
     setError('')
     setSlowWarning(false)
     setElapsed(0)
-    setStepStatus({ scrape: 'active', research: 'active', generate: 'pending' })
+    setStepStatus({ scrape: 'active', research: 'pending', generate: 'pending' })
     setLearningNote(learningAppliedMessage(tid) || '')
 
     let sourceContext = null
@@ -133,7 +125,15 @@ export default function GenerateWorkspace() {
       if (raw) sourceContext = JSON.parse(raw)
     } catch { /* ignore */ }
 
+    let scraped = scrapedCache
     try {
+      if (!scraped || retryResearch) {
+        scraped = await fetchScrapePreview(url, abortRef.current.signal)
+        setPreviewScraped(scraped)
+        setScrapedCache(scraped)
+        setStepStatus({ scrape: 'done', research: 'active', generate: 'pending' })
+      }
+
       writeMemoMetaToSession(buildMemoMeta({
         url,
         searchThesis: sourceContext?.thesis,
@@ -146,6 +146,8 @@ export default function GenerateWorkspace() {
         signal: abortRef.current.signal,
         forceRegenerate,
         researchMode: deep ? 'deep' : researchMode,
+        scraped,
+        retryResearch,
         onStep: (id, status) => setStepStatus(s => ({ ...s, [id]: status })),
       })
       sessionStorage.setItem('memoData', JSON.stringify(memoData))
@@ -154,18 +156,25 @@ export default function GenerateWorkspace() {
       sessionStorage.setItem('memoId', memoId)
       router.push('/memo')
     } catch (err) {
-      setError(err.name === 'AbortError' ? 'Cancelled.' : err.message || 'Failed')
+      if (err.canRetryResearch && err.scraped) {
+        setScrapedCache(err.scraped)
+        setPreviewScraped(err.scraped)
+        setError(`${err.message} — you can retry research without re-scraping.`)
+      } else if (err.failedStep) {
+        setError(`${err.message} (failed at ${err.failedStep})`)
+      } else {
+        setError(err.name === 'AbortError' ? 'Cancelled.' : err.message || 'Failed')
+      }
       setLoading(false)
-      setStepStatus({})
+      if (!err.canRetryResearch) setStepStatus({})
     } finally {
       abortRef.current = null
     }
-  }, [router, url, viewMemo, apiHealth, researchMode])
+  }, [router, url, apiHealth, researchMode, scrapedCache])
 
   useEffect(() => {
     if (!pendingAutogen || !url.trim() || loading) return
-    const profile = getFundProfile()
-    const existing = findExistingBrief(url, profile?.id)
+    const existing = findExistingBrief(url, 'guest')
     if (existing) {
       setPendingAutogen(false)
       viewMemo(existing.id)
@@ -231,9 +240,6 @@ export default function GenerateWorkspace() {
           </p>
         )}
 
-        <FundPersonalizeBanner />
-        <FundSetupPrompt />
-
         <WorkspaceSection
           title="Company URL"
           description="Drop a URL, contact export, or company list — we handle the rest."
@@ -288,23 +294,27 @@ export default function GenerateWorkspace() {
                 </button>
               ))}
             </div>
+            {previewScraped && (
+              <BriefPreview scraped={previewScraped} loading={loading} className="mb-4" />
+            )}
             <button type="submit" disabled={loading || !url.trim()} className="m-btn-primary mt-4 w-full">
-              {loading ? 'Running…' : existingBrief ? 'Open existing brief' : 'Generate brief'}
+              {loading ? 'Running…' : 'Generate brief'}
             </button>
           </form>
 
           {existingBrief && !loading && (
-            <div className="mt-4 flex flex-col gap-3 rounded-lg border px-4 py-3 sm:flex-row sm:items-center sm:justify-between" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
+            <div className="mt-4 flex flex-col gap-3 rounded-lg border px-4 py-3" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
               <p className="text-[13px]" style={{ color: 'var(--m-muted)' }}>
-                Brief saved {formatBriefAge(existingBrief.savedAt)} — no API call needed.
+                Brief saved {formatBriefAge(existingBrief.savedAt)} — open existing or regenerate.
               </p>
-              <button
-                type="button"
-                onClick={() => runPipeline(true)}
-                className="m-btn-ghost m-btn-sm shrink-0"
-              >
-                Regenerate anyway
-              </button>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={() => viewMemo(existingBrief.id)} className="m-btn-primary m-btn-sm">
+                  Open
+                </button>
+                <button type="button" onClick={() => runPipeline(true)} className="m-btn-secondary m-btn-sm">
+                  Regenerate
+                </button>
+              </div>
             </div>
           )}
         </WorkspaceSection>
@@ -314,6 +324,15 @@ export default function GenerateWorkspace() {
         {error && !loading && (
           <div className="mt-4 space-y-2">
             <p className="m-alert-error">{error}</p>
+            {error.includes('retry research') && (
+              <button
+                type="button"
+                className="m-btn-secondary w-full"
+                onClick={() => { setError(''); runPipeline(false, { retryResearch: true }) }}
+              >
+                Retry research only
+              </button>
+            )}
             {error.includes('timed out') && researchMode === 'quick' && (
               <button
                 type="button"
