@@ -14,6 +14,7 @@ import {
   retryBatchRow,
   jobHasPending,
   normalizeJobForResume,
+  recoverInterruptedBatchRows,
 } from '@/lib/batch-runner'
 import { RESEARCH_MODES } from '@/lib/research-mode'
 import { batchResultsToCsv } from '@/lib/crm-export'
@@ -91,7 +92,7 @@ function ListsContent() {
 
     fetchActiveBatchJob().then(job => {
       if (!job) return
-      const normalized = normalizeJobForResume(job)
+      const normalized = recoverInterruptedBatchRows(job)
       setProgress(normalized.progress)
       setJobId(normalized.id)
       setResearchMode(normalized.researchMode || 'auto')
@@ -163,7 +164,7 @@ function ListsContent() {
           {failedCount > 0 && !running && (
             <button
               type="button"
-              onClick={() => runBatchInternal(normalizeJobForResume({ urls: parseUrlList(text), results: progress.results.map(r => r.status === 'failed' ? { ...r, status: 'pending' } : r), id: jobId, researchMode, progress }), true)}
+              onClick={() => runBatchInternal(normalizeJobForResume({ urls: parseUrlList(text), results: progress.results, id: jobId, researchMode, progress }, { resetFailed: true }), true)}
               className="m-btn-secondary m-btn-sm"
             >
               Retry failed ({failedCount})
@@ -185,7 +186,7 @@ function ListsContent() {
       <WorkspacePage width="wide">
         <WorkspaceSection
           title="Company list"
-          description="One URL per line. Runs 3 briefs in parallel. Leave and come back — progress resumes automatically."
+          description="One URL per line. Processes URLs sequentially on server (or 3 at once locally). Leave and come back — progress resumes automatically."
         >
           <IntakeDropzone
             compact

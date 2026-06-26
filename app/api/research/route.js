@@ -7,10 +7,10 @@ export async function POST(req) {
   const limited = await enforceRateLimit(req, 'research')
   if (limited) return limited
 
-  const { url, forceRegenerate, researchMode } = await req.json()
+  const { url, forceRegenerate, researchMode, scraped } = await req.json()
 
   try {
-    const result = await runResearch(url, { forceRegenerate, researchMode })
+    const result = await runResearch(url, { forceRegenerate, researchMode, scraped })
     console.log('[research]', url, `${result.research?.length || 0} chars`)
     return Response.json(result)
   } catch (err) {

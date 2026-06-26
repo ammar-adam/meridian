@@ -78,14 +78,14 @@ No fund setup required — guest context works out of the box. Optional: configu
 
 1. Go to **/brief** or paste URL on landing
 2. Scrape preview appears in ~2s
-3. Click generate → full memo in ~90s (Quick mode)
+3. Click generate → draft memo in ~5s, full brief in ~30–75s (Auto mode)
 4. Edit inline → **Pursue** / **Pass** → share link for GP review
 
 ### Lists (batch)
 
 1. Go to **/lists**
 2. Paste up to 50 URLs (one per line)
-3. Batch runs with concurrency 3
+3. Batch runs one URL at a time on server (3 parallel when local-only)
 4. **Auto-resumes on page refresh** if interrupted
 5. Export CSV when done
 
@@ -196,7 +196,7 @@ Anonymous users get a `meridian_did` cookie for isolated batch jobs (no shared `
 
 ## Demo checklist
 
-1. Paste one well-known Series A URL on `/brief` — preview <3s, memo <90s
+1. Paste one well-known Series A URL on `/brief` — preview <3s, full brief <75s (Auto)
 2. Batch 3 URLs on `/lists` — refresh mid-run, confirm auto-resume
 3. Share a memo → incognito Pursue → Library shows GP outcome
 4. Run Discover with a real thesis → brief one result → check thesis band

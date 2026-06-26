@@ -44,7 +44,7 @@ async function run() {
     const res = await fetch(`${BASE}/api/batch`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Cookie: 'meridian_did=smoke-test-device-001' },
-      body: JSON.stringify({ urls: ['https://stripe.com'], researchMode: 'quick' }),
+      body: JSON.stringify({ urls: ['https://stripe.com'], researchMode: 'auto' }),
     })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || `status ${res.status}`)
@@ -53,7 +53,7 @@ async function run() {
 
   console.log(`\n${passed} passed, ${failed} failed`)
   console.log('\nManual checks:')
-  console.log('  1. /brief → paste URL → preview <3s → memo <90s')
+  console.log('  1. /brief → paste URL → preview <3s → draft <5s → full brief <75s')
   console.log('  2. /lists → batch 3 URLs → refresh mid-run → auto-resume')
   console.log('  3. Share link → incognito Pursue → Library shows GP outcome')
 

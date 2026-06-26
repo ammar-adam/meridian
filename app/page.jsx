@@ -17,7 +17,7 @@ export default function LandingPage() {
           <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-20 pt-8 lg:pb-28">
             <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
               <div className="max-w-xl">
-                <p className="m-landing-eyebrow">90-second first-pass briefs</p>
+                <p className="m-landing-eyebrow">First-pass briefs in under a minute</p>
                 <h1 className="m-landing-headline">
                   Paste a URL. Get a memo your GP can forward.
                 </h1>
@@ -44,7 +44,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
-              Three steps. Under 90 seconds.
+              Three steps. Under a minute.
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed text-zinc-500">
               Built for deal velocity — the memo a GP forwards without rewriting the thesis band.
@@ -76,7 +76,7 @@ export default function LandingPage() {
             <Link href="/brief" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
               <span className="m-bento-icon">◇</span>
               <h3 className="m-bento-title">Brief</h3>
-              <p className="m-bento-desc">Company URL in → fund-native one-pager out. The core loop. Usually under 90 seconds.</p>
+              <p className="m-bento-desc">Company URL in → fund-native one-pager out. Auto mode picks Instant or Quick based on site coverage (~30–75s).</p>
               <span className="m-bento-link">Generate a brief →</span>
             </Link>
 

@@ -1,6 +1,6 @@
 # Meridian
 
-**AI-powered investment memos for venture capital.** Paste a company URL — get a mandate-specific one-page research brief in under 90 seconds.
+**AI-powered investment memos for venture capital.** Paste a company URL — get a mandate-specific one-page research brief in under a minute (Auto mode).
 
 **Live demo:** [meridian-eight-sandy.vercel.app](https://meridian-eight-sandy.vercel.app)
 
@@ -18,7 +18,7 @@ URL in → scrape (~2s preview) → research → generate → memo PDF-ready
 
 **Primary loop:** Discover companies by thesis → batch brief → pursue/pass → fund learns preferences.
 
-**Secondary loop:** Already have a URL? `/brief` → one memo in ~90s.
+**Secondary loop:** Already have a URL? `/brief` → one memo in ~30–75s (Auto).
 
 ---
 

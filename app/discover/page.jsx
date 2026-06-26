@@ -16,7 +16,7 @@ import {
 } from '@/lib/source-session'
 import { getFundProfile, getActiveStrategy, resolveApiFundContext, getTrackingId } from '@/lib/fund-profile'
 import { findMemoByDomain } from '@/lib/memo-library'
-import { runBatchJob, fetchActiveBatchJob, jobHasPending, normalizeJobForResume } from '@/lib/batch-runner'
+import { runBatchJob, fetchActiveBatchJob, jobHasPending, recoverInterruptedBatchRows } from '@/lib/batch-runner'
 import IntakeDropzone from '@/components/intake-dropzone'
 import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } from '@/components/pipeline-contacts-panel'
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
@@ -128,7 +128,7 @@ function DiscoverContent() {
   useEffect(() => {
     fetchActiveBatchJob().then(job => {
       if (!job || batchResumedRef.current) return
-      const normalized = normalizeJobForResume(job)
+      const normalized = recoverInterruptedBatchRows(job)
       if (!jobHasPending(normalized)) return
       batchResumedRef.current = true
       setBatchRunning(true)
@@ -235,7 +235,7 @@ function DiscoverContent() {
     await runBatchJob({
       companies: selected,
       sourceContext,
-      researchMode: 'quick',
+      researchMode: 'auto',
       signal: abortRef.current.signal,
       onProgress: setBatchProgress,
     })

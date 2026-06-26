@@ -21,7 +21,7 @@ export async function POST(req) {
       sourceContext,
       learningContext,
       forceRegenerate,
-      researchMode: researchMode || 'quick',
+      researchMode: researchMode || 'auto',
     })
     console.log('[generate] memo for', result.memoData?.COMPANY_NAME, 'qg:', result.qualityGate?.passed)
     return Response.json(result)

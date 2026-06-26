@@ -37,7 +37,7 @@ export default function OnboardingHost() {
     <div className="m-overlay z-[100]">
       <div className="m-modal max-w-md">
         <p className="m-kicker mb-2">Welcome to Meridian</p>
-        <h2 className="text-[18px] font-semibold tracking-tight">Your first brief in 90 seconds</h2>
+        <h2 className="text-[18px] font-semibold tracking-tight">Your first brief in about a minute</h2>
         <p className="mt-2 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
           Paste any company URL. Get a one-page memo with a fund-native thesis band — the section GPs actually forward.
         </p>

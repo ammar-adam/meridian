@@ -337,15 +337,22 @@ export default function GenerateWorkspace() {
             compact
             className="mb-4"
             onIntake={(payload) => {
-              if (payload.kind === 'company_urls' || (payload.kind === 'pipeline' && payload.pipeline?.length > 1)) {
-                const urls = payload.kind === 'company_urls'
-                  ? payload.companyUrls
-                  : payload.pipeline.map(c => c.url || (c.domain ? `https://${c.domain}` : '')).filter(Boolean)
+              if (payload.kind === 'company_urls') {
+                if (payload.companyUrls.length > 1) {
+                  sessionStorage.setItem('meridian_batch_urls', JSON.stringify(payload.companyUrls))
+                  router.push('/lists')
+                  return
+                }
+                setUrl(payload.companyUrls[0])
+                return
+              }
+              if (payload.kind === 'pipeline' && payload.pipeline?.length > 1) {
+                const urls = payload.pipeline.map(c => c.url || (c.domain ? `https://${c.domain}` : '')).filter(Boolean)
                 sessionStorage.setItem('meridian_batch_urls', JSON.stringify(urls))
                 router.push('/lists')
                 return
               }
-              if (payload.kind === 'company_url' || payload.kind === 'company_urls') {
+              if (payload.kind === 'company_url') {
                 setUrl(payload.companyUrls[0])
                 return
               }

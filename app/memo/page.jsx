@@ -18,6 +18,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import PageLoader from '@/components/page-loader'
 
+const PIPELINE_SAVED_KEY = 'meridian_pipeline_just_saved'
+
 function stripHtml(s) {
   return (s ?? '').replace(/<[^>]+>/g, '').trim()
 }
@@ -157,22 +159,31 @@ function MemoPageContent() {
     }
 
     if (source === 'pipeline') {
-      const saveMeta = meta || (profile ? {
-        ...sessionMeta,
-        trackingId: getTrackingId(profile, getActiveStrategy(profile)),
-        fundId: profile.id,
-        fundName: profile.fundName,
-      } : {})
-      saveMemo(data, id, {
-        ...saveMeta,
-        qualityPassed: qg?.passed ?? null,
-        qualityWarnCount: qg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
-      })
-      incrementBriefCount()
+      const justSaved = sessionStorage.getItem(PIPELINE_SAVED_KEY) === id
+      if (justSaved) {
+        sessionStorage.removeItem(PIPELINE_SAVED_KEY)
+      } else {
+        const saveMeta = meta || (profile ? {
+          ...sessionMeta,
+          trackingId: getTrackingId(profile, getActiveStrategy(profile)),
+          fundId: profile.id,
+          fundName: profile.fundName,
+        } : {})
+        saveMemo(data, id, {
+          ...saveMeta,
+          qualityPassed: qg?.passed ?? null,
+          qualityWarnCount: qg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
+        })
+        incrementBriefCount()
+      }
     }
 
     if (source === 'generating') {
       setFinishingBrief(true)
+      if (!sessionStorage.getItem(MEMO_PENDING_BRIEF_KEY) && sessionStorage.getItem(MEMO_GENERATING_KEY)) {
+        setFinishError('Brief generation was interrupted — go back and regenerate.')
+        setFinishingBrief(false)
+      }
     }
 
     setIsDemo(source === 'demo')
@@ -200,7 +211,13 @@ function MemoPageContent() {
     if (searchParams.get('generating') !== '1') return undefined
     if (pendingGenerateRef.current) return undefined
     const raw = sessionStorage.getItem(MEMO_PENDING_BRIEF_KEY)
-    if (!raw) return undefined
+    if (!raw) {
+      if (sessionStorage.getItem(MEMO_GENERATING_KEY)) {
+        setFinishError('Brief generation was interrupted — go back and regenerate.')
+        setFinishingBrief(false)
+      }
+      return undefined
+    }
 
     pendingGenerateRef.current = true
     let pending
@@ -210,7 +227,6 @@ function MemoPageContent() {
       pendingGenerateRef.current = false
       return undefined
     }
-    sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
 
     const ac = new AbortController()
     setFinishingBrief(true)
@@ -218,11 +234,13 @@ function MemoPageContent() {
 
     completeBriefGenerate({ ...pending, signal: ac.signal })
       .then(({ memoData: nextData, qualityGate: nextQg, memoId: nextId }) => {
+        sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
         sessionStorage.setItem('memoData', JSON.stringify(nextData))
         sessionStorage.setItem('qualityGate', JSON.stringify(nextQg))
         sessionStorage.setItem('memoId', nextId)
         sessionStorage.setItem('memoSource', 'pipeline')
         sessionStorage.removeItem(MEMO_GENERATING_KEY)
+        sessionStorage.setItem(PIPELINE_SAVED_KEY, nextId)
 
         setMemoId(nextId)
         setMemoData(nextData)
@@ -252,6 +270,8 @@ function MemoPageContent() {
       })
       .catch((err) => {
         if (err.name === 'AbortError') return
+        sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
+        sessionStorage.removeItem(MEMO_GENERATING_KEY)
         setFinishError(err.message || 'Failed to finish brief')
         setFinishingBrief(false)
         pendingGenerateRef.current = false
