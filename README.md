@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Meridian
 
-## Getting Started
+**AI-powered investment memos for venture capital.** Paste a company URL — get a mandate-specific one-page research brief in under 90 seconds.
 
-First, run the development server:
+**Live demo:** [meridian-eight-sandy.vercel.app](https://meridian-eight-sandy.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## What it does
+
+Meridian automates first-pass deal research: scrape the website, run deep web research, synthesize through Claude, and render a polished one-pager (product, market, team, defensibility, **fund-specific thesis fit**).
+
+The thesis band is the differentiator — not generic AI summaries, but why *your fund* should care, with portfolio overlap and mandate alignment.
+
+```
+URL in → scrape (~2s preview) → research → generate → memo PDF-ready
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Primary loop:** Discover companies by thesis → batch brief → pursue/pass → fund learns preferences.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+**Secondary loop:** Already have a URL? `/brief` → one memo in ~90s.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+---
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+| Feature | Route | Notes |
+|---------|-------|-------|
+| Single brief | `/brief` | Instant scrape preview, then full pipeline |
+| Batch lists | `/lists` | Up to 50 URLs, concurrency 3, auto-resumes on refresh |
+| Discover | `/discover` | Thesis → ranked companies → batch brief |
+| Library | `/library` | Saved briefs, bulk GP share, CSV export |
+| Share + GP review | `/share/[id]` | Pursue / Pass / Need more info |
+| Learning | `/thesis` | Pursue rate, thesis edits, revealed preferences |
+| Cloud sync | Sign in | Clerk + Neon — memos, edits, shares across devices |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Works **without fund setup** — guest context is the default. Configure your fund at `/fund/setup` when ready.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Layer | Choice |
+|-------|--------|
+| Frontend | Next.js 14 (App Router) + Tailwind |
+| Scraping | Server-side fetch + regex |
+| Research | Perplexity (`sonar-deep-research`) |
+| Synthesis | Anthropic Claude (`claude-sonnet-4`) |
+| PDF | Playwright (server) or browser print |
+| Auth | Clerk |
+| Database | Neon Postgres (shares, sync, batch jobs) |
+| Deploy | Vercel |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+---
+
+## Quick start
+
+```bash
+git clone https://github.com/ammar-adam/meridian.git
+cd meridian
+npm install
+cp .env.example .env.local   # add API keys
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) → paste a URL on `/brief`.
+
+**Required env vars:** `ANTHROPIC_API_KEY`, `PERPLEXITY_API_KEY`
+
+**Optional (cloud product):** `DATABASE_URL`, Clerk keys — enables share links, cross-device sync, persistent batch jobs.
+
+Full setup, deploy, and troubleshooting → **[SETUP.md](./SETUP.md)**
+
+---
+
+## Architecture
+
+```
+app/page.jsx          Landing + URL input
+app/brief/page.jsx    Generate workspace (scrape preview → pipeline)
+app/memo/page.jsx     Memo viewer, inline edits, pursue/pass, share
+app/lists/page.jsx    Batch job dashboard
+app/discover/page.jsx Thesis-driven company search
+app/library/page.jsx  Saved briefs command center
+
+app/api/scrape        og:image, title, description (~2s)
+app/api/brief         Unified pipeline (scrape → research → generate)
+app/api/batch         Persistent batch jobs (Neon)
+app/api/share         GP share links with outcome capture
+
+lib/memo-pipeline-server.js   Server orchestration
+lib/batch-runner.js           Client batch worker (concurrency 3)
+lib/behavioral-rank.js        Learned ranking on Discover
+public/memo-template.html     A4 memo template (210mm)
+```
+
+Pipeline details and agent rules → **[AGENTS.md](./AGENTS.md)**
+
+---
+
+## Health check
+
+```bash
+curl https://meridian-eight-sandy.vercel.app/api/health
+```
+
+Returns status for Anthropic, Perplexity, database, Clerk, and feature flags.
+
+---
+
+## Project docs
+
+| Doc | Purpose |
+|-----|---------|
+| [SETUP.md](./SETUP.md) | Install, env vars, deploy, troubleshooting |
+| [prd.md](./prd.md) | Product requirements and roadmap |
+| [AGENTS.md](./AGENTS.md) | Architecture reference for contributors |
+
+---
+
+## Origin
+
+A manually produced NationGraph memo was sent cold to the GP of Sagard's $150M AI Fund. He gave sourcing credit and asked how to automate it. Meridian is that automation — built for deal velocity, not analyst time savings.
+
+---
+
+## License
+
+Private — all rights reserved.

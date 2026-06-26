@@ -4,7 +4,8 @@
 
 - Node.js 18+
 - npm
-- API keys: Anthropic, Perplexity (required). PitchBook (optional, improves Discover).
+- **Required:** Anthropic + Perplexity API keys
+- **Optional:** Neon (`DATABASE_URL`), Clerk (auth/sync), StartupHub (Discover feed), PitchBook (enterprise Discover)
 
 ---
 
@@ -19,24 +20,43 @@ npm install
 
 ## 2. Environment variables
 
-Create or edit `.env.local` in the project root:
+Copy `.env.example` → `.env.local`:
 
 ```env
+# Required — AI pipeline
 ANTHROPIC_API_KEY=sk-ant-...
 PERPLEXITY_API_KEY=pplx-...
-PITCHBOOK_API_KEY=...          # optional — Discover works without it (web-only)
+
+# Optional — Discover sourcing
+STARTUPHUB_API_KEY=...
+PITCHBOOK_API_KEY=...
+
+# Cloud (recommended for production)
+DATABASE_URL=postgresql://...
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+CLERK_SECRET_KEY=sk_...
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+
+MERIDIAN_ENABLE_SERVER_PDF=true
 ```
 
 Restart the dev server after changing keys.
 
-Check keys are loaded:
+**Health check** (with dev server running):
 
 ```bash
-# With dev server running:
 curl http://localhost:3000/api/health
 ```
 
-Expected: `"anthropic": true`, `"perplexity": true`, `"pitchbook": true/false`.
+Expected: `"anthropic": true`, `"perplexity": true`. With `DATABASE_URL`: `"database": true`, `"shareLinks": true`.
+
+**Database schema:**
+
+```bash
+npm run db:push          # Drizzle push (workspaces, shares, edits)
+npm run db:migrate       # batch_jobs table (if not already applied)
+```
 
 ---
 
@@ -48,92 +68,87 @@ npm run dev
 
 Open **http://localhost:3000**
 
----
-
-## 4. First-time setup (required)
-
-Meridian is firm-agnostic. You must configure a fund before using the workspace.
-
-1. Click **Open workspace** or go to **http://localhost:3000/fund/setup**
-2. Enter **Fund name** and **Fund website** (e.g. `acme.vc`)
-3. Click **Auto-enrich from website** (optional) — drafts thesis + portfolio from scrape + web research
-4. Edit thesis and portfolio rows as needed
-5. Click **Save & enter workspace**
-
-Profile is stored in browser `localStorage` (`meridian_fund_profile`). Same browser only until backend sync exists.
+No fund setup required — guest context works out of the box. Optional: configure your fund at `/fund/setup` for mandate-specific thesis bands.
 
 ---
 
-## 5. Core workflows
+## 4. Core workflows
 
-### Discover (primary)
+### Brief (single company)
+
+1. Go to **/brief** or paste URL on landing
+2. Scrape preview appears in ~2s
+3. Click generate → full memo in ~90s (Quick mode)
+4. Edit inline → **Pursue** / **Pass** → share link for GP review
+
+### Lists (batch)
+
+1. Go to **/lists**
+2. Paste up to 50 URLs (one per line)
+3. Batch runs with concurrency 3
+4. **Auto-resumes on page refresh** if interrupted
+5. Export CSV when done
+
+### Discover
 
 1. Go to **/discover**
-2. Enter a search thesis (e.g. `AI infrastructure for financial services, Series A, North America`)
-3. Click **Run discover pipeline** (~60–90s)
-4. Filter results by stage / geo / sector
-5. Actions:
-   - **Brief →** on one row → opens Brief and auto-generates
-   - **Brief selected (N)** or **Brief top 5** → batch queue, saves to Library without leaving page
-
-### Brief (secondary — already have a URL)
-
-1. Go to **/brief** or use landing **Already have a company?**
-2. Paste company URL → **Generate brief** (~90s)
-3. Review memo → edit inline → **Pursue** or **Pass**
+2. Enter search thesis (e.g. `AI infrastructure, Series A, North America`)
+3. Run pipeline → filter results → **Brief selected** or **Brief top 5**
 
 ### Library
 
-**/library** — all saved briefs with outcome and edit count. Click **Open** to revisit.
+**/library** — all saved briefs. Bulk-select → **Share with GP**. GP outcomes sync back on reload (via share link polling or cloud edit sync when signed in).
 
 ### Thesis
 
-**/thesis** — pursue rate, thesis corrections, pursue/pass log. Populates after you review memos and log outcomes.
+**/thesis** — pursue rate, thesis corrections, behavioral learning dashboard.
 
-### Fund settings
+### Share (GP review)
 
-**/fund** — edit thesis, portfolio, re-run auto-enrich anytime.
-
----
-
-## 6. Without API keys
-
-- **/memo** with no saved brief shows an empty state (no demo data)
-- Discover, Brief, and fund auto-enrich **require** real Anthropic + Perplexity keys
+Creator shares `/share/[id]` → GP clicks Pursue / Pass / Need more info → outcome appears in Library and feeds Discover ranking.
 
 ---
 
-## 7. Deploy (Vercel)
+## 5. Without API keys
+
+- **/memo** with no saved brief shows empty state
+- Discover, Brief, and batch **require** Anthropic + Perplexity keys
+
+---
+
+## 6. Deploy (Vercel)
 
 1. Push repo to GitHub
-2. Import in Vercel
-3. Add env vars: `ANTHROPIC_API_KEY`, `PERPLEXITY_API_KEY`, `PITCHBOOK_API_KEY`
+2. Import in [Vercel](https://vercel.com)
+3. Add env vars from section 2
 4. Deploy
 
-`vercel.json` sets timeouts: research 300s, source 300s, generate 120s. Vercel **Pro** recommended for long research calls.
+Production: **https://meridian-eight-sandy.vercel.app**
+
+`vercel.json` sets API timeouts (research 300s, brief 300s). Vercel **Pro** recommended for long research calls.
+
+Post-deploy:
+
+```bash
+npm run db:push
+npm run db:migrate
+```
+
+(Set `DATABASE_URL` locally or run SQL from `drizzle/0001_batch_jobs.sql` in Neon console.)
 
 ---
 
-## 8. Troubleshooting
+## 7. Troubleshooting
 
 | Issue | Fix |
 |-------|-----|
-| Redirected to `/fund/setup` on every visit | Complete fund setup; need `fundName` + `thesis` saved |
-| `ANTHROPIC_API_KEY is not configured` | Replace `your_key_here` in `.env.local`, restart dev server |
-| Discover returns few companies | Add PitchBook key; or broaden thesis |
-| Batch brief slow / times out | Brief 1–2 at a time first; each company ~90s |
-| Thesis tab empty | Generate briefs, open memos, click Pursue or Pass |
+| `ANTHROPIC_API_KEY is not configured` | Set real key in `.env.local`, restart dev server |
+| Brief times out | Use Quick research mode; check Vercel plan limits |
+| Batch stops mid-run | Refresh `/lists` — job auto-resumes |
+| GP outcome not in Library | Reload Library (polls share link); sign in for cloud sync |
+| Share links 503 | Set `DATABASE_URL` on server |
+| Discover returns few companies | Add `STARTUPHUB_API_KEY` or broaden thesis |
 | Old routes | `/source` → `/discover`, `/app` → `/brief`, `/insights` → `/thesis` |
-
----
-
-## 9. Evan demo checklist
-
-1. Fund setup with real fund context (or manual thesis + 3–5 portcos)
-2. One live Discover run on a thesis Evan cares about
-3. Brief **one** company — check thesis band before batching
-4. Forward test: would GP send without editing thesis section?
-5. Pursue/pass on 2+ memos → show **/thesis** pursue rate
 
 ---
 
@@ -142,10 +157,21 @@ Profile is stored in browser `localStorage` (`meridian_fund_profile`). Same brow
 | Route | Purpose |
 |-------|---------|
 | `/` | Landing |
-| `/fund/setup` | First-run onboarding |
-| `/discover` | Thesis → ranked companies |
 | `/brief` | URL → one-pager |
-| `/library` | Saved briefs |
+| `/lists` | Batch up to 50 URLs |
+| `/discover` | Thesis → ranked companies |
+| `/library` | Saved briefs + GP share |
 | `/thesis` | Fund learning dashboard |
-| `/fund` | Edit fund profile |
 | `/memo` | Brief viewer + pursue/pass |
+| `/share/[id]` | GP review page |
+| `/fund/setup` | Optional fund configuration |
+| `/fund` | Edit fund profile |
+
+---
+
+## Demo checklist
+
+1. Paste one well-known Series A URL on `/brief` — preview <3s, memo <90s
+2. Batch 3 URLs on `/lists` — refresh mid-run, confirm auto-resume
+3. Share a memo → incognito Pursue → Library shows GP outcome
+4. Run Discover with a real thesis → brief one result → check thesis band

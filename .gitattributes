@@ -1,0 +1,5 @@
+# Memo template is a design asset, not application logic
+public/memo-template.html linguist-documentation
+
+# Dev/deploy helper scripts
+scripts/*.ps1 linguist-documentation

@@ -86,7 +86,8 @@ meridian/
 ├── lib/
 │   ├── fund-profile.js       # Fund CRUD (localStorage)
 │   ├── memo-pipeline.js      # Client brief pipeline
-│   ├── batch-queue.js        # Batch brief from discover
+│   ├── batch-runner.js       # Batch jobs (lists, discover)
+│   ├── outcome-sync.js       # GP outcomes → library
 │   ├── thesis-parser.js
 │   ├── pitchbook.js
 │   ├── source-prompt.js
@@ -112,7 +113,7 @@ meridian/
 
 **Always do these:**
 - Memo page renders at exactly 210mm wide
-- Fund profile required for Discover/Brief (gate via FundGate)
+- Fund profile optional — guest context default; configure at `/fund/setup` when ready
 - Thread sourceContext from Discover through to /api/generate
 - `/memo` shows empty state when sessionStorage has no brief
 - Log API responses during development

@@ -17,7 +17,7 @@ import {
 } from '@/lib/batch-runner'
 import { RESEARCH_MODES } from '@/lib/research-mode'
 import { batchResultsToCsv } from '@/lib/crm-export'
-import { reconcileLibraryOutcomes } from '@/lib/outcome-sync'
+import { reconcileLibraryOutcomes, syncShareOutcomesFromServer } from '@/lib/outcome-sync'
 
 const BATCH_KEY = 'meridian_batch_urls'
 
@@ -66,6 +66,7 @@ function ListsContent() {
       })
       setJobId(result.jobId)
       reconcileLibraryOutcomes()
+      syncShareOutcomesFromServer().then(() => reconcileLibraryOutcomes())
     } finally {
       setRunning(false)
       setAutoResuming(false)
@@ -75,6 +76,7 @@ function ListsContent() {
 
   useEffect(() => {
     reconcileLibraryOutcomes()
+    syncShareOutcomesFromServer().then(() => reconcileLibraryOutcomes())
 
     try {
       const stored = sessionStorage.getItem(BATCH_KEY)
@@ -129,6 +131,7 @@ function ListsContent() {
       completed: results.filter(r => r.status === 'done').length,
     }))
     reconcileLibraryOutcomes()
+    syncShareOutcomesFromServer().then(() => reconcileLibraryOutcomes())
   }
 
   function exportCsv() {
