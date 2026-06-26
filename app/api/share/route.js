@@ -5,7 +5,7 @@ import { createShare, listTeamShares, isShareEnabled } from '@/lib/share-store'
 export const maxDuration = 30
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'share')
+  const limited = await enforceRateLimit(req, 'share')
   if (limited) return limited
 
   if (!isShareEnabled()) {
@@ -31,7 +31,7 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  const limited = enforceRateLimit(req, 'share')
+  const limited = await enforceRateLimit(req, 'share')
   if (limited) return limited
 
   const teamId = new URL(req.url).searchParams.get('teamId')

@@ -16,7 +16,7 @@ import {
 } from '@/lib/source-session'
 import { getFundProfile, getActiveStrategy, resolveApiFundContext, getTrackingId } from '@/lib/fund-profile'
 import { findMemoByDomain } from '@/lib/memo-library'
-import { runBatchJob } from '@/lib/batch-runner'
+import { runBatchJob, fetchActiveBatchJob, jobHasPending, normalizeJobForResume } from '@/lib/batch-runner'
 import IntakeDropzone from '@/components/intake-dropzone'
 import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } from '@/components/pipeline-contacts-panel'
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
@@ -40,6 +40,7 @@ function DiscoverContent() {
   const [pipelineVersion, setPipelineVersion] = useState(0)
   const [demoteVersion, setDemoteVersion] = useState(0)
   const abortRef = useRef(null)
+  const batchResumedRef = useRef(false)
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -70,14 +71,15 @@ function DiscoverContent() {
         throw new Error(err.error || 'Search failed')
       }
       const data = await res.json()
+      const profile = getFundProfile()
+      const strategy = profile ? getActiveStrategy(profile) : null
+      const trackingId = profile && strategy ? getTrackingId(profile, strategy) : 'guest'
       const ranked = applyBehavioralRank(data.companies || [], {
-        trackingId: 'guest',
+        trackingId,
         thesis: thesisText.trim(),
       })
       setCompanies(ranked)
       setMeta({ ...data.meta, cached: data.cached })
-      const profile = getFundProfile()
-      const strategy = profile ? getActiveStrategy(profile) : null
       saveSourceResults(thesisText.trim(), ranked, { ...data.meta, cached: data.cached }, profile?.id, strategy?.id)
     } catch (err) {
       setError(err.message || 'Something went wrong')
@@ -122,6 +124,26 @@ function DiscoverContent() {
     window.addEventListener('meridian-context-change', onCtx)
     return () => window.removeEventListener('meridian-context-change', onCtx)
   }, [runSearch, searchParams])
+
+  useEffect(() => {
+    fetchActiveBatchJob().then(job => {
+      if (!job || batchResumedRef.current) return
+      const normalized = normalizeJobForResume(job)
+      if (!jobHasPending(normalized)) return
+      batchResumedRef.current = true
+      setBatchRunning(true)
+      setBatchProgress(normalized.progress)
+      abortRef.current = new AbortController()
+      runBatchJob({
+        resumeJob: normalized,
+        signal: abortRef.current.signal,
+        onProgress: setBatchProgress,
+      }).finally(() => {
+        setBatchRunning(false)
+        abortRef.current = null
+      })
+    })
+  }, [])
 
   async function handleSearch(e) {
     e.preventDefault()
@@ -208,8 +230,8 @@ function DiscoverContent() {
     setBatchRunning(true)
     setBatchProgress({ completed: 0, failed: 0, skipped: 0, total: selected.length, current: null, results: [] })
     const sourceContext = savedSource
-      ? { thesis: savedSource.thesis, parsed: savedSource.meta?.parsed }
-      : { thesis }
+      ? { thesis: savedSource.thesis, parsed: savedSource.meta?.parsed, companies: selected }
+      : { thesis, companies: selected }
     await runBatchJob({
       companies: selected,
       sourceContext,

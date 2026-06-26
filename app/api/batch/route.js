@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 import { enforceRateLimit } from '@/lib/api-guard'
-import { getUserId } from '@/lib/auth-server'
+import { resolveActorId } from '@/lib/actor-id'
 import {
   createBatchJobDb,
   getActiveBatchJobDb,
@@ -10,21 +10,21 @@ import {
 
 export const maxDuration = 30
 
-export async function GET() {
-  const limited = enforceRateLimit(null, 'batch')
+export async function GET(req) {
+  const limited = await enforceRateLimit(req, 'batch')
   if (limited) return limited
 
   if (!isBatchDbEnabled()) {
     return Response.json({ job: null })
   }
 
-  const userId = (await getUserId()) || 'guest'
+  const userId = await resolveActorId(req)
   const job = await getActiveBatchJobDb(userId)
   return Response.json({ job })
 }
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'batch')
+  const limited = await enforceRateLimit(req, 'batch')
   if (limited) return limited
 
   const { urls, researchMode, sourceContext } = await req.json()
@@ -32,10 +32,9 @@ export async function POST(req) {
     return Response.json({ error: 'urls array is required' }, { status: 400 })
   }
 
-  const userId = (await getUserId()) || 'guest'
+  const userId = await resolveActorId(req)
 
   if (!isBatchDbEnabled()) {
-    const id = crypto.randomBytes(8).toString('base64url')
     return Response.json({
       id: null,
       status: 'running',

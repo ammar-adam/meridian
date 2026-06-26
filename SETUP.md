@@ -134,7 +134,17 @@ npm run db:push
 npm run db:migrate
 ```
 
-(Set `DATABASE_URL` locally or run SQL from `drizzle/0001_batch_jobs.sql` in Neon console.)
+Set `CRON_SECRET` on Vercel (random string) — enables background batch via cron every 2 minutes.
+
+**Smoke tests:**
+
+```bash
+npm run smoke
+# against production:
+BASE_URL=https://meridian-eight-sandy.vercel.app npm run smoke
+```
+
+Anonymous users get a `meridian_did` cookie for isolated batch jobs (no shared `guest` collision).
 
 ---
 

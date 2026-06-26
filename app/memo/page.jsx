@@ -292,6 +292,7 @@ function MemoPageContent() {
     }
 
     const edits = memoId ? getEditsForMemo(memoId).filter(e => e.fieldName !== '_outcome').length : editCount
+    const libraryEntry = memoId ? getMemoById(memoId) : null
 
     setOutcome(selected)
     if (!current || !memoId) return
@@ -303,6 +304,8 @@ function MemoPageContent() {
       trackingId,
       outcome: selected,
       editCount: edits,
+      sector: libraryEntry?.sector || null,
+      stage: libraryEntry?.stage || current.ROUND || null,
     })
     updateMemoMeta(memoId, { outcome: selected, editCount: edits })
     setShowOutcomeNudge(false)

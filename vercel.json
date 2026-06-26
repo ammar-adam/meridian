@@ -1,4 +1,10 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/batch-tick",
+      "schedule": "*/2 * * * *"
+    }
+  ],
   "functions": {
     "app/api/scrape/route.js": {
       "maxDuration": 30
@@ -35,6 +41,12 @@
     },
     "app/api/batch/[id]/route.js": {
       "maxDuration": 30
+    },
+    "app/api/batch/[id]/advance/route.js": {
+      "maxDuration": 300
+    },
+    "app/api/cron/batch-tick/route.js": {
+      "maxDuration": 300
     },
     "app/api/team/route.js": {
       "maxDuration": 15

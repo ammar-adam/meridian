@@ -23,7 +23,7 @@ async function scrapeUrl(url) {
 }
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'fundEnrich')
+  const limited = await enforceRateLimit(req, 'fundEnrich')
   if (limited) return limited
 
   const { fundName, fundWebsiteUrl, forceRegenerate } = await req.json()

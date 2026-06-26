@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
+import { ensureDeviceCookie } from '@/lib/middleware-device'
 
 const isClerkConfigured = Boolean(
   process.env.CLERK_SECRET_KEY?.trim() &&
@@ -26,6 +27,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/share(.*)',
   '/api/brief(.*)',
   '/api/batch(.*)',
+  '/api/cron(.*)',
 ])
 
 const isApiRoute = createRouteMatcher(['/api(.*)'])
@@ -43,13 +45,17 @@ const clerkHandler = clerkMiddleware(async (auth, req) => {
 
 export default function middleware(req, event) {
   if (!isClerkConfigured) {
-    return NextResponse.next()
+    return ensureDeviceCookie(req, NextResponse.next())
   }
   try {
-    return clerkHandler(req, event)
+    const result = clerkHandler(req, event)
+    if (result instanceof Promise) {
+      return result.then(r => ensureDeviceCookie(req, r ?? NextResponse.next()))
+    }
+    return ensureDeviceCookie(req, result ?? NextResponse.next())
   } catch (err) {
     console.error('[middleware]', err)
-    return NextResponse.next()
+    return ensureDeviceCookie(req, NextResponse.next())
   }
 }
 

@@ -4,7 +4,7 @@ import { runResearch } from '@/lib/research-core'
 export const maxDuration = 300
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'research')
+  const limited = await enforceRateLimit(req, 'research')
   if (limited) return limited
 
   const { url, forceRegenerate, researchMode } = await req.json()

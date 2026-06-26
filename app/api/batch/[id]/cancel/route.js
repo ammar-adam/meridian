@@ -1,14 +1,14 @@
 import { enforceRateLimit } from '@/lib/api-guard'
-import { getUserId } from '@/lib/auth-server'
+import { resolveActorId } from '@/lib/actor-id'
 import { updateBatchJobDb, isBatchDbEnabled } from '@/lib/batch-jobs'
 
 export const maxDuration = 30
 
 export async function POST(req, { params }) {
-  const limited = enforceRateLimit(req, 'batch')
+  const limited = await enforceRateLimit(req, 'batch')
   if (limited) return limited
 
-  const userId = (await getUserId()) || 'guest'
+  const userId = await resolveActorId(req)
   if (!isBatchDbEnabled()) {
     return Response.json({ ok: true, status: 'cancelled' })
   }

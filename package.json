@@ -10,7 +10,8 @@
     "postinstall": "node scripts/fetch-chromium-pack.js || true && npx playwright install chromium || true",
     "db:push": "drizzle-kit push",
     "db:migrate": "node scripts/migrate-batch-jobs.mjs",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "smoke": "node scripts/acceptance-smoke.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",

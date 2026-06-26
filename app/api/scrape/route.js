@@ -4,7 +4,7 @@ import { runScrape } from '@/lib/scrape-core'
 export const maxDuration = 30
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'scrape')
+  const limited = await enforceRateLimit(req, 'scrape')
   if (limited) return limited
 
   const { url: rawUrl, forceRegenerate } = await req.json()

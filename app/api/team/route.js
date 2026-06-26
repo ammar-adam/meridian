@@ -6,7 +6,7 @@ import { isDbEnabled } from '@/lib/db/workspace'
 export const maxDuration = 30
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'team')
+  const limited = await enforceRateLimit(req, 'team')
   if (limited) return limited
 
   const auth = await requireUserId()
@@ -40,7 +40,7 @@ export async function POST(req) {
 }
 
 export async function GET(req) {
-  const limited = enforceRateLimit(req, 'team')
+  const limited = await enforceRateLimit(req, 'team')
   if (limited) return limited
 
   const teamId = new URL(req.url).searchParams.get('teamId')

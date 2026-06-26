@@ -4,7 +4,7 @@ import { recordShareOutcome } from '@/lib/share-store'
 const VALID = new Set(['pursue', 'pass', 'more_info'])
 
 export async function POST(req, { params }) {
-  const limited = enforceRateLimit(req, 'share')
+  const limited = await enforceRateLimit(req, 'share')
   if (limited) return limited
 
   const body = await req.json()

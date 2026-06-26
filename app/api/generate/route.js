@@ -4,7 +4,7 @@ import { runGenerate } from '@/lib/generate-core'
 export const maxDuration = 120
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'generate')
+  const limited = await enforceRateLimit(req, 'generate')
   if (limited) return limited
 
   const { research, scraped, fundContext, sourceContext, learningContext, forceRegenerate } = await req.json()

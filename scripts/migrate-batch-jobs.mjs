@@ -1,8 +1,8 @@
 /**
- * Run: node scripts/migrate-batch-jobs.mjs
- * Requires DATABASE_URL in environment (.env.local loaded via dotenv if present)
+ * Run: npm run db:migrate
+ * Applies drizzle/*.sql migrations in order.
  */
-import { readFileSync, existsSync } from 'fs'
+import { readFileSync, existsSync, readdirSync } from 'fs'
 import { resolve } from 'path'
 import { neon } from '@neondatabase/serverless'
 
@@ -30,10 +30,15 @@ if (!url) {
 }
 
 const sql = neon(url)
-const migration = readFileSync(resolve(process.cwd(), 'drizzle/0001_batch_jobs.sql'), 'utf8')
+const dir = resolve(process.cwd(), 'drizzle')
+const files = readdirSync(dir).filter(f => f.endsWith('.sql')).sort()
 
-// Run each statement (Neon tagged-template API does not accept raw multi-statement strings)
-for (const statement of migration.split(';').map(s => s.trim()).filter(Boolean)) {
-  await sql.query(statement)
+for (const file of files) {
+  const migration = readFileSync(resolve(dir, file), 'utf8')
+  for (const statement of migration.split(';').map(s => s.trim()).filter(Boolean)) {
+    await sql.query(statement)
+  }
+  console.log(`applied ${file}`)
 }
-console.log('batch_jobs migration applied')
+
+console.log('migrations complete')

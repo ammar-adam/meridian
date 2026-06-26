@@ -5,7 +5,7 @@ import { GUEST_FUND_API_CONTEXT } from '@/lib/fund-defaults'
 export const maxDuration = 300
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'brief')
+  const limited = await enforceRateLimit(req, 'brief')
   if (limited) return limited
 
   const body = await req.json()

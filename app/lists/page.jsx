@@ -145,6 +145,7 @@ function ListsContent() {
     URL.revokeObjectURL(a.href)
   }
 
+  const failedCount = progress?.results?.filter(r => r.status === 'failed').length || 0
   const canResume = !running && progress && jobHasPending({ results: progress.results })
 
   return (
@@ -154,11 +155,20 @@ function ListsContent() {
         autoResuming
           ? 'Resuming batch…'
           : running
-            ? 'Generating briefs…'
+            ? (jobId ? 'Processing in background — safe to close tab' : 'Generating briefs…')
             : 'Batch up to 50 companies · auto-resumes on refresh'
       }
       actions={
         <div className="flex gap-2">
+          {failedCount > 0 && !running && (
+            <button
+              type="button"
+              onClick={() => runBatchInternal(normalizeJobForResume({ urls: parseUrlList(text), results: progress.results.map(r => r.status === 'failed' ? { ...r, status: 'pending' } : r), id: jobId, researchMode, progress }), true)}
+              className="m-btn-secondary m-btn-sm"
+            >
+              Retry failed ({failedCount})
+            </button>
+          )}
           {canResume && (
             <button type="button" onClick={() => runBatchInternal(normalizeJobForResume({ urls: parseUrlList(text), results: progress.results, id: jobId, researchMode, progress }))} className="m-btn-secondary m-btn-sm">
               Resume batch

@@ -17,7 +17,7 @@ function sourceCacheKey(thesis, fundContext) {
 }
 
 export async function POST(req) {
-  const limited = enforceRateLimit(req, 'source')
+  const limited = await enforceRateLimit(req, 'source')
   if (limited) return limited
 
   const { thesis, fundContext, forceRegenerate } = await req.json()

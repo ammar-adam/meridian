@@ -63,7 +63,8 @@ export default function GenerateWorkspace() {
   }, [searchParams])
 
   useEffect(() => {
-    setExistingBrief(url.trim() ? findExistingBrief(url, 'guest') : null)
+    const fundId = resolveApiFundContext().id || 'guest'
+    setExistingBrief(url.trim() ? findExistingBrief(url, fundId) : null)
     setPreviewScraped(null)
     setScrapedCache(null)
   }, [url])
@@ -174,7 +175,8 @@ export default function GenerateWorkspace() {
 
   useEffect(() => {
     if (!pendingAutogen || !url.trim() || loading) return
-    const existing = findExistingBrief(url, 'guest')
+    const fundId = resolveApiFundContext().id || 'guest'
+    const existing = findExistingBrief(url, fundId)
     if (existing) {
       setPendingAutogen(false)
       viewMemo(existing.id)

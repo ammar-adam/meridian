@@ -10,7 +10,7 @@ export async function POST(req) {
     return Response.json({ error: 'Server PDF is disabled' }, { status: 503 })
   }
 
-  const limited = enforceRateLimit(req, 'pdf')
+  const limited = await enforceRateLimit(req, 'pdf')
   if (limited) return limited
 
   const { memoData } = await req.json()
