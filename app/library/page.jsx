@@ -6,10 +6,9 @@ import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
 import BriefStarters from '@/components/brief-starters'
-import { FundSwitcher, StrategySwitcher } from '@/components/context-switcher'
 import { downloadLibraryCsv } from '@/lib/crm-export'
+import { createShareLink } from '@/lib/memo-export'
 import { getMemoLibrary, getRelatedMemos } from '@/lib/memo-library'
-import { getFundProfile, getAllFunds } from '@/lib/fund-profile'
 
 function sortLibrary(entries) {
   return [...entries].sort((a, b) => {
@@ -22,8 +21,9 @@ function sortLibrary(entries) {
 
 export default function LibraryPage() {
   const [library, setLibrary] = useState([])
-  const [filter, setFilter] = useState('active')
   const [outcomeFilter, setOutcomeFilter] = useState('all')
+  const [selected, setSelected] = useState(new Set())
+  const [sharing, setSharing] = useState(false)
   const router = useRouter()
 
   function reload() {
@@ -36,58 +36,67 @@ export default function LibraryPage() {
     return () => window.removeEventListener('meridian-context-change', reload)
   }, [])
 
-  const profile = getFundProfile()
-  const funds = getAllFunds()
-
-  const scoped = useMemo(() => {
-    if (filter === 'all') return library
-    if (filter === 'active' && profile) {
-      return library.filter(e => e.fundId === profile.id && e.strategyId === profile.activeStrategyId)
-    }
-    if (filter.startsWith('fund:')) {
-      const fundId = filter.slice(5)
-      return library.filter(e => e.fundId === fundId)
-    }
-    return library
-  }, [library, filter, profile])
-
   const filtered = useMemo(() => {
-    let rows = scoped
+    let rows = library
     if (outcomeFilter === 'pending') rows = rows.filter(e => !e.outcome)
     if (outcomeFilter === 'pursue') rows = rows.filter(e => e.outcome === 'pursue')
     if (outcomeFilter === 'pass') rows = rows.filter(e => e.outcome === 'pass')
     return sortLibrary(rows)
-  }, [scoped, outcomeFilter])
+  }, [library, outcomeFilter])
 
-  const pending = scoped.filter(e => !e.outcome).length
+  const pending = library.filter(e => !e.outcome).length
 
   function openMemo(id) {
-    const entry = library.find(e => e.id === id)
-    if (!entry) return
-    sessionStorage.setItem('memoData', JSON.stringify(entry.data))
-    sessionStorage.setItem('memoSource', 'library')
-    sessionStorage.setItem('memoId', entry.id)
-    sessionStorage.removeItem('qualityGate')
-    if (entry.trackingId) {
-      sessionStorage.setItem('memoMeta', JSON.stringify({
-        fundId: entry.fundId,
-        fundName: entry.fundName,
-        strategyId: entry.strategyId,
-        strategyName: entry.strategyName,
-        trackingId: entry.trackingId,
-        searchThesis: entry.sourceThesis,
-        companyDomain: entry.companyDomain,
-      }))
+    router.push(`/memo?id=${id}`)
+  }
+
+  function toggleSelect(id) {
+    setSelected(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  async function bulkShareWithGp() {
+    if (!selected.size) return
+    setSharing(true)
+    try {
+      const lines = []
+      for (const id of selected) {
+        const entry = library.find(e => e.id === id)
+        if (!entry?.data) continue
+        const url = await createShareLink(entry.data, {
+          memoId: id,
+          allowOutcome: true,
+          fundName: entry.fundName,
+          outcome: entry.outcome,
+        })
+        lines.push(`${entry.companyName}\t${url}`)
+      }
+      await navigator.clipboard.writeText(lines.join('\n'))
+    } finally {
+      setSharing(false)
     }
-    router.push('/memo')
+  }
+
+  function statusLabel(entry) {
+    if (entry.outcome) return 'Reviewed'
+    return 'Ready'
   }
 
   return (
     <WorkspaceShell
       title="Library"
-      subtitle={scoped.length ? `${scoped.length} briefs · ${pending} awaiting review` : 'Saved briefs'}
+      subtitle={library.length ? `${library.length} briefs · ${pending} awaiting review` : 'Saved briefs'}
       actions={
         <div className="flex items-center gap-2">
+          {selected.size > 0 && (
+            <button type="button" disabled={sharing} onClick={bulkShareWithGp} className="m-btn-primary m-btn-sm">
+              {sharing ? 'Sharing…' : `Share ${selected.size} with GP`}
+            </button>
+          )}
           {filtered.length > 0 && (
             <button type="button" onClick={() => downloadLibraryCsv('meridian-briefs.csv', filtered)} className="m-btn-secondary m-btn-sm">
               Export CSV
@@ -96,8 +105,6 @@ export default function LibraryPage() {
           <button type="button" onClick={() => router.push('/lists')} className="m-btn-ghost m-btn-sm">
             Batch list
           </button>
-          <FundSwitcher onChange={reload} />
-          <StrategySwitcher onChange={reload} />
         </div>
       }
     >
@@ -105,7 +112,7 @@ export default function LibraryPage() {
         {pending > 0 && (
           <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
             <span className="font-medium">{pending} brief{pending !== 1 ? 's' : ''} need review.</span>
-            {' '}Pursue/pass signals train your thesis band.
+            {' '}Pursue/pass signals train Discover ranking and thesis band.
             {outcomeFilter !== 'pending' && (
               <button type="button" onClick={() => setOutcomeFilter('pending')} className="ml-2 font-medium underline">
                 Show pending
@@ -114,18 +121,8 @@ export default function LibraryPage() {
           </div>
         )}
 
-        <div className="mb-4 flex flex-wrap gap-2">
-          <FilterChip active={filter === 'active'} onClick={() => setFilter('active')}>Active strategy</FilterChip>
-          <FilterChip active={filter === 'all'} onClick={() => setFilter('all')}>All briefs</FilterChip>
-          {funds.length > 1 && funds.map(f => (
-            <FilterChip key={f.id} active={filter === `fund:${f.id}`} onClick={() => setFilter(`fund:${f.id}`)}>
-              {f.fundName}
-            </FilterChip>
-          ))}
-        </div>
-
         <div className="mb-6 flex flex-wrap gap-2">
-          <FilterChip active={outcomeFilter === 'all'} onClick={() => setOutcomeFilter('all')}>All outcomes</FilterChip>
+          <FilterChip active={outcomeFilter === 'all'} onClick={() => setOutcomeFilter('all')}>All</FilterChip>
           <FilterChip active={outcomeFilter === 'pending'} onClick={() => setOutcomeFilter('pending')}>
             Needs review{pending > 0 ? ` (${pending})` : ''}
           </FilterChip>
@@ -135,25 +132,34 @@ export default function LibraryPage() {
 
         {filtered.length === 0 ? (
           <EmptyState
-            title="No briefs in this view"
-            description="Generate from any company URL — or open the NationGraph demo to see the quality bar instantly."
+            title="No briefs yet"
+            description="Generate from any company URL or run a batch list."
             primaryHref="/brief"
             primaryLabel="Generate a brief"
-            steps={[
-              { label: 'Paste company URL', desc: 'Works without fund setup' },
-              { label: 'Pursue or pass', desc: 'Close the loop on every memo' },
-              { label: 'Personalize fund', desc: 'Thesis band gets fund-specific' },
-            ]}
+            secondaryHref="/lists"
+            secondaryLabel="Batch list"
           />
         ) : (
-          <WorkspaceSection title="Briefs" description="Pending review first. Same company under different funds appears as separate rows.">
+          <WorkspaceSection title="Briefs" description="Click a row to open. Select rows to bulk-share with GP.">
             <div className="m-table-wrap">
               <table className="m-table !min-w-0">
                 <thead>
                   <tr>
+                    <th className="w-10">
+                      <input
+                        type="checkbox"
+                        checked={selected.size === filtered.length && filtered.length > 0}
+                        onChange={() => {
+                          setSelected(selected.size === filtered.length
+                            ? new Set()
+                            : new Set(filtered.map(e => e.id)))
+                        }}
+                        className="rounded"
+                      />
+                    </th>
                     <th>Company</th>
                     <th>Domain</th>
-                    <th>Fund / Strategy</th>
+                    <th>Status</th>
                     <th>Round</th>
                     <th>Outcome</th>
                     <th>Saved</th>
@@ -170,6 +176,14 @@ export default function LibraryPage() {
                         className={`cursor-pointer ${!entry.outcome ? 'm-row-attention' : ''}`}
                         onClick={() => openMemo(entry.id)}
                       >
+                        <td onClick={(e) => e.stopPropagation()}>
+                          <input
+                            type="checkbox"
+                            checked={selected.has(entry.id)}
+                            onChange={() => toggleSelect(entry.id)}
+                            className="rounded"
+                          />
+                        </td>
                         <td>
                           <div className="font-medium">{entry.companyName}</div>
                           {related.length > 0 && (
@@ -193,24 +207,19 @@ export default function LibraryPage() {
                             <span className="text-[13px]" style={{ color: 'var(--m-muted)' }}>—</span>
                           )}
                         </td>
-                        <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>
-                          {entry.fundName || '—'}
-                          {entry.strategyName && entry.strategyName !== 'Primary' && (
-                            <span className="block text-[11px]">{entry.strategyName}</span>
-                          )}
-                        </td>
+                        <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{statusLabel(entry)}</td>
                         <td className="text-[13px]" style={{ color: 'var(--m-muted)' }}>{entry.round}</td>
                         <td>
                           {entry.outcome ? (
                             <span className={entry.outcome === 'pursue' ? 'm-outcome-pursue' : 'm-outcome-pass'}>{entry.outcome}</span>
                           ) : (
-                            <span className="m-outcome-pending">Needs review</span>
+                            <span className="m-outcome-pending">Pending</span>
                           )}
                         </td>
                         <td className="text-[13px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{entry.savedAt?.slice(0, 10)}</td>
                         <td onClick={(e) => e.stopPropagation()}>
                           <button onClick={() => openMemo(entry.id)} className="m-btn-secondary m-btn-sm">
-                            {entry.outcome ? 'Open' : 'Review'}
+                            Open
                           </button>
                         </td>
                       </tr>
