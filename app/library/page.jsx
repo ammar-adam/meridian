@@ -7,6 +7,7 @@ import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
 import BriefStarters from '@/components/brief-starters'
 import { FundSwitcher, StrategySwitcher } from '@/components/context-switcher'
+import { downloadLibraryCsv } from '@/lib/crm-export'
 import { getMemoLibrary, getRelatedMemos } from '@/lib/memo-library'
 import { getFundProfile, getAllFunds } from '@/lib/fund-profile'
 
@@ -87,6 +88,14 @@ export default function LibraryPage() {
       subtitle={scoped.length ? `${scoped.length} briefs · ${pending} awaiting review` : 'Saved briefs'}
       actions={
         <div className="flex items-center gap-2">
+          {filtered.length > 0 && (
+            <button type="button" onClick={() => downloadLibraryCsv('meridian-briefs.csv', filtered)} className="m-btn-secondary m-btn-sm">
+              Export CSV
+            </button>
+          )}
+          <button type="button" onClick={() => router.push('/lists')} className="m-btn-ghost m-btn-sm">
+            Batch list
+          </button>
           <FundSwitcher onChange={reload} />
           <StrategySwitcher onChange={reload} />
         </div>
@@ -143,10 +152,10 @@ export default function LibraryPage() {
                 <thead>
                   <tr>
                     <th>Company</th>
+                    <th>Domain</th>
                     <th>Fund / Strategy</th>
                     <th>Round</th>
                     <th>Outcome</th>
-                    <th>Edits</th>
                     <th>Saved</th>
                     <th />
                   </tr>
@@ -154,14 +163,34 @@ export default function LibraryPage() {
                 <tbody>
                   {filtered.map(entry => {
                     const related = getRelatedMemos(entry.companyDomain, entry.id)
+                    const domain = entry.companyDomain
                     return (
-                      <tr key={entry.id} className={!entry.outcome ? 'm-row-attention' : ''}>
+                      <tr
+                        key={entry.id}
+                        className={`cursor-pointer ${!entry.outcome ? 'm-row-attention' : ''}`}
+                        onClick={() => openMemo(entry.id)}
+                      >
                         <td>
                           <div className="font-medium">{entry.companyName}</div>
                           {related.length > 0 && (
                             <div className="mt-0.5 text-[11px]" style={{ color: 'var(--m-muted)' }}>
-                              +{related.length} other brief{related.length !== 1 ? 's' : ''} for {entry.companyDomain}
+                              +{related.length} other brief{related.length !== 1 ? 's' : ''}
                             </div>
+                          )}
+                        </td>
+                        <td onClick={(e) => e.stopPropagation()}>
+                          {domain ? (
+                            <a
+                              href={`https://${domain}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[13px] underline"
+                              style={{ color: 'var(--m-muted)' }}
+                            >
+                              {domain}
+                            </a>
+                          ) : (
+                            <span className="text-[13px]" style={{ color: 'var(--m-muted)' }}>—</span>
                           )}
                         </td>
                         <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>
@@ -178,9 +207,8 @@ export default function LibraryPage() {
                             <span className="m-outcome-pending">Needs review</span>
                           )}
                         </td>
-                        <td className="text-[13px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{entry.editCount ?? 0}</td>
                         <td className="text-[13px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{entry.savedAt?.slice(0, 10)}</td>
-                        <td>
+                        <td onClick={(e) => e.stopPropagation()}>
                           <button onClick={() => openMemo(entry.id)} className="m-btn-secondary m-btn-sm">
                             {entry.outcome ? 'Open' : 'Review'}
                           </button>

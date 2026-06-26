@@ -6,7 +6,7 @@ import AuthBar from '@/components/auth-bar'
 
 export default function Nav({ variant = 'default' }) {
   const pathname = usePathname()
-  const inWorkspace = ['/discover', '/brief', '/library', '/thesis', '/fund'].some(
+  const inWorkspace = ['/discover', '/brief', '/lists', '/library', '/thesis', '/fund'].some(
     p => pathname === p || pathname.startsWith(p + '/')
   )
   const isLanding = variant === 'landing'

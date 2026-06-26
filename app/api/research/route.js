@@ -9,7 +9,7 @@ export async function POST(req) {
   const limited = enforceRateLimit(req, 'research')
   if (limited) return limited
 
-  const { url, forceRegenerate } = await req.json()
+  const { url, forceRegenerate, researchMode } = await req.json()
 
   if (!process.env.PERPLEXITY_API_KEY) {
     return Response.json({ error: 'PERPLEXITY_API_KEY is not configured' }, { status: 500 })
@@ -26,7 +26,12 @@ export async function POST(req) {
     }
   }
 
-  const query = `
+  const quick = researchMode === 'quick'
+  const model = quick ? MODELS.perplexitySearch : MODELS.perplexityResearch
+
+  const query = quick
+    ? `Research ${url}. Return: product summary, market size, funding stage and total raised, lead investors, founding team names, 2–3 defensibility points, recent news. Be specific with numbers.`
+    : `
     Research the company at ${url}.
     Return detailed information about:
     1. What the product does, in plain english, including specific features
@@ -45,7 +50,7 @@ export async function POST(req) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      model: MODELS.perplexityResearch,
+      model,
       messages: [{ role: 'user', content: query }],
     }),
   })

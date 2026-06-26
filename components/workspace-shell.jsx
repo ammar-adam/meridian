@@ -15,6 +15,7 @@ const NAV_GROUPS = [
     label: 'Core',
     items: [
       { href: '/brief', label: 'Brief', desc: 'URL → memo', primary: true },
+      { href: '/lists', label: 'Lists', desc: 'Batch briefs' },
       { href: '/library', label: 'Library', desc: 'Saved briefs', badgeKey: 'pendingReview' },
     ],
   },

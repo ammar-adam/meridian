@@ -8,6 +8,7 @@ import { buildMemoMeta, writeMemoMetaToSession } from '@/lib/memo-context'
 import { getMemoLibrary } from '@/lib/memo-library'
 import { findExistingBrief, runMemoPipeline } from '@/lib/memo-pipeline'
 import { formatBriefAge } from '@/lib/cost-estimate'
+import { RESEARCH_MODES } from '@/lib/research-mode'
 import { FundPersonalizeBanner } from '@/components/fund-gate'
 import IntakeDropzone from '@/components/intake-dropzone'
 import BriefStarters from '@/components/brief-starters'
@@ -49,7 +50,7 @@ export default function GenerateWorkspace() {
   const [pendingAutogen, setPendingAutogen] = useState(false)
   const [existingBrief, setExistingBrief] = useState(null)
   const [learningNote, setLearningNote] = useState('')
-  const [apiHealth, setApiHealth] = useState(null)
+  const [researchMode, setResearchMode] = useState('quick')
   const router = useRouter()
   const abortRef = useRef(null)
   const timerRef = useRef(null)
@@ -97,7 +98,7 @@ export default function GenerateWorkspace() {
     router.push('/memo')
   }, [router])
 
-  const runPipeline = useCallback(async (forceRegenerate = false) => {
+  const runPipeline = useCallback(async (forceRegenerate = false, { deep = false } = {}) => {
     if (!url.trim()) return
 
     if (apiHealth && (!apiHealth.anthropic || !apiHealth.perplexity)) {
@@ -144,6 +145,7 @@ export default function GenerateWorkspace() {
         sourceContext,
         signal: abortRef.current.signal,
         forceRegenerate,
+        researchMode: deep ? 'deep' : researchMode,
         onStep: (id, status) => setStepStatus(s => ({ ...s, [id]: status })),
       })
       sessionStorage.setItem('memoData', JSON.stringify(memoData))
@@ -158,7 +160,7 @@ export default function GenerateWorkspace() {
     } finally {
       abortRef.current = null
     }
-  }, [router, url, viewMemo, apiHealth])
+  }, [router, url, viewMemo, apiHealth, researchMode])
 
   useEffect(() => {
     if (!pendingAutogen || !url.trim() || loading) return
@@ -208,7 +210,13 @@ export default function GenerateWorkspace() {
                 {learningNote}
               </p>
             )}
-            {slowWarning && <p className="m-alert-warn mb-3">Research may take up to 2 minutes.</p>}
+            {slowWarning && (
+              <p className="m-alert-warn mb-3">
+                {researchMode === 'deep'
+                  ? 'Deep research can take 3–5 minutes. Switch to Quick or cancel.'
+                  : 'Still working — scrape and research run in parallel.'}
+              </p>
+            )}
             <button onClick={() => { abortRef.current?.abort(); setLoading(false); setStepStatus({}) }} className="m-btn-secondary w-full">
               Cancel
             </button>
@@ -234,6 +242,14 @@ export default function GenerateWorkspace() {
             compact
             className="mb-4"
             onIntake={(payload) => {
+              if (payload.kind === 'company_urls' || (payload.kind === 'pipeline' && payload.pipeline?.length > 1)) {
+                const urls = payload.kind === 'company_urls'
+                  ? payload.companyUrls
+                  : payload.pipeline.map(c => c.url || (c.domain ? `https://${c.domain}` : '')).filter(Boolean)
+                sessionStorage.setItem('meridian_batch_urls', JSON.stringify(urls))
+                router.push('/lists')
+                return
+              }
               if (payload.kind === 'company_url' || payload.kind === 'company_urls') {
                 setUrl(payload.companyUrls[0])
                 return
@@ -255,6 +271,23 @@ export default function GenerateWorkspace() {
               disabled={loading}
               className="m-input"
             />
+            <div className="mt-3 flex flex-wrap gap-2">
+              {Object.values(RESEARCH_MODES).map(m => (
+                <button
+                  key={m.id}
+                  type="button"
+                  disabled={loading}
+                  onClick={() => setResearchMode(m.id)}
+                  className={`rounded-md px-3 py-1.5 text-[12px] font-medium ring-1 transition ${
+                    researchMode === m.id
+                      ? 'bg-zinc-900 text-white ring-zinc-900'
+                      : 'bg-white text-zinc-600 ring-zinc-200 hover:bg-zinc-50'
+                  }`}
+                >
+                  {m.label} · {m.hint}
+                </button>
+              ))}
+            </div>
             <button type="submit" disabled={loading || !url.trim()} className="m-btn-primary mt-4 w-full">
               {loading ? 'Running…' : existingBrief ? 'Open existing brief' : 'Generate brief'}
             </button>
@@ -278,13 +311,31 @@ export default function GenerateWorkspace() {
 
         <BriefStarters onPickUrl={setUrl} compact />
 
-        {error && !loading && <p className="m-alert-error mt-4">{error}</p>}
+        {error && !loading && (
+          <div className="mt-4 space-y-2">
+            <p className="m-alert-error">{error}</p>
+            {error.includes('timed out') && researchMode === 'quick' && (
+              <button
+                type="button"
+                className="m-btn-secondary w-full"
+                onClick={() => { setError(''); runPipeline(false, { deep: true }) }}
+              >
+                Retry with Deep research (~5 min)
+              </button>
+            )}
+          </div>
+        )}
 
         {library.length > 0 && (
           <WorkspaceSection
             title="Recent briefs"
             description="Continue reviewing or open the full library"
-            actions={<Link href="/library" className="m-btn-ghost m-btn-sm">View all</Link>}
+            actions={
+              <div className="flex gap-2">
+                <Link href="/lists" className="m-btn-ghost m-btn-sm">Batch list</Link>
+                <Link href="/library" className="m-btn-ghost m-btn-sm">View all</Link>
+              </div>
+            }
             bare
           >
             <div className="m-table-wrap">

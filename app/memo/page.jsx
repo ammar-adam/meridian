@@ -13,7 +13,9 @@ import { openDemoMemo } from '@/lib/demo-memo'
 import { incrementBriefCount } from '@/lib/onboarding'
 import FundSetupPrompt from '@/components/fund-setup-prompt'
 import { getTeamContext } from '@/lib/team-workspace'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
+import PageLoader from '@/components/page-loader'
 
 function stripHtml(s) {
   return (s ?? '').replace(/<[^>]+>/g, '').trim()
@@ -30,7 +32,16 @@ function captureMemoFromDom(container) {
 }
 
 export default function MemoPage() {
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <MemoPageContent />
+    </Suspense>
+  )
+}
+
+function MemoPageContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const memoRef = useRef(null)
   const memoDataRef = useRef(null)
   const [html, setHtml] = useState('')
@@ -69,25 +80,40 @@ export default function MemoPage() {
   useEffect(() => {
     const profile = getFundProfile()
     const sessionMeta = readMemoMetaFromSession()
+    const queryId = searchParams.get('id')
 
     let data = null
     let source = null
     let qg = null
-    let id = sessionStorage.getItem('memoId')
+    let id = queryId || sessionStorage.getItem('memoId')
 
-    try {
-      const stored = sessionStorage.getItem('memoData')
-      if (stored) {
-        data = JSON.parse(stored)
-        source = sessionStorage.getItem('memoSource') || 'pipeline'
+    if (queryId) {
+      const fromLibrary = getMemoById(queryId)
+      if (fromLibrary) {
+        data = fromLibrary.data
+        source = 'library'
+        id = fromLibrary.id
+        sessionStorage.setItem('memoData', JSON.stringify(data))
+        sessionStorage.setItem('memoSource', 'library')
+        sessionStorage.setItem('memoId', id)
       }
-      const qgStored = sessionStorage.getItem('qualityGate')
-      if (qgStored) {
-        qg = JSON.parse(qgStored)
-        setQualityGate(qg)
+    }
+
+    if (!data) {
+      try {
+        const stored = sessionStorage.getItem('memoData')
+        if (stored) {
+          data = JSON.parse(stored)
+          source = sessionStorage.getItem('memoSource') || 'pipeline'
+        }
+        const qgStored = sessionStorage.getItem('qualityGate')
+        if (qgStored) {
+          qg = JSON.parse(qgStored)
+          setQualityGate(qg)
+        }
+      } catch {
+        // ignore parse errors
       }
-    } catch {
-      // ignore parse errors
     }
 
     if (!data) {
@@ -155,7 +181,7 @@ export default function MemoPage() {
         setLoading(false)
       })
       .catch(() => setLoading(false))
-  }, [])
+  }, [searchParams])
 
   useEffect(() => {
     if (!html) return

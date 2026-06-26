@@ -5,7 +5,8 @@ import { usePathname } from 'next/navigation'
 
 const STEPS = [
   { id: 'brief', label: 'Brief', href: '/brief', paths: ['/brief'] },
-  { id: 'review', label: 'Review', href: '/library', paths: ['/library', '/memo'] },
+  { id: 'lists', label: 'Lists', href: '/lists', paths: ['/lists'] },
+  { id: 'review', label: 'Library', href: '/library', paths: ['/library', '/memo'] },
   { id: 'learn', label: 'Learn', href: '/thesis', paths: ['/thesis'] },
   { id: 'discover', label: 'Discover', href: '/discover', paths: ['/discover'] },
   { id: 'fund', label: 'Fund', href: '/fund', paths: ['/fund', '/fund/setup'] },

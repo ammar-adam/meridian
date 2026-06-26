@@ -8,7 +8,7 @@ import PageLoader from '@/components/page-loader'
 export default function BriefPage() {
   return (
     <Suspense fallback={<PageLoader />}>
-      <WorkspaceShell title="Brief" subtitle="paste url → fund-native memo in ~90s">
+      <WorkspaceShell title="Brief" subtitle="Quick ~90s · Deep ~5 min · or batch on Lists">
         <GenerateWorkspace />
       </WorkspaceShell>
     </Suspense>
