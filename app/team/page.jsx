@@ -131,7 +131,7 @@ export default function TeamPage() {
                     <thead>
                       <tr>
                         <th>Company</th>
-                        <th>Outcome</th>
+                        <th>GP review</th>
                         <th>Shared</th>
                         <th />
                       </tr>
@@ -140,7 +140,11 @@ export default function TeamPage() {
                       {shares.map(s => (
                         <tr key={s.id}>
                           <td className="font-medium">{s.companyName}</td>
-                          <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{s.outcome || '—'}</td>
+                          <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>
+                            {s.outcome
+                              ? `${s.outcome}${s.reviewerName ? ` · ${s.reviewerName}` : ''}`
+                              : <span className="text-amber-700">Pending review</span>}
+                          </td>
                           <td className="text-[12px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{s.createdAt?.slice(0, 10)}</td>
                           <td>
                             <Link href={`/share/${s.id}`} className="m-btn-secondary m-btn-sm" target="_blank">

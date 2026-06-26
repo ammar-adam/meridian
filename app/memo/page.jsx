@@ -379,6 +379,8 @@ function MemoPageContent() {
       fundName: merged.FUND_NAME,
       teamId: team?.teamId,
       createdBy: team?.memberName,
+      allowOutcome: true,
+      memoId,
     })
     setShareUrl(url)
     await navigator.clipboard.writeText(url)
