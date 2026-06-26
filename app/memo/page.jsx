@@ -11,7 +11,6 @@ import { getMemoById } from '@/lib/memo-library'
 import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-export'
 import { openDemoMemo } from '@/lib/demo-memo'
 import { incrementBriefCount } from '@/lib/onboarding'
-import FundSetupPrompt from '@/components/fund-setup-prompt'
 import { getTeamContext } from '@/lib/team-workspace'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
@@ -483,8 +482,6 @@ function MemoPageContent() {
         style={{ width: '210mm', margin: '0 auto', paddingTop: topOffset }}
         dangerouslySetInnerHTML={{ __html: html }}
       />
-
-      {outcome && <div className="no-print mx-auto max-w-3xl px-4 pb-2"><FundSetupPrompt /></div>}
 
       <div className="no-print fixed inset-x-0 bottom-0 z-50 border-t bg-white/95 px-4 py-4 backdrop-blur-sm" style={{ borderColor: 'var(--m-border)' }}>
         <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
