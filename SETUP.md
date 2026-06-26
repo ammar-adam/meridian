@@ -134,7 +134,22 @@ npm run db:push
 npm run db:migrate
 ```
 
-Set `CRON_SECRET` on Vercel (random string) — enables background batch via cron every 2 minutes.
+Set `CRON_SECRET` on Vercel (random string). The `/api/cron/batch-tick` route is ready for background batch.
+
+**Vercel Hobby:** built-in cron is limited to once/day — use a free external scheduler (e.g. [cron-job.org](https://cron-job.org)) to `GET` your deploy URL every 2 minutes:
+
+```
+GET https://meridian-eight-sandy.vercel.app/api/cron/batch-tick
+Authorization: Bearer <CRON_SECRET>
+```
+
+**Vercel Pro:** add to `vercel.json`:
+
+```json
+"crons": [{ "path": "/api/cron/batch-tick", "schedule": "*/2 * * * *" }]
+```
+
+Without cron, batch still runs via `/lists` (keep tab open) or auto-resumes on refresh.
 
 **Smoke tests:**
 

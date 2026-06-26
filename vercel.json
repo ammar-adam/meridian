@@ -1,10 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/cron/batch-tick",
-      "schedule": "*/2 * * * *"
-    }
-  ],
   "functions": {
     "app/api/scrape/route.js": {
       "maxDuration": 30
