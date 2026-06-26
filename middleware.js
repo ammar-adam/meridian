@@ -24,6 +24,8 @@ const isPublicRoute = createRouteMatcher([
   '/api/generate(.*)',
   '/api/pdf(.*)',
   '/api/share(.*)',
+  '/api/brief(.*)',
+  '/api/batch(.*)',
 ])
 
 const isApiRoute = createRouteMatcher(['/api(.*)'])
