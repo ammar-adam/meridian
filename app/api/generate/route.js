@@ -7,7 +7,7 @@ export async function POST(req) {
   const limited = await enforceRateLimit(req, 'generate')
   if (limited) return limited
 
-  const { research, scraped, fundContext, sourceContext, learningContext, forceRegenerate } = await req.json()
+  const { research, scraped, fundContext, sourceContext, learningContext, forceRegenerate, researchMode } = await req.json()
 
   if (!fundContext?.fundName) {
     return Response.json({ error: 'Fund profile is required' }, { status: 400 })
@@ -21,6 +21,7 @@ export async function POST(req) {
       sourceContext,
       learningContext,
       forceRegenerate,
+      researchMode: researchMode || 'quick',
     })
     console.log('[generate] memo for', result.memoData?.COMPANY_NAME, 'qg:', result.qualityGate?.passed)
     return Response.json(result)

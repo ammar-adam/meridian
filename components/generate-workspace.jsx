@@ -6,7 +6,18 @@ import Link from 'next/link'
 import { resolveApiFundContext } from '@/lib/fund-profile'
 import { buildMemoMeta, writeMemoMetaToSession } from '@/lib/memo-context'
 import { getMemoLibrary } from '@/lib/memo-library'
-import { findExistingBrief, runMemoPipeline, fetchScrapePreview } from '@/lib/memo-pipeline'
+import {
+  findExistingBrief,
+  runMemoPipeline,
+  fetchScrapePreview,
+  prefetchResearch,
+  resolveResearchText,
+  resolveEffectiveResearchMode,
+  needsPerplexity,
+  urlsMatchForPrefetch,
+} from '@/lib/memo-pipeline'
+import { buildInstantResearch } from '@/lib/instant-research'
+import { buildDraftMemoFromScrape, MEMO_GENERATING_KEY, MEMO_PENDING_BRIEF_KEY } from '@/lib/memo-draft'
 import { formatBriefAge } from '@/lib/cost-estimate'
 import { RESEARCH_MODES } from '@/lib/research-mode'
 import BriefPreview from '@/components/brief-preview'
@@ -21,7 +32,7 @@ const STEPS = [
   { id: 'generate', label: 'Generate' },
 ]
 
-const SLOW_THRESHOLD_MS = 90_000
+const SLOW_THRESHOLD_MS = 60_000
 
 function formatElapsed(seconds) {
   const m = Math.floor(seconds / 60)
@@ -48,13 +59,15 @@ export default function GenerateWorkspace() {
   const [pendingAutogen, setPendingAutogen] = useState(false)
   const [existingBrief, setExistingBrief] = useState(null)
   const [learningNote, setLearningNote] = useState('')
-  const [researchMode, setResearchMode] = useState('quick')
+  const [researchMode, setResearchMode] = useState('auto')
   const [apiHealth, setApiHealth] = useState(null)
   const [previewScraped, setPreviewScraped] = useState(null)
   const [scrapedCache, setScrapedCache] = useState(null)
   const router = useRouter()
   const abortRef = useRef(null)
   const timerRef = useRef(null)
+  const previewAbortRef = useRef(null)
+  const prefetchRef = useRef({ url: '', mode: '', research: null })
 
   useEffect(() => {
     const q = searchParams.get('url')
@@ -67,6 +80,7 @@ export default function GenerateWorkspace() {
     setExistingBrief(url.trim() ? findExistingBrief(url, fundId) : null)
     setPreviewScraped(null)
     setScrapedCache(null)
+    prefetchRef.current = { url: '', mode: '', research: null }
   }, [url])
 
   useEffect(() => { setLibrary(getMemoLibrary()) }, [])
@@ -74,6 +88,35 @@ export default function GenerateWorkspace() {
   useEffect(() => {
     fetch('/api/health').then(r => r.json()).then(setApiHealth).catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!url.trim() || loading) return undefined
+    const t = setTimeout(async () => {
+      previewAbortRef.current?.abort()
+      previewAbortRef.current = new AbortController()
+      const signal = previewAbortRef.current.signal
+      try {
+        const scraped = await fetchScrapePreview(url, signal)
+        if (signal.aborted) return
+        setPreviewScraped(scraped)
+        setScrapedCache(scraped)
+        const eff = resolveEffectiveResearchMode(researchMode, scraped)
+        if (eff === 'instant') {
+          prefetchRef.current = { url, mode: eff, research: buildInstantResearch(scraped) }
+          return
+        }
+        const research = await prefetchResearch(url, eff, signal)
+        if (signal.aborted) return
+        prefetchRef.current = { url, mode: eff, research }
+      } catch (err) {
+        if (err.name !== 'AbortError') prefetchRef.current = { url: '', mode: '', research: null }
+      }
+    }, 500)
+    return () => {
+      clearTimeout(t)
+      previewAbortRef.current?.abort()
+    }
+  }, [url, researchMode, loading])
 
   useEffect(() => {
     if (!loading) {
@@ -104,8 +147,16 @@ export default function GenerateWorkspace() {
   const runPipeline = useCallback(async (forceRegenerate = false, { deep = false, retryResearch = false } = {}) => {
     if (!url.trim()) return
 
-    if (apiHealth && (!apiHealth.anthropic || !apiHealth.perplexity)) {
-      setError('API keys not configured — add ANTHROPIC_API_KEY and PERPLEXITY_API_KEY to .env.local')
+    const mode = deep ? 'deep' : researchMode
+    const scrapedForCheck = scrapedCache || previewScraped
+    const perplexityRequired = needsPerplexity(mode, scrapedForCheck)
+
+    if (apiHealth && !apiHealth.anthropic) {
+      setError('API keys not configured — add ANTHROPIC_API_KEY to .env.local')
+      return
+    }
+    if (apiHealth && perplexityRequired && !apiHealth.perplexity) {
+      setError('PERPLEXITY_API_KEY required for Quick/Deep research — or use Instant mode')
       return
     }
 
@@ -132,13 +183,48 @@ export default function GenerateWorkspace() {
         scraped = await fetchScrapePreview(url, abortRef.current.signal)
         setPreviewScraped(scraped)
         setScrapedCache(scraped)
-        setStepStatus({ scrape: 'done', research: 'active', generate: 'pending' })
       }
+      setStepStatus({ scrape: 'done', research: 'active', generate: 'pending' })
 
       writeMemoMetaToSession(buildMemoMeta({
         url,
         searchThesis: sourceContext?.thesis,
       }))
+
+      const effectiveMode = resolveEffectiveResearchMode(mode, scraped)
+      const prefetched = urlsMatchForPrefetch(url, prefetchRef.current.url)
+        && prefetchRef.current.mode === effectiveMode
+        ? prefetchRef.current.research
+        : null
+
+      if (effectiveMode !== 'deep') {
+        const research = await resolveResearchText(url, {
+          researchMode: mode,
+          scraped,
+          prefetchedResearch: prefetched,
+          signal: abortRef.current.signal,
+          forceRegenerate,
+        })
+        setStepStatus({ scrape: 'done', research: 'done', generate: 'active' })
+
+        const draft = buildDraftMemoFromScrape(scraped, fundContext)
+        sessionStorage.setItem('memoData', JSON.stringify(draft))
+        sessionStorage.setItem('memoSource', 'generating')
+        sessionStorage.setItem(MEMO_PENDING_BRIEF_KEY, JSON.stringify({
+          url,
+          research,
+          scraped,
+          fundContext,
+          sourceContext,
+          forceRegenerate,
+          researchMode: mode,
+        }))
+        sessionStorage.setItem(MEMO_GENERATING_KEY, '1')
+        router.push('/memo?generating=1')
+        setLoading(false)
+        setStepStatus({})
+        return
+      }
 
       const { memoData, qualityGate, memoId } = await runMemoPipeline({
         url,
@@ -146,9 +232,10 @@ export default function GenerateWorkspace() {
         sourceContext,
         signal: abortRef.current.signal,
         forceRegenerate,
-        researchMode: deep ? 'deep' : researchMode,
+        researchMode: 'deep',
         scraped,
         retryResearch,
+        prefetchedResearch: prefetched,
         onStep: (id, status) => setStepStatus(s => ({ ...s, [id]: status })),
       })
       sessionStorage.setItem('memoData', JSON.stringify(memoData))
@@ -171,7 +258,7 @@ export default function GenerateWorkspace() {
     } finally {
       abortRef.current = null
     }
-  }, [router, url, apiHealth, researchMode, scrapedCache])
+  }, [router, url, apiHealth, researchMode, scrapedCache, previewScraped])
 
   useEffect(() => {
     if (!pendingAutogen || !url.trim() || loading) return
@@ -224,8 +311,8 @@ export default function GenerateWorkspace() {
             {slowWarning && (
               <p className="m-alert-warn mb-3">
                 {researchMode === 'deep'
-                  ? 'Deep research can take 3–5 minutes. Switch to Quick or cancel.'
-                  : 'Still working — scrape and research run in parallel.'}
+                  ? 'Deep research can take 3–5 minutes. Switch to Auto/Quick or cancel.'
+                  : 'Still working — research may be running ahead of generate.'}
               </p>
             )}
             <button onClick={() => { abortRef.current?.abort(); setLoading(false); setStepStatus({}) }} className="m-btn-secondary w-full">
@@ -236,9 +323,9 @@ export default function GenerateWorkspace() {
       )}
 
       <WorkspacePage width="narrow">
-        {apiHealth && (!apiHealth.anthropic || !apiHealth.perplexity) && (
+        {apiHealth && !apiHealth.anthropic && (
           <p className="m-alert-error mb-4">
-            Missing API keys — brief generation will fail. Configure `.env.local` first.
+            Missing ANTHROPIC_API_KEY — brief generation will fail. Configure `.env.local` first.
           </p>
         )}
 
@@ -297,7 +384,12 @@ export default function GenerateWorkspace() {
               ))}
             </div>
             {previewScraped && (
-              <BriefPreview scraped={previewScraped} loading={loading} className="mb-4" />
+              <BriefPreview
+                scraped={previewScraped}
+                loading={loading}
+                researchMode={researchMode}
+                className="mt-4 mb-4"
+              />
             )}
             <button type="submit" disabled={loading || !url.trim()} className="m-btn-primary mt-4 w-full">
               {loading ? 'Running…' : 'Generate brief'}
@@ -335,7 +427,7 @@ export default function GenerateWorkspace() {
                 Retry research only
               </button>
             )}
-            {error.includes('timed out') && researchMode === 'quick' && (
+            {error.includes('timed out') && researchMode !== 'deep' && (
               <button
                 type="button"
                 className="m-btn-secondary w-full"

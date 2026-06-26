@@ -1,12 +1,13 @@
 'use client'
 
-import { coverageLabel, scoreScrapeCoverage } from '@/lib/scrape-coverage'
+import { coverageLabel, coverageModeHint, scoreScrapeCoverage } from '@/lib/scrape-coverage'
 
-export default function BriefPreview({ scraped, loading, className = '' }) {
+export default function BriefPreview({ scraped, loading, className = '', researchMode = 'auto' }) {
   if (!scraped) return null
 
   const coverage = scoreScrapeCoverage(scraped)
   const badge = coverageLabel(coverage.level)
+  const autoHint = researchMode === 'auto' ? coverageModeHint(coverage.level) : null
   const title = scraped.ogTitle || scraped.domain || 'Company'
   const initial = (title[0] || '?').toUpperCase()
 
@@ -57,6 +58,12 @@ export default function BriefPreview({ scraped, loading, className = '' }) {
             )}
           </div>
         </div>
+
+        {autoHint && (
+          <p className="mt-3 rounded-md border border-sky-200 bg-sky-50 px-3 py-2 text-[11px] text-sky-900">
+            {autoHint}
+          </p>
+        )}
 
         {badge && (
           <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-[11px] text-amber-900">

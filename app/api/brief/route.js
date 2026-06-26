@@ -19,6 +19,8 @@ export async function POST(req) {
     scrapeOnly,
     scraped,
     retryResearch,
+    prefetchedResearch,
+    generateOnly,
   } = body
 
   if (!url?.trim()) {
@@ -31,10 +33,12 @@ export async function POST(req) {
     sourceContext: sourceContext || null,
     learningContext: learningContext || null,
     forceRegenerate: !!forceRegenerate,
-    researchMode: researchMode || 'quick',
+    researchMode: researchMode || 'auto',
     scrapeOnly: !!scrapeOnly,
     scraped: scraped || null,
     retryResearch: !!retryResearch,
+    prefetchedResearch: prefetchedResearch || null,
+    generateOnly: !!generateOnly,
   })
 
   if (result.error) {

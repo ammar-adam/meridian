@@ -12,6 +12,8 @@ import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-expo
 import { openDemoMemo } from '@/lib/demo-memo'
 import { incrementBriefCount } from '@/lib/onboarding'
 import { getTeamContext } from '@/lib/team-workspace'
+import { completeBriefGenerate } from '@/lib/memo-pipeline'
+import { MEMO_GENERATING_KEY, MEMO_PENDING_BRIEF_KEY } from '@/lib/memo-draft'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import PageLoader from '@/components/page-loader'
@@ -63,6 +65,9 @@ function MemoPageContent() {
   const [pdfLoading, setPdfLoading] = useState(false)
   const [serverPdf, setServerPdf] = useState(false)
   const [shareEnabled, setShareEnabled] = useState(false)
+  const [finishingBrief, setFinishingBrief] = useState(false)
+  const [finishError, setFinishError] = useState('')
+  const pendingGenerateRef = useRef(false)
   const pendingNavRef = useRef(null)
 
   useEffect(() => {
@@ -166,6 +171,10 @@ function MemoPageContent() {
       incrementBriefCount()
     }
 
+    if (source === 'generating') {
+      setFinishingBrief(true)
+    }
+
     setIsDemo(source === 'demo')
 
     setMemoId(id)
@@ -186,6 +195,70 @@ function MemoPageContent() {
     if (!html) return
     setMemoRendered(true)
   }, [html])
+
+  useEffect(() => {
+    if (searchParams.get('generating') !== '1') return undefined
+    if (pendingGenerateRef.current) return undefined
+    const raw = sessionStorage.getItem(MEMO_PENDING_BRIEF_KEY)
+    if (!raw) return undefined
+
+    pendingGenerateRef.current = true
+    let pending
+    try {
+      pending = JSON.parse(raw)
+    } catch {
+      pendingGenerateRef.current = false
+      return undefined
+    }
+    sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
+
+    const ac = new AbortController()
+    setFinishingBrief(true)
+    setFinishError('')
+
+    completeBriefGenerate({ ...pending, signal: ac.signal })
+      .then(({ memoData: nextData, qualityGate: nextQg, memoId: nextId }) => {
+        sessionStorage.setItem('memoData', JSON.stringify(nextData))
+        sessionStorage.setItem('qualityGate', JSON.stringify(nextQg))
+        sessionStorage.setItem('memoId', nextId)
+        sessionStorage.setItem('memoSource', 'pipeline')
+        sessionStorage.removeItem(MEMO_GENERATING_KEY)
+
+        setMemoId(nextId)
+        setMemoData(nextData)
+        setQualityGate(nextQg)
+        setFinishingBrief(false)
+
+        const profile = getFundProfile()
+        const sessionMeta = readMemoMetaFromSession()
+        const saveMeta = sessionMeta || (profile ? {
+          trackingId: getTrackingId(profile, getActiveStrategy(profile)),
+          fundId: profile.id,
+          fundName: profile.fundName,
+        } : {})
+        saveMemo(nextData, nextId, {
+          ...saveMeta,
+          qualityPassed: nextQg?.passed ?? null,
+          qualityWarnCount: nextQg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
+        })
+        incrementBriefCount()
+
+        return fetch('/memo-template.html')
+          .then(res => res.text())
+          .then(template => {
+            setHtml(populateTemplate(template, nextData))
+            router.replace('/memo')
+          })
+      })
+      .catch((err) => {
+        if (err.name === 'AbortError') return
+        setFinishError(err.message || 'Failed to finish brief')
+        setFinishingBrief(false)
+        pendingGenerateRef.current = false
+      })
+
+    return () => ac.abort()
+  }, [searchParams, router])
 
   const persistMemoData = useCallback((updated) => {
     memoDataRef.current = updated
@@ -413,10 +486,10 @@ function MemoPageContent() {
 
   const warnings = qualityGate?.flags?.filter(f => f.severity === 'warn') ?? []
   const errors = qualityGate?.flags?.filter(f => f.severity === 'error') ?? []
-  const showErrorBanner = errors.length > 0 && !errorBannerDismissed
-  const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner
+  const showErrorBanner = errors.length > 0 && !errorBannerDismissed && !finishingBrief
+  const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief
   const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
-  const topOffset = (showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
+  const topOffset = (finishingBrief || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
   return (
     <div>
@@ -430,6 +503,26 @@ function MemoPageContent() {
         </div>
         <div className="w-10" />
       </div>
+
+      {finishingBrief && (
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-sky-200 bg-sky-50 px-4 py-2">
+          <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
+            <p className="text-xs font-medium text-sky-900">
+              Finishing brief — draft below updates when Claude completes (~20–40s)
+            </p>
+            <span className="font-mono text-[10px] text-sky-700">Generating…</span>
+          </div>
+        </div>
+      )}
+
+      {finishError && (
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-200 bg-red-50 px-4 py-2">
+          <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
+            <p className="text-xs text-red-900">{finishError}</p>
+            <Link href="/brief" className="text-xs font-medium text-red-700 underline">Back to Brief</Link>
+          </div>
+        </div>
+      )}
 
       {showErrorBanner && (
         <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-200 bg-red-50 px-4 py-2">

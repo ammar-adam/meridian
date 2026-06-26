@@ -23,7 +23,7 @@ const BATCH_KEY = 'meridian_batch_urls'
 
 function ListsContent() {
   const [text, setText] = useState('')
-  const [researchMode, setResearchMode] = useState('quick')
+  const [researchMode, setResearchMode] = useState('auto')
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(null)
   const [jobId, setJobId] = useState(null)
@@ -94,7 +94,7 @@ function ListsContent() {
       const normalized = normalizeJobForResume(job)
       setProgress(normalized.progress)
       setJobId(normalized.id)
-      setResearchMode(normalized.researchMode || 'quick')
+      setResearchMode(normalized.researchMode || 'auto')
       if (normalized.urls?.length) setText(normalized.urls.join('\n'))
 
       if (jobHasPending(normalized) && !resumedRef.current) {

@@ -38,7 +38,7 @@ export async function POST(req) {
     return Response.json({
       id: null,
       status: 'running',
-      researchMode: researchMode || 'quick',
+      researchMode: researchMode || 'auto',
       urls: urls.slice(0, 50),
       results: urls.slice(0, 50).map(url => ({ url, status: 'pending' })),
       progress: { completed: 0, failed: 0, skipped: 0, total: urls.length, current: null },
