@@ -6,10 +6,10 @@ import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import PageLoader from '@/components/page-loader'
 import IntakeDropzone from '@/components/intake-dropzone'
-import { parseUrlList, runBriefBatch } from '@/lib/brief-batch'
+import BriefPreview from '@/components/brief-preview'
+import { parseUrlList, runBatchJob, fetchActiveBatchJob, retryBatchRow } from '@/lib/batch-runner'
 import { RESEARCH_MODES } from '@/lib/research-mode'
 import { batchResultsToCsv } from '@/lib/crm-export'
-import { getMemoLibrary } from '@/lib/memo-library'
 
 const BATCH_KEY = 'meridian_batch_urls'
 
@@ -18,6 +18,7 @@ function ListsContent() {
   const [researchMode, setResearchMode] = useState('quick')
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(null)
+  const [jobId, setJobId] = useState(null)
   const abortRef = useRef(null)
   const router = useRouter()
 
@@ -32,32 +33,64 @@ function ListsContent() {
         }
       }
     } catch { /* ignore */ }
+
+    fetchActiveBatchJob().then(job => {
+      if (job?.status === 'running' && job.progress) {
+        setProgress(job.progress)
+        setJobId(job.id)
+        setResearchMode(job.researchMode || 'quick')
+        if (job.urls?.length) setText(job.urls.join('\n'))
+      }
+    })
   }, [])
 
   const urlCount = parseUrlList(text).length
 
   const openMemo = useCallback((memoId) => {
-    const entry = getMemoLibrary().find(e => e.id === memoId)
-    if (!entry) return
-    sessionStorage.setItem('memoData', JSON.stringify(entry.data))
-    sessionStorage.setItem('memoSource', 'library')
-    sessionStorage.setItem('memoId', entry.id)
-    sessionStorage.removeItem('qualityGate')
-    router.push('/memo')
+    router.push(`/memo?id=${memoId}`)
   }, [router])
 
-  async function startBatch() {
+  async function startBatch(forceRegenerate = false) {
     const urls = parseUrlList(text)
     if (!urls.length) return
 
     abortRef.current = new AbortController()
     setRunning(true)
-    setProgress({ completed: 0, failed: 0, skipped: 0, total: urls.length, current: null, results: [] })
+    setProgress({ completed: 0, failed: 0, skipped: 0, total: urls.length, current: null, results: urls.map(url => ({ url, status: 'pending' })) })
 
     try {
-      await runBriefBatch({
+      const result = await runBatchJob({
         urls,
         researchMode,
+        forceRegenerate,
+        concurrency: 3,
+        signal: abortRef.current.signal,
+        onProgress: (p) => {
+          setProgress(p)
+          if (p.jobId) setJobId(p.jobId)
+        },
+      })
+      setJobId(result.jobId)
+    } finally {
+      setRunning(false)
+      abortRef.current = null
+    }
+  }
+
+  async function resumeBatch() {
+    const job = await fetchActiveBatchJob()
+    if (!job) return
+
+    abortRef.current = new AbortController()
+    setRunning(true)
+    setJobId(job.id)
+
+    try {
+      await runBatchJob({
+        urls: job.urls,
+        researchMode: job.researchMode,
+        sourceContext: job.sourceContext,
+        resumeJob: job,
         concurrency: 3,
         signal: abortRef.current.signal,
         onProgress: setProgress,
@@ -66,6 +99,27 @@ function ListsContent() {
       setRunning(false)
       abortRef.current = null
     }
+  }
+
+  async function retryRow(i, { researchOnly = false } = {}) {
+    if (!progress?.results?.[i]) return
+    abortRef.current = new AbortController()
+    const results = [...progress.results]
+    await retryBatchRow({
+      row: results[i],
+      index: i,
+      results,
+      researchMode,
+      signal: abortRef.current.signal,
+      retryResearch: researchOnly,
+      onProgress: (p) => setProgress(prev => ({ ...prev, ...p, results: p.results || prev.results })),
+    })
+    setProgress(prev => ({
+      ...prev,
+      results,
+      failed: results.filter(r => r.status === 'failed').length,
+      completed: results.filter(r => r.status === 'done').length,
+    }))
   }
 
   function exportCsv() {
@@ -79,22 +133,31 @@ function ListsContent() {
     URL.revokeObjectURL(a.href)
   }
 
+  const canResume = !running && progress && progress.completed + progress.failed + progress.skipped < progress.total
+
   return (
     <WorkspaceShell
       title="Lists"
-      subtitle={running ? 'Generating briefs…' : 'Batch up to 50 companies · export to CRM'}
+      subtitle={running ? 'Generating briefs…' : 'Batch up to 50 companies · survives refresh'}
       actions={
-        progress?.results?.length > 0 && (
-          <button type="button" onClick={exportCsv} className="m-btn-secondary m-btn-sm">
-            Export CSV
-          </button>
-        )
+        <div className="flex gap-2">
+          {canResume && (
+            <button type="button" onClick={resumeBatch} className="m-btn-secondary m-btn-sm">
+              Resume batch
+            </button>
+          )}
+          {progress?.results?.length > 0 && (
+            <button type="button" onClick={exportCsv} className="m-btn-secondary m-btn-sm">
+              Export CSV
+            </button>
+          )}
+        </div>
       }
     >
       <WorkspacePage width="wide">
         <WorkspaceSection
           title="Company list"
-          description="One URL per line, or drop a CSV / contact export. Runs 3 briefs in parallel."
+          description="One URL per line. Runs 3 briefs in parallel. Progress syncs to your account when signed in."
         >
           <IntakeDropzone
             compact
@@ -137,12 +200,13 @@ function ListsContent() {
             </div>
             <span className="text-[12px]" style={{ color: 'var(--m-muted)' }}>
               {urlCount} URL{urlCount !== 1 ? 's' : ''}{urlCount > 50 ? ' — only first 50 will run' : ''}
+              {jobId && <span className="ml-2 font-mono">job {jobId.slice(0, 8)}</span>}
             </span>
           </div>
           <div className="mt-4 flex gap-2">
             <button
               type="button"
-              onClick={startBatch}
+              onClick={() => startBatch(false)}
               disabled={running || urlCount === 0}
               className="m-btn-primary"
             >
@@ -151,7 +215,10 @@ function ListsContent() {
             {running && (
               <button
                 type="button"
-                onClick={() => abortRef.current?.abort()}
+                onClick={() => {
+                  abortRef.current?.abort()
+                  if (jobId) fetch(`/api/batch/${jobId}/cancel`, { method: 'POST' }).catch(() => {})
+                }}
                 className="m-btn-secondary"
               >
                 Stop
@@ -174,6 +241,7 @@ function ListsContent() {
               <table className="m-table !min-w-0">
                 <thead>
                   <tr>
+                    <th>Preview</th>
                     <th>Company</th>
                     <th>Domain</th>
                     <th>Status</th>
@@ -183,6 +251,9 @@ function ListsContent() {
                 <tbody>
                   {progress.results.map((r, i) => (
                     <tr key={`${r.url}-${i}`}>
+                      <td className="w-32">
+                        {r.scraped && <BriefPreview scraped={r.scraped} loading={r.status === 'researching'} className="!rounded-lg" />}
+                      </td>
                       <td className="font-medium">{r.companyName || '—'}</td>
                       <td>
                         {r.domain ? (
@@ -194,11 +265,23 @@ function ListsContent() {
                       <td>
                         <StatusBadge row={r} />
                       </td>
-                      <td>
+                      <td className="space-x-1">
                         {r.memoId && (
                           <button type="button" onClick={() => openMemo(r.memoId)} className="m-btn-secondary m-btn-sm">
-                            Open brief
+                            Open
                           </button>
+                        )}
+                        {r.status === 'failed' && !running && (
+                          <>
+                            <button type="button" onClick={() => retryRow(i)} className="m-btn-ghost m-btn-sm">
+                              Retry
+                            </button>
+                            {r.canRetryResearch && (
+                              <button type="button" onClick={() => retryRow(i, { researchOnly: true })} className="m-btn-ghost m-btn-sm">
+                                Retry research
+                              </button>
+                            )}
+                          </>
                         )}
                       </td>
                     </tr>
@@ -214,9 +297,11 @@ function ListsContent() {
 }
 
 function StatusBadge({ row }) {
-  if (row.status === 'done') return <span className="text-emerald-600 text-[12px] font-medium">Done</span>
+  if (row.status === 'done') return <span className="text-emerald-600 text-[12px] font-medium">Ready</span>
+  if (row.status === 'researching') return <span className="text-zinc-600 text-[12px] font-medium">Researching</span>
   if (row.status === 'skipped') return <span className="text-zinc-500 text-[12px]">In library</span>
   if (row.status === 'failed') return <span className="text-red-600 text-[12px]" title={row.error}>Failed</span>
+  if (row.status === 'pending') return <span className="text-zinc-400 text-[12px]">Queued</span>
   return <span className="text-zinc-400 text-[12px]">…</span>
 }
 

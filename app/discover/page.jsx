@@ -16,7 +16,7 @@ import {
 } from '@/lib/source-session'
 import { getFundProfile, getActiveStrategy, resolveApiFundContext, getTrackingId } from '@/lib/fund-profile'
 import { findMemoByDomain } from '@/lib/memo-library'
-import { runBatchBrief } from '@/lib/batch-queue'
+import { runBatchJob } from '@/lib/batch-runner'
 import IntakeDropzone from '@/components/intake-dropzone'
 import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } from '@/components/pipeline-contacts-panel'
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
@@ -197,7 +197,7 @@ function DiscoverContent() {
   }
 
   async function handleBatchBrief(selected) {
-    if (!selected.length || !fundProfile) return
+    if (!selected.length) return
     if (selected.length > 3 && !window.confirm('Batch briefs are expensive. Continue with more than 3?')) return
     abortRef.current = new AbortController()
     setBatchRunning(true)
@@ -205,10 +205,10 @@ function DiscoverContent() {
     const sourceContext = savedSource
       ? { thesis: savedSource.thesis, parsed: savedSource.meta?.parsed }
       : { thesis }
-    await runBatchBrief({
+    await runBatchJob({
       companies: selected,
-      fundProfile,
       sourceContext,
+      researchMode: 'quick',
       signal: abortRef.current.signal,
       onProgress: setBatchProgress,
     })
