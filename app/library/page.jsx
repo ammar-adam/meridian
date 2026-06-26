@@ -8,7 +8,8 @@ import EmptyState from '@/components/empty-state'
 import BriefStarters from '@/components/brief-starters'
 import { downloadLibraryCsv } from '@/lib/crm-export'
 import { createShareLink } from '@/lib/memo-export'
-import { getMemoLibrary, getRelatedMemos } from '@/lib/memo-library'
+import { getMemoLibrary, getRelatedMemos, updateMemoMeta } from '@/lib/memo-library'
+import { reconcileLibraryOutcomes, syncShareOutcomesFromServer } from '@/lib/outcome-sync'
 
 function sortLibrary(entries) {
   return [...entries].sort((a, b) => {
@@ -27,13 +28,22 @@ export default function LibraryPage() {
   const router = useRouter()
 
   function reload() {
+    reconcileLibraryOutcomes()
     setLibrary(getMemoLibrary())
+    syncShareOutcomesFromServer().then(() => {
+      reconcileLibraryOutcomes()
+      setLibrary(getMemoLibrary())
+    })
   }
 
   useEffect(() => {
     reload()
     window.addEventListener('meridian-context-change', reload)
-    return () => window.removeEventListener('meridian-context-change', reload)
+    window.addEventListener('meridian-sync-complete', reload)
+    return () => {
+      window.removeEventListener('meridian-context-change', reload)
+      window.removeEventListener('meridian-sync-complete', reload)
+    }
   }, [])
 
   const filtered = useMemo(() => {
@@ -67,12 +77,13 @@ export default function LibraryPage() {
       for (const id of selected) {
         const entry = library.find(e => e.id === id)
         if (!entry?.data) continue
-        const url = await createShareLink(entry.data, {
+        const { url, shareId } = await createShareLink(entry.data, {
           memoId: id,
           allowOutcome: true,
           fundName: entry.fundName,
           outcome: entry.outcome,
         })
+        updateMemoMeta(id, { lastShareId: shareId })
         lines.push(`${entry.companyName}\t${url}`)
       }
       await navigator.clipboard.writeText(lines.join('\n'))
@@ -212,6 +223,10 @@ export default function LibraryPage() {
                         <td>
                           {entry.outcome ? (
                             <span className={entry.outcome === 'pursue' ? 'm-outcome-pursue' : 'm-outcome-pass'}>{entry.outcome}</span>
+                          ) : entry.gpOutcome ? (
+                            <span className="text-[12px] text-violet-700" title={entry.gpReviewer ? `GP: ${entry.gpReviewer}` : ''}>
+                              GP: {entry.gpOutcome}
+                            </span>
                           ) : (
                             <span className="m-outcome-pending">Pending</span>
                           )}

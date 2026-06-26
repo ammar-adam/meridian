@@ -373,7 +373,7 @@ function MemoPageContent() {
     const captured = captureMemoFromDom(memoRef.current)
     const merged = { ...memoDataRef.current, ...captured }
     const team = getTeamContext()
-    const url = await createShareLink(merged, {
+    const { url, shareId } = await createShareLink(merged, {
       outcome,
       editCount,
       fundName: merged.FUND_NAME,
@@ -382,6 +382,9 @@ function MemoPageContent() {
       allowOutcome: true,
       memoId,
     })
+    if (memoId && shareId) {
+      updateMemoMeta(memoId, { lastShareId: shareId })
+    }
     setShareUrl(url)
     await navigator.clipboard.writeText(url)
     setShareCopied(true)
