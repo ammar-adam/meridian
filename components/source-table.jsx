@@ -11,6 +11,20 @@ function FitBadge({ score }) {
   return <span className={cls}>{score}</span>
 }
 
+function LearnedBadge({ behavioral }) {
+  if (!behavioral?.label) return null
+  const cls = behavioral.label === 'Lean in'
+    ? 'm-badge-high'
+    : behavioral.label === 'Downranked' || behavioral.label === 'Demoted'
+      ? 'm-badge-low'
+      : 'm-badge-mid'
+  return (
+    <span className={`${cls} ml-1`} title={behavioral.reason || ''}>
+      {behavioral.label}
+    </span>
+  )
+}
+
 function confirmBatchBrief(companies) {
   const fund = getFundProfile()
   const needing = filterCompaniesNeedingBrief(companies, { fundId: fund?.id })
@@ -125,7 +139,7 @@ export default function SourceTable({
               )}
               <th className="w-10">#</th>
               <th>Company</th>
-              <th className="w-16">Fit</th>
+              <th className="w-28">Fit</th>
               <th>Stage</th>
               <th>Geography</th>
               <th>Sector</th>
@@ -147,7 +161,10 @@ export default function SourceTable({
                   <div className="mt-0.5 max-w-md text-[12px] leading-snug" style={{ color: 'var(--m-muted)' }}>{c.description}</div>
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
-                <td><FitBadge score={c.fitScore} /></td>
+                <td>
+                  <FitBadge score={c.fitScore} />
+                  <LearnedBadge behavioral={c.behavioral} />
+                </td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.stage || '—'}</td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.geography || '—'}</td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.sector || '—'}</td>

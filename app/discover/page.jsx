@@ -21,6 +21,7 @@ import IntakeDropzone from '@/components/intake-dropzone'
 import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } from '@/components/pipeline-contacts-panel'
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
 import { logDiscoverDemote } from '@/lib/edit-tracker'
+import { applyBehavioralRank } from '@/lib/behavioral-rank'
 
 const EXAMPLE_THESIS = 'AI infrastructure for financial services, Series A, North America'
 
@@ -69,11 +70,15 @@ function DiscoverContent() {
         throw new Error(err.error || 'Search failed')
       }
       const data = await res.json()
-      setCompanies(data.companies)
+      const ranked = applyBehavioralRank(data.companies || [], {
+        trackingId: 'guest',
+        thesis: thesisText.trim(),
+      })
+      setCompanies(ranked)
       setMeta({ ...data.meta, cached: data.cached })
       const profile = getFundProfile()
       const strategy = profile ? getActiveStrategy(profile) : null
-      saveSourceResults(thesisText.trim(), data.companies, { ...data.meta, cached: data.cached }, profile?.id, strategy?.id)
+      saveSourceResults(thesisText.trim(), ranked, { ...data.meta, cached: data.cached }, profile?.id, strategy?.id)
     } catch (err) {
       setError(err.message || 'Something went wrong')
     } finally {

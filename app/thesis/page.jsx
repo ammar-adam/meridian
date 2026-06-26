@@ -12,6 +12,8 @@ import { getEditLog, getEditSummary } from '@/lib/edit-tracker'
 import { generatePromptFeedback } from '@/lib/prompt-feedback'
 import { getLearningPreview } from '@/lib/learning-preview'
 import { getFundProfile, getActiveStrategy, getTrackingId } from '@/lib/fund-profile'
+import { inferRevealedPreference } from '@/lib/behavioral-rank'
+import { GUEST_FUND_API_CONTEXT } from '@/lib/fund-defaults'
 
 export default function ThesisPage() {
   const [summary, setSummary] = useState(null)
@@ -24,7 +26,7 @@ export default function ThesisPage() {
   function loadSummary() {
     const profile = getFundProfile()
     const strategy = getActiveStrategy(profile)
-    const tid = profile && strategy ? getTrackingId(profile, strategy) : 'default'
+    const tid = profile && strategy ? getTrackingId(profile, strategy) : 'guest'
     setTrackingId(tid)
     setContextLabel(
       profile
@@ -52,6 +54,7 @@ export default function ThesisPage() {
 
   const maxSection = Math.max(...Object.values(summary?.sectionCounts ?? {}), 1)
   const learning = trackingId ? getLearningPreview(trackingId) : null
+  const revealed = inferRevealedPreference(trackingId || 'guest')
 
   return (
     <WorkspaceShell
@@ -87,6 +90,18 @@ export default function ThesisPage() {
                 <Link href="/brief" className="mt-3 inline-block text-[12px] font-medium text-emerald-900 hover:underline">
                   Generate another brief →
                 </Link>
+              </div>
+            )}
+
+            {revealed && (
+              <div className="m-card m-card-pad mb-6">
+                <p className="m-kicker mb-2">Revealed preference</p>
+                <p className="text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
+                  {revealed.summary}
+                </p>
+                <p className="mt-3 text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
+                  Stated mandate: {GUEST_FUND_API_CONTEXT.thesis.slice(0, 200)}…
+                </p>
               </div>
             )}
 
