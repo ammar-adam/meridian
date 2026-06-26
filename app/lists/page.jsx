@@ -6,10 +6,18 @@ import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import PageLoader from '@/components/page-loader'
 import IntakeDropzone from '@/components/intake-dropzone'
-import BriefPreview from '@/components/brief-preview'
-import { parseUrlList, runBatchJob, fetchActiveBatchJob, retryBatchRow } from '@/lib/batch-runner'
+import BatchRowPreview from '@/components/batch-row-preview'
+import {
+  parseUrlList,
+  runBatchJob,
+  fetchActiveBatchJob,
+  retryBatchRow,
+  jobHasPending,
+  normalizeJobForResume,
+} from '@/lib/batch-runner'
 import { RESEARCH_MODES } from '@/lib/research-mode'
 import { batchResultsToCsv } from '@/lib/crm-export'
+import { reconcileLibraryOutcomes } from '@/lib/outcome-sync'
 
 const BATCH_KEY = 'meridian_batch_urls'
 
@@ -19,10 +27,55 @@ function ListsContent() {
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(null)
   const [jobId, setJobId] = useState(null)
+  const [autoResuming, setAutoResuming] = useState(false)
   const abortRef = useRef(null)
+  const resumedRef = useRef(false)
   const router = useRouter()
 
+  const runBatchInternal = useCallback(async (resumeJob = null, forceRegenerate = false) => {
+    const urls = resumeJob?.urls?.length ? resumeJob.urls : parseUrlList(text)
+    if (!urls.length && !resumeJob) return
+
+    abortRef.current = new AbortController()
+    setRunning(true)
+
+    if (!resumeJob) {
+      setProgress({
+        completed: 0,
+        failed: 0,
+        skipped: 0,
+        total: urls.length,
+        current: null,
+        results: urls.map(url => ({ url, status: 'pending' })),
+      })
+    }
+
+    try {
+      const result = await runBatchJob({
+        urls: resumeJob ? undefined : urls,
+        resumeJob,
+        researchMode: resumeJob?.researchMode || researchMode,
+        sourceContext: resumeJob?.sourceContext,
+        forceRegenerate,
+        concurrency: 3,
+        signal: abortRef.current.signal,
+        onProgress: (p) => {
+          setProgress(p)
+          if (p.jobId) setJobId(p.jobId)
+        },
+      })
+      setJobId(result.jobId)
+      reconcileLibraryOutcomes()
+    } finally {
+      setRunning(false)
+      setAutoResuming(false)
+      abortRef.current = null
+    }
+  }, [text, researchMode])
+
   useEffect(() => {
+    reconcileLibraryOutcomes()
+
     try {
       const stored = sessionStorage.getItem(BATCH_KEY)
       if (stored) {
@@ -35,71 +88,26 @@ function ListsContent() {
     } catch { /* ignore */ }
 
     fetchActiveBatchJob().then(job => {
-      if (job?.status === 'running' && job.progress) {
-        setProgress(job.progress)
-        setJobId(job.id)
-        setResearchMode(job.researchMode || 'quick')
-        if (job.urls?.length) setText(job.urls.join('\n'))
+      if (!job) return
+      const normalized = normalizeJobForResume(job)
+      setProgress(normalized.progress)
+      setJobId(normalized.id)
+      setResearchMode(normalized.researchMode || 'quick')
+      if (normalized.urls?.length) setText(normalized.urls.join('\n'))
+
+      if (jobHasPending(normalized) && !resumedRef.current) {
+        resumedRef.current = true
+        setAutoResuming(true)
+        runBatchInternal(normalized)
       }
     })
-  }, [])
+  }, [runBatchInternal])
 
   const urlCount = parseUrlList(text).length
 
   const openMemo = useCallback((memoId) => {
     router.push(`/memo?id=${memoId}`)
   }, [router])
-
-  async function startBatch(forceRegenerate = false) {
-    const urls = parseUrlList(text)
-    if (!urls.length) return
-
-    abortRef.current = new AbortController()
-    setRunning(true)
-    setProgress({ completed: 0, failed: 0, skipped: 0, total: urls.length, current: null, results: urls.map(url => ({ url, status: 'pending' })) })
-
-    try {
-      const result = await runBatchJob({
-        urls,
-        researchMode,
-        forceRegenerate,
-        concurrency: 3,
-        signal: abortRef.current.signal,
-        onProgress: (p) => {
-          setProgress(p)
-          if (p.jobId) setJobId(p.jobId)
-        },
-      })
-      setJobId(result.jobId)
-    } finally {
-      setRunning(false)
-      abortRef.current = null
-    }
-  }
-
-  async function resumeBatch() {
-    const job = await fetchActiveBatchJob()
-    if (!job) return
-
-    abortRef.current = new AbortController()
-    setRunning(true)
-    setJobId(job.id)
-
-    try {
-      await runBatchJob({
-        urls: job.urls,
-        researchMode: job.researchMode,
-        sourceContext: job.sourceContext,
-        resumeJob: job,
-        concurrency: 3,
-        signal: abortRef.current.signal,
-        onProgress: setProgress,
-      })
-    } finally {
-      setRunning(false)
-      abortRef.current = null
-    }
-  }
 
   async function retryRow(i, { researchOnly = false } = {}) {
     if (!progress?.results?.[i]) return
@@ -120,6 +128,7 @@ function ListsContent() {
       failed: results.filter(r => r.status === 'failed').length,
       completed: results.filter(r => r.status === 'done').length,
     }))
+    reconcileLibraryOutcomes()
   }
 
   function exportCsv() {
@@ -133,16 +142,22 @@ function ListsContent() {
     URL.revokeObjectURL(a.href)
   }
 
-  const canResume = !running && progress && progress.completed + progress.failed + progress.skipped < progress.total
+  const canResume = !running && progress && jobHasPending({ results: progress.results })
 
   return (
     <WorkspaceShell
       title="Lists"
-      subtitle={running ? 'Generating briefs…' : 'Batch up to 50 companies · survives refresh'}
+      subtitle={
+        autoResuming
+          ? 'Resuming batch…'
+          : running
+            ? 'Generating briefs…'
+            : 'Batch up to 50 companies · auto-resumes on refresh'
+      }
       actions={
         <div className="flex gap-2">
           {canResume && (
-            <button type="button" onClick={resumeBatch} className="m-btn-secondary m-btn-sm">
+            <button type="button" onClick={() => runBatchInternal(normalizeJobForResume({ urls: parseUrlList(text), results: progress.results, id: jobId, researchMode, progress }))} className="m-btn-secondary m-btn-sm">
               Resume batch
             </button>
           )}
@@ -157,7 +172,7 @@ function ListsContent() {
       <WorkspacePage width="wide">
         <WorkspaceSection
           title="Company list"
-          description="One URL per line. Runs 3 briefs in parallel. Progress syncs to your account when signed in."
+          description="One URL per line. Runs 3 briefs in parallel. Leave and come back — progress resumes automatically."
         >
           <IntakeDropzone
             compact
@@ -206,7 +221,7 @@ function ListsContent() {
           <div className="mt-4 flex gap-2">
             <button
               type="button"
-              onClick={() => startBatch(false)}
+              onClick={() => runBatchInternal(null, false)}
               disabled={running || urlCount === 0}
               className="m-btn-primary"
             >
@@ -251,8 +266,8 @@ function ListsContent() {
                 <tbody>
                   {progress.results.map((r, i) => (
                     <tr key={`${r.url}-${i}`}>
-                      <td className="w-32">
-                        {r.scraped && <BriefPreview scraped={r.scraped} loading={r.status === 'researching'} className="!rounded-lg" />}
+                      <td>
+                        <BatchRowPreview scraped={r.scraped} loading={r.status === 'researching'} />
                       </td>
                       <td className="font-medium">{r.companyName || '—'}</td>
                       <td>
