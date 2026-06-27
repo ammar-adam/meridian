@@ -98,6 +98,7 @@ export default function LibraryPage() {
   }
 
   return (
+    <div data-testid="library-page">
     <WorkspaceShell
       title="Library"
       subtitle={library.length ? `${library.length} briefs · ${pending} awaiting review` : 'Saved briefs'}
@@ -249,6 +250,7 @@ export default function LibraryPage() {
         {library.length === 0 && <BriefStarters />}
       </WorkspacePage>
     </WorkspaceShell>
+    </div>
   )
 }
 

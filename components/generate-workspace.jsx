@@ -25,6 +25,7 @@ import IntakeDropzone from '@/components/intake-dropzone'
 import BriefStarters from '@/components/brief-starters'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import { learningAppliedMessage } from '@/lib/learning-preview'
+import { normalizeUrl, extractDomain } from '@/lib/url-utils'
 
 const STEPS = [
   { id: 'scrape', label: 'Scrape' },
@@ -45,6 +46,25 @@ function stepProgress(stepStatus) {
   const active = STEPS.some(s => stepStatus[s.id] === 'active')
   const base = (done / STEPS.length) * 100
   return active && done < STEPS.length ? Math.min(base + 8, 95) : base
+}
+
+function validateBriefUrl(raw) {
+  const normalized = normalizeUrl(raw)
+  if (!normalized) return { ok: false, message: 'Enter a company URL' }
+  const domain = extractDomain(normalized)
+  if (!domain || !domain.includes('.')) {
+    return { ok: false, message: "That doesn't look like a valid URL — try company.com" }
+  }
+  return { ok: true, url: normalized }
+}
+
+function buildProvisionalMemoId(scraped, url) {
+  const domain = scraped?.domain || extractDomain(url)
+  const slug = (scraped?.ogTitle || domain || 'memo')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '_')
+    .slice(0, 40)
+  return `${slug}_${Date.now()}`
 }
 
 export default function GenerateWorkspace() {
@@ -68,6 +88,7 @@ export default function GenerateWorkspace() {
   const timerRef = useRef(null)
   const previewAbortRef = useRef(null)
   const prefetchRef = useRef({ url: '', mode: '', research: null })
+  const submittingRef = useRef(false)
 
   useEffect(() => {
     const q = searchParams.get('url')
@@ -145,7 +166,12 @@ export default function GenerateWorkspace() {
   }, [router])
 
   const runPipeline = useCallback(async (forceRegenerate = false, { deep = false, retryResearch = false } = {}) => {
-    if (!url.trim()) return
+    const validated = validateBriefUrl(url)
+    if (!validated.ok) {
+      setError(validated.message)
+      return
+    }
+    if (submittingRef.current) return
 
     const mode = deep ? 'deep' : researchMode
     const scrapedForCheck = scrapedCache || previewScraped
@@ -164,6 +190,7 @@ export default function GenerateWorkspace() {
     const tid = fundContext.trackingId || 'guest'
 
     abortRef.current = new AbortController()
+    submittingRef.current = true
     setLoading(true)
     setError('')
     setSlowWarning(false)
@@ -208,7 +235,10 @@ export default function GenerateWorkspace() {
         setStepStatus({ scrape: 'done', research: 'done', generate: 'active' })
 
         const draft = buildDraftMemoFromScrape(scraped, fundContext)
+        const memoId = buildProvisionalMemoId(scraped, url)
         sessionStorage.setItem('memoData', JSON.stringify(draft))
+        sessionStorage.setItem('memoId', memoId)
+        sessionStorage.removeItem('qualityGate')
         sessionStorage.setItem('memoSource', 'generating')
         sessionStorage.setItem(MEMO_PENDING_BRIEF_KEY, JSON.stringify({
           url,
@@ -218,6 +248,7 @@ export default function GenerateWorkspace() {
           sourceContext,
           forceRegenerate,
           researchMode: mode,
+          memoId,
         }))
         sessionStorage.setItem(MEMO_GENERATING_KEY, '1')
         router.push('/memo?generating=1')
@@ -250,12 +281,15 @@ export default function GenerateWorkspace() {
         setError(`${err.message} — you can retry research without re-scraping.`)
       } else if (err.failedStep) {
         setError(`${err.message} (failed at ${err.failedStep})`)
+      } else if (err.message === 'fetch failed' || err.message?.includes('Failed to fetch')) {
+        setError('Could not reach that website — check the URL and try again')
       } else {
         setError(err.name === 'AbortError' ? 'Cancelled.' : err.message || 'Failed')
       }
       setLoading(false)
       if (!err.canRetryResearch) setStepStatus({})
     } finally {
+      submittingRef.current = false
       abortRef.current = null
     }
   }, [router, url, apiHealth, researchMode, scrapedCache, previewScraped])
@@ -323,9 +357,14 @@ export default function GenerateWorkspace() {
       )}
 
       <WorkspacePage width="narrow">
-        {apiHealth && !apiHealth.anthropic && (
+        {apiHealth && !apiHealth.anthropicKeyPresent && (
           <p className="m-alert-error mb-4">
             Missing ANTHROPIC_API_KEY — brief generation will fail. Configure `.env.local` first.
+          </p>
+        )}
+        {apiHealth?.anthropicKeyPresent && apiHealth.anthropicPing && !apiHealth.anthropicPing.ok && (
+          <p className="m-alert-error mb-4">
+            AI generation unavailable — {apiHealth.anthropicPing.error || 'model or API issue'}. Check server logs.
           </p>
         )}
 
@@ -371,7 +410,7 @@ export default function GenerateWorkspace() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="company.com"
               disabled={loading}
-              className="m-input"
+              className={error ? 'm-input ring-1 ring-red-300' : 'm-input'}
             />
             <div className="mt-3 flex flex-wrap gap-2">
               {Object.values(RESEARCH_MODES).map(m => (

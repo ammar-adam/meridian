@@ -12,8 +12,13 @@ import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-expo
 import { openDemoMemo } from '@/lib/demo-memo'
 import { incrementBriefCount } from '@/lib/onboarding'
 import { getTeamContext } from '@/lib/team-workspace'
+import { DEMO_MEMO_ID } from '@/lib/demo-memo'
 import { completeBriefGenerate } from '@/lib/memo-pipeline'
-import { MEMO_GENERATING_KEY, MEMO_PENDING_BRIEF_KEY } from '@/lib/memo-draft'
+import {
+  MEMO_GENERATING_KEY,
+  MEMO_PENDING_BRIEF_KEY,
+  MEMO_GENERATE_INFLIGHT_KEY,
+} from '@/lib/memo-draft'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 import PageLoader from '@/components/page-loader'
@@ -67,6 +72,7 @@ function MemoPageContent() {
   const [pdfLoading, setPdfLoading] = useState(false)
   const [serverPdf, setServerPdf] = useState(false)
   const [shareEnabled, setShareEnabled] = useState(false)
+  const [shareError, setShareError] = useState('')
   const [finishingBrief, setFinishingBrief] = useState(false)
   const [finishError, setFinishError] = useState('')
   const pendingGenerateRef = useRef(false)
@@ -91,9 +97,17 @@ function MemoPageContent() {
     let data = null
     let source = null
     let qg = null
-    let id = queryId || sessionStorage.getItem('memoId')
+    const sessionSource = typeof window !== 'undefined' ? sessionStorage.getItem('memoSource') : null
+    const isGeneratingSession = sessionSource === 'generating'
+    let id = isGeneratingSession
+      ? sessionStorage.getItem('memoId')
+      : (queryId || sessionStorage.getItem('memoId'))
 
-    if (queryId) {
+    if (id === DEMO_MEMO_ID && isGeneratingSession) {
+      id = null
+    }
+
+    if (queryId && !isGeneratingSession) {
       const fromLibrary = getMemoById(queryId)
       if (fromLibrary) {
         data = fromLibrary.data
@@ -210,6 +224,8 @@ function MemoPageContent() {
   useEffect(() => {
     if (searchParams.get('generating') !== '1') return undefined
     if (pendingGenerateRef.current) return undefined
+    if (sessionStorage.getItem(MEMO_GENERATE_INFLIGHT_KEY) === '1') return undefined
+
     const raw = sessionStorage.getItem(MEMO_PENDING_BRIEF_KEY)
     if (!raw) {
       if (sessionStorage.getItem(MEMO_GENERATING_KEY)) {
@@ -220,11 +236,13 @@ function MemoPageContent() {
     }
 
     pendingGenerateRef.current = true
+    sessionStorage.setItem(MEMO_GENERATE_INFLIGHT_KEY, '1')
     let pending
     try {
       pending = JSON.parse(raw)
     } catch {
       pendingGenerateRef.current = false
+      sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
       return undefined
     }
 
@@ -232,21 +250,93 @@ function MemoPageContent() {
     setFinishingBrief(true)
     setFinishError('')
 
+    const finishSuccess = ({ memoData: nextData, qualityGate: nextQg, memoId: nextId }) => {
+      sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
+      sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
+      sessionStorage.setItem('memoData', JSON.stringify(nextData))
+      sessionStorage.setItem('qualityGate', JSON.stringify(nextQg))
+      sessionStorage.setItem('memoId', nextId)
+      sessionStorage.setItem('memoSource', 'pipeline')
+      sessionStorage.removeItem(MEMO_GENERATING_KEY)
+      sessionStorage.setItem(PIPELINE_SAVED_KEY, nextId)
+
+      setMemoId(nextId)
+      setMemoData(nextData)
+      setQualityGate(nextQg)
+      setFinishingBrief(false)
+      pendingGenerateRef.current = false
+
+      const profile = getFundProfile()
+      const sessionMeta = readMemoMetaFromSession()
+      const saveMeta = sessionMeta || (profile ? {
+        trackingId: getTrackingId(profile, getActiveStrategy(profile)),
+        fundId: profile.id,
+        fundName: profile.fundName,
+      } : {})
+      saveMemo(nextData, nextId, {
+        ...saveMeta,
+        qualityPassed: nextQg?.passed ?? null,
+        qualityWarnCount: nextQg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
+      })
+      incrementBriefCount()
+
+      return fetch('/memo-template.html')
+        .then(res => res.text())
+        .then(template => {
+          setHtml(populateTemplate(template, nextData))
+          router.replace('/memo')
+        })
+    }
+
     completeBriefGenerate({ ...pending, signal: ac.signal })
+      .then(finishSuccess)
+      .catch((err) => {
+        if (err.name === 'AbortError') return
+        sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
+        setFinishError(err.message || 'Failed to finish brief')
+        setFinishingBrief(false)
+        pendingGenerateRef.current = false
+      })
+
+    return () => ac.abort()
+  }, [searchParams, router])
+
+  const retryGenerate = useCallback(() => {
+    const raw = sessionStorage.getItem(MEMO_PENDING_BRIEF_KEY)
+    if (!raw) {
+      setFinishError('Nothing to retry — start a new brief.')
+      return
+    }
+    if (sessionStorage.getItem(MEMO_GENERATE_INFLIGHT_KEY) === '1') return
+
+    let pending
+    try {
+      pending = JSON.parse(raw)
+    } catch {
+      setFinishError('Could not read pending brief — start over from Brief.')
+      return
+    }
+
+    pendingGenerateRef.current = true
+    sessionStorage.setItem(MEMO_GENERATE_INFLIGHT_KEY, '1')
+    setFinishingBrief(true)
+    setFinishError('')
+
+    completeBriefGenerate({ ...pending })
       .then(({ memoData: nextData, qualityGate: nextQg, memoId: nextId }) => {
         sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
+        sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
         sessionStorage.setItem('memoData', JSON.stringify(nextData))
         sessionStorage.setItem('qualityGate', JSON.stringify(nextQg))
         sessionStorage.setItem('memoId', nextId)
         sessionStorage.setItem('memoSource', 'pipeline')
         sessionStorage.removeItem(MEMO_GENERATING_KEY)
         sessionStorage.setItem(PIPELINE_SAVED_KEY, nextId)
-
         setMemoId(nextId)
         setMemoData(nextData)
         setQualityGate(nextQg)
         setFinishingBrief(false)
-
+        pendingGenerateRef.current = false
         const profile = getFundProfile()
         const sessionMeta = readMemoMetaFromSession()
         const saveMeta = sessionMeta || (profile ? {
@@ -260,7 +350,6 @@ function MemoPageContent() {
           qualityWarnCount: nextQg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
         })
         incrementBriefCount()
-
         return fetch('/memo-template.html')
           .then(res => res.text())
           .then(template => {
@@ -269,16 +358,12 @@ function MemoPageContent() {
           })
       })
       .catch((err) => {
-        if (err.name === 'AbortError') return
-        sessionStorage.removeItem(MEMO_PENDING_BRIEF_KEY)
-        sessionStorage.removeItem(MEMO_GENERATING_KEY)
+        sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
         setFinishError(err.message || 'Failed to finish brief')
         setFinishingBrief(false)
         pendingGenerateRef.current = false
       })
-
-    return () => ac.abort()
-  }, [searchParams, router])
+  }, [router])
 
   const persistMemoData = useCallback((updated) => {
     memoDataRef.current = updated
@@ -378,6 +463,8 @@ function MemoPageContent() {
   }, [outcome])
 
   function handleOutcome(selected) {
+    if (finishingBrief || finishError) return
+
     const captured = captureMemoFromDom(memoRef.current)
     const current = memoDataRef.current
     if (current && Object.keys(captured).length) {
@@ -466,25 +553,30 @@ function MemoPageContent() {
       window.alert('Share links need DATABASE_URL configured on the server. Use Copy text for now.')
       return
     }
-    const captured = captureMemoFromDom(memoRef.current)
-    const merged = { ...memoDataRef.current, ...captured }
-    const team = getTeamContext()
-    const { url, shareId } = await createShareLink(merged, {
-      outcome,
-      editCount,
-      fundName: merged.FUND_NAME,
-      teamId: team?.teamId,
-      createdBy: team?.memberName,
-      allowOutcome: true,
-      memoId,
-    })
-    if (memoId && shareId) {
-      updateMemoMeta(memoId, { lastShareId: shareId })
+    setShareError('')
+    try {
+      const captured = captureMemoFromDom(memoRef.current)
+      const merged = { ...memoDataRef.current, ...captured }
+      const team = getTeamContext()
+      const { url, shareId } = await createShareLink(merged, {
+        outcome,
+        editCount,
+        fundName: merged.FUND_NAME,
+        teamId: team?.teamId,
+        createdBy: team?.memberName,
+        allowOutcome: true,
+        memoId,
+      })
+      if (memoId && shareId) {
+        updateMemoMeta(memoId, { lastShareId: shareId })
+      }
+      setShareUrl(url)
+      await navigator.clipboard.writeText(url)
+      setShareCopied(true)
+      setTimeout(() => setShareCopied(false), 2000)
+    } catch (err) {
+      setShareError(err.message || 'Could not create share link')
     }
-    setShareUrl(url)
-    await navigator.clipboard.writeText(url)
-    setShareCopied(true)
-    setTimeout(() => setShareCopied(false), 2000)
   }
 
   async function handleDownloadPdf() {
@@ -506,10 +598,10 @@ function MemoPageContent() {
 
   const warnings = qualityGate?.flags?.filter(f => f.severity === 'warn') ?? []
   const errors = qualityGate?.flags?.filter(f => f.severity === 'error') ?? []
-  const showErrorBanner = errors.length > 0 && !errorBannerDismissed && !finishingBrief
-  const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief
+  const showErrorBanner = errors.length > 0 && !errorBannerDismissed && !finishingBrief && !finishError
+  const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief && !finishError
   const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
-  const topOffset = (finishingBrief || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
+  const topOffset = (finishingBrief || finishError || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
   return (
     <div>
@@ -537,9 +629,14 @@ function MemoPageContent() {
 
       {finishError && (
         <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-200 bg-red-50 px-4 py-2">
-          <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
+          <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3">
             <p className="text-xs text-red-900">{finishError}</p>
-            <Link href="/brief" className="text-xs font-medium text-red-700 underline">Back to Brief</Link>
+            <div className="flex shrink-0 gap-2">
+              <button type="button" onClick={retryGenerate} className="text-xs font-medium text-red-800 underline">
+                Retry generate
+              </button>
+              <Link href="/brief" className="text-xs font-medium text-red-700 underline">Back to Brief</Link>
+            </div>
           </div>
         </div>
       )}
@@ -625,6 +722,9 @@ function MemoPageContent() {
           </div>
 
           <div className="flex shrink-0 flex-wrap items-center gap-2">
+            {shareError && (
+              <p className="w-full text-[11px] text-red-600 sm:w-auto">{shareError}</p>
+            )}
             <button type="button" onClick={handleCopyShare} className="m-btn-ghost m-btn-sm">
               {shareCopied && !shareUrl ? 'Copied!' : 'Copy text'}
             </button>

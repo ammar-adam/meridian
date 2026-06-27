@@ -11,6 +11,8 @@ import {
   parseUrlList,
   runBatchJob,
   fetchActiveBatchJob,
+  fetchLastBatchJob,
+  dismissBatchJob,
   retryBatchRow,
   jobHasPending,
   normalizeJobForResume,
@@ -91,14 +93,17 @@ function ListsContent() {
     } catch { /* ignore */ }
 
     fetchActiveBatchJob().then(job => {
-      if (!job) return
-      const normalized = recoverInterruptedBatchRows(job)
+      const normalized = job
+        ? recoverInterruptedBatchRows(job)
+        : fetchLastBatchJob()
+      if (!normalized) return
+
       setProgress(normalized.progress)
       setJobId(normalized.id)
       setResearchMode(normalized.researchMode || 'auto')
       if (normalized.urls?.length) setText(normalized.urls.join('\n'))
 
-      if (jobHasPending(normalized) && !resumedRef.current) {
+      if (job && jobHasPending(normalized) && !resumedRef.current) {
         resumedRef.current = true
         setAutoResuming(true)
         runBatchInternal(normalized)
@@ -147,7 +152,17 @@ function ListsContent() {
   }
 
   const failedCount = progress?.results?.filter(r => r.status === 'failed').length || 0
+  const doneCount = progress?.results?.filter(r => r.status === 'done').length || 0
   const canResume = !running && progress && jobHasPending({ results: progress.results })
+  const showLastBatchSummary = !running && progress && !jobHasPending({ results: progress.results })
+
+  function clearBatch() {
+    dismissBatchJob()
+    setProgress(null)
+    setJobId(null)
+    setText('')
+    resumedRef.current = false
+  }
 
   return (
     <WorkspaceShell
@@ -156,8 +171,10 @@ function ListsContent() {
         autoResuming
           ? 'Resuming batch…'
           : running
-            ? (jobId ? 'Processing in background — safe to close tab' : 'Generating briefs…')
-            : 'Batch up to 50 companies · auto-resumes on refresh'
+            ? (jobId ? 'Keep tab open or set up cron for background processing' : 'Generating briefs…')
+            : showLastBatchSummary
+              ? `Last batch: ${doneCount} done, ${failedCount} failed`
+              : 'Batch up to 50 companies · progress saved while on this page · resumes on refresh'
       }
       actions={
         <div className="flex gap-2">
@@ -180,13 +197,27 @@ function ListsContent() {
               Export CSV
             </button>
           )}
+          {showLastBatchSummary && (
+            <>
+              <button
+                type="button"
+                onClick={() => runBatchInternal(normalizeJobForResume({ urls: parseUrlList(text), results: progress.results, id: jobId, researchMode, progress }), true)}
+                className="m-btn-secondary m-btn-sm"
+              >
+                Run again
+              </button>
+              <button type="button" onClick={clearBatch} className="m-btn-ghost m-btn-sm">
+                Clear batch
+              </button>
+            </>
+          )}
         </div>
       }
     >
       <WorkspacePage width="wide">
         <WorkspaceSection
           title="Company list"
-          description="One URL per line. Processes URLs sequentially on server (or 3 at once locally). Leave and come back — progress resumes automatically."
+          description="One URL per line. Processes URLs sequentially on server (or 3 at once locally). Progress is saved while you stay on this page and resumes on refresh."
         >
           <IntakeDropzone
             compact

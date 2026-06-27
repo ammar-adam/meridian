@@ -119,7 +119,7 @@ export async function POST(req) {
     raw = result.text
   } catch (err) {
     console.error('[source] Claude rank error:', err.message)
-    return Response.json({ error: 'Ranking failed' }, { status: 500 })
+    return Response.json({ error: err.message || 'Ranking failed' }, { status: 500 })
   }
 
   let companies

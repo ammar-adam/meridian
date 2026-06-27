@@ -25,9 +25,17 @@ export default function Nav({ variant = 'default' }) {
           <div className="flex items-center gap-3">
             <AuthBar variant={isLanding ? 'landing' : 'default'} />
             {isLanding && (
-              <Link href="/fund/setup" className="m-btn-ghost-landing hidden sm:inline-flex">
-                Setup
-              </Link>
+              <>
+                <Link href="/library" className="m-btn-ghost-landing hidden sm:inline-flex">
+                  Library
+                </Link>
+                <Link href="/discover" className="m-btn-ghost-landing hidden sm:inline-flex">
+                  Discover
+                </Link>
+                <Link href="/fund/setup" className="m-btn-ghost-landing hidden sm:inline-flex">
+                  Setup
+                </Link>
+              </>
             )}
             <Link href="/brief" className={isLanding ? 'm-btn-glow' : 'm-btn-primary'}>
               Generate brief

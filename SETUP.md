@@ -47,9 +47,19 @@ Restart the dev server after changing keys.
 
 ```bash
 curl http://localhost:3000/api/health
+# skip live Anthropic ping (faster):
+curl "http://localhost:3000/api/health?quick=1"
 ```
 
-Expected: `"anthropic": true`, `"perplexity": true`. With `DATABASE_URL`: `"database": true`, `"shareLinks": true`.
+Expected: `"anthropicKeyPresent": true`, `"anthropicPing": { "ok": true, "model": "claude-haiku-4-5-20251001" }`, `"perplexity": true`. With `DATABASE_URL`: `"database": true`, `"shareLinks": true`.
+
+`anthropic` is `true` only when the key is present **and** the live ping succeeds. If ping fails, check `anthropicPing.error` in the response.
+
+Optional override for the fast draft model:
+
+```env
+ANTHROPIC_FAST_MODEL=claude-haiku-4-5-20251001
+```
 
 **Database schema:**
 
@@ -122,6 +132,8 @@ Creator shares `/share/[id]` → GP clicks Pursue / Pass / Need more info → ou
 2. Import in [Vercel](https://vercel.com)
 3. Add env vars from section 2
 4. Deploy
+
+**Clerk (production):** On Vercel, set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` to a `pk_live_…` key (not `pk_test_…`) so the app does not show the Clerk development badge. `/api/health` reports `clerkMode`: `production`, `development`, or `none`.
 
 Production: **https://meridian-eight-sandy.vercel.app**
 
