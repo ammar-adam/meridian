@@ -41,6 +41,26 @@ BASE_URL=https://meridian-eight-sandy.vercel.app npm run smoke
 
 Required status check for merge: **Lint, test, and build**.
 
+### Enable branch protection (one-time, repo admin)
+
+In GitHub → **Settings → Branches → Add rule** for `main`:
+
+- Branch name pattern: `main`
+- **Require a pull request before merging** (no direct pushes)
+- **Require status checks to pass**: select `Lint, test, and build` (appears after the first CI run on a PR)
+- Optional: **Require branches to be up to date before merging**
+
+CLI (if `gh` is installed):
+
+```bash
+gh api repos/OWNER/REPO/branches/main/protection -X PUT \
+  -f required_status_checks[strict]=true \
+  -f required_status_checks[contexts][]='Lint, test, and build' \
+  -f enforce_admins=true \
+  -f required_pull_request_reviews[required_approving_review_count]=0 \
+  -f restrictions=
+```
+
 ## Test layout
 
 ```
