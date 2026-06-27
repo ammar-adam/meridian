@@ -27,7 +27,10 @@ async function run() {
     if (!res.ok || !data.ok) throw new Error('health not ok')
     if (!data.anthropic || !data.perplexity) throw new Error('API keys not configured')
     if (data.anthropicPing && !data.anthropicPing.ok) {
-      throw new Error(data.anthropicPing.error || 'anthropic ping failed')
+      throw new Error(data.anthropicPing.error || 'anthropic fast ping failed')
+    }
+    if (data.anthropicSonnetPing && !data.anthropicSonnetPing.ok) {
+      throw new Error(data.anthropicSonnetPing.error || 'anthropic sonnet ping failed')
     }
   })) passed++; else failed++
 

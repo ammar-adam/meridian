@@ -39,6 +39,24 @@ async function pingAnthropic() {
   return anthropicPingCache.result
 }
 
+async function pingAnthropicSonnet() {
+  if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_key_here') {
+    return { ok: false, model: MODELS.claude, error: 'API key not configured' }
+  }
+  try {
+    const result = await callAnthropic({
+      model: MODELS.claude,
+      system: 'ping',
+      maxTokens: 1,
+      cacheSystem: false,
+      messages: [{ role: 'user', content: 'ok' }],
+    })
+    return { ok: true, model: result.model || MODELS.claude }
+  } catch (err) {
+    return { ok: false, model: MODELS.claude, error: err.message }
+  }
+}
+
 export async function GET(req) {
   const quick = new URL(req.url).searchParams.get('quick') === '1'
   const pdfEnabled = isServerPdfEnabled()
@@ -50,13 +68,15 @@ export async function GET(req) {
   const anthropicKeyPresent = !!process.env.ANTHROPIC_API_KEY
     && process.env.ANTHROPIC_API_KEY !== 'your_key_here'
   const anthropicPing = anthropicKeyPresent && !quick ? await pingAnthropic() : null
+  const anthropicSonnetPing = anthropicKeyPresent && !quick ? await pingAnthropicSonnet() : null
   const clerkPk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || ''
 
   return Response.json({
     ok: true,
-    anthropic: anthropicKeyPresent && (quick || anthropicPing?.ok === true),
+    anthropic: anthropicKeyPresent && (quick || (anthropicPing?.ok === true && anthropicSonnetPing?.ok === true)),
     anthropicKeyPresent,
     anthropicPing,
+    anthropicSonnetPing,
     perplexity: !!process.env.PERPLEXITY_API_KEY && process.env.PERPLEXITY_API_KEY !== 'your_key_here',
     startuphub: startuphubConfigured && startuphubStatus.ok,
     startuphubConfigured,

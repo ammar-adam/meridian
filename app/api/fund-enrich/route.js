@@ -89,7 +89,7 @@ export async function POST(req) {
     raw = result.text
   } catch (err) {
     console.error('[fund-enrich] Claude error:', err.message)
-    return Response.json({ error: 'Failed to enrich fund profile' }, { status: 500 })
+    return Response.json({ error: err.message || 'Failed to enrich fund profile' }, { status: 500 })
   }
 
   let draft

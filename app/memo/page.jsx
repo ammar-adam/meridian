@@ -225,7 +225,6 @@ function MemoPageContent() {
   useEffect(() => {
     if (searchParams.get('generating') !== '1') return undefined
     if (pendingGenerateRef.current) return undefined
-    if (sessionStorage.getItem(MEMO_GENERATE_INFLIGHT_KEY) === '1') return undefined
 
     const raw = sessionStorage.getItem(MEMO_PENDING_BRIEF_KEY)
     if (!raw) {
@@ -292,14 +291,22 @@ function MemoPageContent() {
     completeBriefGenerate({ ...pending, signal: ac.signal })
       .then(finishSuccess)
       .catch((err) => {
-        if (err.name === 'AbortError') return
+        if (err.name === 'AbortError') {
+          pendingGenerateRef.current = false
+          sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
+          return
+        }
         sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
         setFinishError(err.message || 'Failed to finish brief')
         setFinishingBrief(false)
         pendingGenerateRef.current = false
       })
 
-    return () => ac.abort()
+    return () => {
+      ac.abort()
+      pendingGenerateRef.current = false
+      sessionStorage.removeItem(MEMO_GENERATE_INFLIGHT_KEY)
+    }
   }, [searchParams, router])
 
   const retryGenerate = useCallback(() => {
@@ -308,7 +315,6 @@ function MemoPageContent() {
       setFinishError('Nothing to retry — start a new brief.')
       return
     }
-    if (sessionStorage.getItem(MEMO_GENERATE_INFLIGHT_KEY) === '1') return
 
     let pending
     try {
