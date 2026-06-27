@@ -75,6 +75,7 @@ function MemoPageContent() {
   const [shareError, setShareError] = useState('')
   const [finishingBrief, setFinishingBrief] = useState(false)
   const [finishError, setFinishError] = useState('')
+  const [outcomeBlocked, setOutcomeBlocked] = useState('')
   const pendingGenerateRef = useRef(false)
   const pendingNavRef = useRef(null)
 
@@ -463,7 +464,11 @@ function MemoPageContent() {
   }, [outcome])
 
   function handleOutcome(selected) {
-    if (finishingBrief || finishError) return
+    if (finishingBrief || finishError) {
+      setOutcomeBlocked('Finish generating first')
+      setTimeout(() => setOutcomeBlocked(''), 3000)
+      return
+    }
 
     const captured = captureMemoFromDom(memoRef.current)
     const current = memoDataRef.current
@@ -708,7 +713,7 @@ function MemoPageContent() {
               <>
                 <p className="text-[13px] font-medium">Pursue or pass?</p>
                 <p className="text-[11px]" style={{ color: 'var(--m-muted)' }}>
-                  Your signal improves the next brief&apos;s thesis band.
+                  {outcomeBlocked || 'Your signal improves the next brief\'s thesis band.'}
                 </p>
               </>
             ) : (
@@ -729,9 +734,14 @@ function MemoPageContent() {
               {shareCopied && !shareUrl ? 'Copied!' : 'Copy text'}
             </button>
             {shareEnabled && (
-              <button type="button" onClick={handleCreateShareLink} className="m-btn-ghost m-btn-sm">
-                {shareCopied && shareUrl ? 'Link copied!' : 'Share link'}
-              </button>
+              <>
+                <button type="button" onClick={handleCreateShareLink} className="m-btn-ghost m-btn-sm">
+                  Share link
+                </button>
+                {shareCopied && shareUrl && (
+                  <span className="text-[11px] font-medium text-emerald-700">Link copied!</span>
+                )}
+              </>
             )}
             {!outcome ? (
               <>

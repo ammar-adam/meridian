@@ -26,13 +26,13 @@ export default function Nav({ variant = 'default' }) {
             <AuthBar variant={isLanding ? 'landing' : 'default'} />
             {isLanding && (
               <>
-                <Link href="/library" className="m-btn-ghost-landing hidden sm:inline-flex">
+                <Link href="/library" className="m-btn-ghost-landing hidden md:inline-flex">
                   Library
                 </Link>
-                <Link href="/discover" className="m-btn-ghost-landing hidden sm:inline-flex">
+                <Link href="/discover" className="m-btn-ghost-landing hidden md:inline-flex">
                   Discover
                 </Link>
-                <Link href="/fund/setup" className="m-btn-ghost-landing hidden sm:inline-flex">
+                <Link href="/fund/setup" className="m-btn-ghost-landing hidden md:inline-flex">
                   Setup
                 </Link>
               </>

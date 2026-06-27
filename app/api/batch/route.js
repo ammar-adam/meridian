@@ -11,9 +11,6 @@ import {
 export const maxDuration = 30
 
 export async function GET(req) {
-  const limited = await enforceRateLimit(req, 'batch')
-  if (limited) return limited
-
   if (!isBatchDbEnabled()) {
     return Response.json({ job: null })
   }

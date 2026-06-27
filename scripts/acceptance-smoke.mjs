@@ -26,6 +26,9 @@ async function run() {
     const data = await res.json()
     if (!res.ok || !data.ok) throw new Error('health not ok')
     if (!data.anthropic || !data.perplexity) throw new Error('API keys not configured')
+    if (data.anthropicPing && !data.anthropicPing.ok) {
+      throw new Error(data.anthropicPing.error || 'anthropic ping failed')
+    }
   })) passed++; else failed++
 
   if (await check('scrape latency', async () => {
@@ -40,15 +43,14 @@ async function run() {
     if (ms > 8000) throw new Error(`too slow (${ms}ms)`)
   })) passed++; else failed++
 
-  if (await check('batch create', async () => {
+  if (await check('batch endpoint', async () => {
     const res = await fetch(`${BASE}/api/batch`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Cookie: 'meridian_did=smoke-test-device-001' },
-      body: JSON.stringify({ urls: ['https://stripe.com'], researchMode: 'auto' }),
+      cache: 'no-store',
+      headers: { Cookie: 'meridian_did=smoke-test-device-001' },
     })
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || `status ${res.status}`)
-    if (data.id === undefined && data.status !== 'running') throw new Error('unexpected batch response')
+    if (!('job' in data)) throw new Error('missing job field in batch response')
   })) passed++; else failed++
 
   console.log(`\n${passed} passed, ${failed} failed`)

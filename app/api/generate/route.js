@@ -26,7 +26,7 @@ export async function POST(req) {
     console.log('[generate] memo for', result.memoData?.COMPANY_NAME, 'qg:', result.qualityGate?.passed)
     return Response.json(result)
   } catch (err) {
-    console.error('[generate]', err.message)
+    console.error('[generate]', err.message, err.cause)
     return Response.json({ error: err.message || 'Generate failed' }, { status: 500 })
   }
 }

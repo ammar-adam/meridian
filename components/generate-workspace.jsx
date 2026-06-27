@@ -173,6 +173,7 @@ export default function GenerateWorkspace() {
     }
     if (submittingRef.current) return
 
+    const targetUrl = validated.url
     const mode = deep ? 'deep' : researchMode
     const scrapedForCheck = scrapedCache || previewScraped
     const perplexityRequired = needsPerplexity(mode, scrapedForCheck)
@@ -207,25 +208,25 @@ export default function GenerateWorkspace() {
     let scraped = scrapedCache
     try {
       if (!scraped || retryResearch) {
-        scraped = await fetchScrapePreview(url, abortRef.current.signal)
+        scraped = await fetchScrapePreview(targetUrl, abortRef.current.signal)
         setPreviewScraped(scraped)
         setScrapedCache(scraped)
       }
       setStepStatus({ scrape: 'done', research: 'active', generate: 'pending' })
 
       writeMemoMetaToSession(buildMemoMeta({
-        url,
+        url: targetUrl,
         searchThesis: sourceContext?.thesis,
       }))
 
       const effectiveMode = resolveEffectiveResearchMode(mode, scraped)
-      const prefetched = urlsMatchForPrefetch(url, prefetchRef.current.url)
+      const prefetched = urlsMatchForPrefetch(targetUrl, prefetchRef.current.url)
         && prefetchRef.current.mode === effectiveMode
         ? prefetchRef.current.research
         : null
 
       if (effectiveMode !== 'deep') {
-        const research = await resolveResearchText(url, {
+        const research = await resolveResearchText(targetUrl, {
           researchMode: mode,
           scraped,
           prefetchedResearch: prefetched,
@@ -235,13 +236,13 @@ export default function GenerateWorkspace() {
         setStepStatus({ scrape: 'done', research: 'done', generate: 'active' })
 
         const draft = buildDraftMemoFromScrape(scraped, fundContext)
-        const memoId = buildProvisionalMemoId(scraped, url)
+        const memoId = buildProvisionalMemoId(scraped, targetUrl)
         sessionStorage.setItem('memoData', JSON.stringify(draft))
         sessionStorage.setItem('memoId', memoId)
         sessionStorage.removeItem('qualityGate')
         sessionStorage.setItem('memoSource', 'generating')
         sessionStorage.setItem(MEMO_PENDING_BRIEF_KEY, JSON.stringify({
-          url,
+          url: targetUrl,
           research,
           scraped,
           fundContext,
@@ -258,7 +259,7 @@ export default function GenerateWorkspace() {
       }
 
       const { memoData, qualityGate, memoId } = await runMemoPipeline({
-        url,
+        url: targetUrl,
         fundContext,
         sourceContext,
         signal: abortRef.current.signal,
