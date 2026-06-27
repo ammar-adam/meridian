@@ -26,6 +26,7 @@ import BriefStarters from '@/components/brief-starters'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import { learningAppliedMessage } from '@/lib/learning-preview'
 import { normalizeUrl, extractDomain } from '@/lib/url-utils'
+import { validateBriefUrl } from '@/lib/brief-url'
 
 const STEPS = [
   { id: 'scrape', label: 'Scrape' },
@@ -46,16 +47,6 @@ function stepProgress(stepStatus) {
   const active = STEPS.some(s => stepStatus[s.id] === 'active')
   const base = (done / STEPS.length) * 100
   return active && done < STEPS.length ? Math.min(base + 8, 95) : base
-}
-
-function validateBriefUrl(raw) {
-  const normalized = normalizeUrl(raw)
-  if (!normalized) return { ok: false, message: 'Enter a company URL' }
-  const domain = extractDomain(normalized)
-  if (!domain || !domain.includes('.')) {
-    return { ok: false, message: "That doesn't look like a valid URL — try company.com" }
-  }
-  return { ok: true, url: normalized }
 }
 
 function buildProvisionalMemoId(scraped, url) {

@@ -163,6 +163,16 @@ Authorization: Bearer <CRON_SECRET>
 
 Without cron, batch still runs via `/lists` (keep tab open) or auto-resumes on refresh.
 
+**CI / tests:**
+
+```bash
+npm run test:unit          # unit tests (Vitest)
+npm run test:ci            # lint + unit + build
+npm run smoke              # HTTP checks (set BASE_URL for prod)
+```
+
+Pull requests to `main` run GitHub Actions CI automatically. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 **Smoke tests:**
 
 ```bash

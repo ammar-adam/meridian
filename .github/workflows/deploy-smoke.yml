@@ -1,0 +1,47 @@
+name: Deploy smoke
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: 'Deployment URL to smoke test'
+        required: false
+        default: 'https://meridian-eight-sandy.vercel.app'
+
+concurrency:
+  group: deploy-smoke-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  production-smoke:
+    name: Production smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for Vercel deploy
+        if: github.event_name == 'push'
+        run: sleep 90
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Smoke test production
+        run: npm run smoke
+        env:
+          BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}
+
+      - name: Integration smoke (vitest)
+        run: npm run test:integration
+        env:
+          BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}
