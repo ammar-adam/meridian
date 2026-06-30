@@ -1,5 +1,8 @@
 'use client'
 
+/* External company favicons/OG images — dynamic URLs, not optimizable via next/image */
+/* eslint-disable @next/next/no-img-element */
+
 import { coverageLabel, coverageModeHint, scoreScrapeCoverage } from '@/lib/scrape-coverage'
 
 export default function BriefPreview({ scraped, loading, className = '', researchMode = 'auto' }) {

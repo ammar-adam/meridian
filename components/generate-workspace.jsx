@@ -453,6 +453,13 @@ export default function GenerateWorkspace() {
 
         <BriefStarters onPickUrl={setUrl} compact />
 
+        <p className="mt-6 text-center text-[13px]" style={{ color: 'var(--m-muted)' }}>
+          Need sourcing?{' '}
+          <Link href="/discover" className="font-medium hover:underline" style={{ color: 'var(--m-accent)' }}>
+            Run a thesis search in Discover →
+          </Link>
+        </p>
+
         {error && !loading && (
           <div className="mt-4 space-y-2">
             <p className="m-alert-error">{error}</p>

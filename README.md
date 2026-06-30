@@ -120,7 +120,7 @@ Returns status for Anthropic, Perplexity, database, Clerk, and feature flags.
 
 ## Origin
 
-A manually produced NationGraph memo was sent cold to the GP of Sagard's $150M AI Fund. He gave sourcing credit and asked how to automate it. Meridian is that automation — built for deal velocity, not analyst time savings.
+Meridian started from a manually produced NationGraph memo that earned GP sourcing credit on first send. The ask was simple: automate that quality at deal velocity. Meridian is that automation — built for throughput, not analyst time savings.
 
 ---
 

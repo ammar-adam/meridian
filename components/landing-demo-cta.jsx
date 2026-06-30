@@ -16,10 +16,10 @@ export default function LandingDemoCta() {
     <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-8 text-center sm:p-10">
       <p className="text-[13px] font-medium uppercase tracking-wide text-zinc-500">Proof without API cost</p>
       <h3 className="mt-2 text-[22px] font-bold tracking-tight text-zinc-900">
-        See the memo that got Sagard sourcing credit
+        See the reference brief Meridian was built to match
       </h3>
       <p className="mx-auto mt-2 max-w-lg text-[15px] leading-relaxed text-zinc-500">
-        NationGraph — the reference brief Meridian was built to match. Instant load, no keys required.
+        NationGraph — fund-native one-pager with thesis band, stats, and team. Instant load, no keys required.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
         <button type="button" onClick={handleDemo} className="m-btn-primary">

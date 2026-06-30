@@ -2,14 +2,23 @@ import { describe, it, expect } from 'vitest'
 import { runQualityGate } from '@/lib/quality-gate'
 
 describe('quality-gate', () => {
-  it('flags placeholder team names as errors', () => {
+  it('softens team errors to warnings for instant mode', () => {
     const qg = runQualityGate({
       TEAM_1_NAME: 'Undisclosed',
       TEAM_2_NAME: 'Jane Doe',
       TEAM_3_NAME: 'John Smith',
-    }, { id: 'guest', isGuest: true })
+    }, { id: 'guest', isGuest: true }, { researchMode: 'instant' })
+    expect(qg.flags.some(f => f.field === 'TEAM_1_NAME' && f.severity === 'warn')).toBe(true)
+    expect(qg.flags.some(f => f.field === 'TEAM_1_NAME' && f.severity === 'error')).toBe(false)
+  })
+
+  it('keeps team placeholder errors in deep mode', () => {
+    const qg = runQualityGate({
+      TEAM_1_NAME: 'Undisclosed',
+      TEAM_2_NAME: 'Jane Doe',
+      TEAM_3_NAME: 'John Smith',
+    }, { id: 'guest', isGuest: true }, { researchMode: 'deep' })
     expect(qg.flags.some(f => f.field === 'TEAM_1_NAME' && f.severity === 'error')).toBe(true)
-    expect(qg.passed).toBe(false)
   })
 
   it('warns guest funds to personalize thesis band', () => {

@@ -115,15 +115,18 @@ function DiscoverContent() {
       if (pending.autoRun || searchParams.get('run') === '1') runSearch(pending.thesis)
       return
     }
-    const profile = getFundProfile()
-    const strategy = getActiveStrategy(profile)
-    if (!thesis && strategy?.thesis) {
-      setThesis(strategy.thesis.slice(0, 500))
-    }
     const onCtx = () => loadSavedForContext()
     window.addEventListener('meridian-context-change', onCtx)
     return () => window.removeEventListener('meridian-context-change', onCtx)
   }, [runSearch, searchParams])
+
+  useEffect(() => {
+    const profile = getFundProfile()
+    const strategy = getActiveStrategy(profile)
+    if (strategy?.thesis) {
+      setThesis(prev => prev || strategy.thesis.slice(0, 500))
+    }
+  }, [])
 
   useEffect(() => {
     fetchActiveBatchJob().then(job => {
@@ -185,7 +188,7 @@ function DiscoverContent() {
   const pipelineContacts = useMemo(() => {
     void pipelineVersion
     return getPipelineContacts()
-  }, [pipelineVersion, companies])
+  }, [pipelineVersion])
 
   function briefPipelineContact(contact) {
     const url = contact.url || (contact.domain ? `https://${contact.domain}` : '')

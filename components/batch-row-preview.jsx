@@ -1,5 +1,8 @@
 'use client'
 
+/* External favicons from arbitrary company domains */
+/* eslint-disable @next/next/no-img-element */
+
 export default function BatchRowPreview({ scraped, loading }) {
   if (!scraped) {
     return (
