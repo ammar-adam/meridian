@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import IntakeDropzone from '@/components/intake-dropzone'
 import { createFundProfile, saveFundProfile } from '@/lib/fund-profile'
+import { DEFAULT_METRIC_PREFERENCES } from '@/lib/metric-preferences'
+import MetricPreferencesPicker from '@/components/metric-preferences-picker'
 import { importPipelineContacts } from '@/lib/pipeline-contacts'
 import { extractDomain, normalizeUrl } from '@/lib/url-utils'
 import { guessFundNameFromUrl } from '@/lib/intake-parser'
@@ -16,6 +18,7 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
   const [preview, setPreview] = useState(null)
   const [error, setError] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
+  const [metricPreferences, setMetricPreferences] = useState(DEFAULT_METRIC_PREFERENCES)
 
   useEffect(() => {
     if (initialUrl) setFundUrl(initialUrl)
@@ -105,6 +108,14 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       portfolio: preview?.portfolio || [],
       mandate: preview?.mandate,
       thesisInstructions: preview?.thesisInstructions,
+      strategies: [{
+        id: 'primary',
+        name: 'Primary',
+        thesis: preview?.thesis || '',
+        portfolio: preview?.portfolio || [],
+        mandate: preview?.mandate,
+        metricPreferences,
+      }],
     })
 
     saveFundProfile(profile)
@@ -169,6 +180,11 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
             {preview.mandate?.stages?.length > 0 && <span>{preview.mandate.stages.join(', ')}</span>}
             {preview.importedContacts > 0 && <span>{preview.importedContacts} contacts imported</span>}
           </div>
+          <MetricPreferencesPicker
+            value={metricPreferences}
+            onChange={setMetricPreferences}
+            compact
+          />
           <button type="button" onClick={handleSave} className="m-btn-primary w-full">
             Save & start screening
           </button>

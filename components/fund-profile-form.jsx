@@ -10,6 +10,8 @@ import {
   addFund,
   slugify,
 } from '@/lib/fund-profile'
+import MetricPreferencesPicker from '@/components/metric-preferences-picker'
+import { DEFAULT_METRIC_PREFERENCES } from '@/lib/metric-preferences'
 
 function FieldLabel({ children }) {
   return <label className="mb-1.5 block m-kicker">{children}</label>
@@ -33,7 +35,7 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
   const [strategies, setStrategies] = useState(
     initial?.strategies?.length
       ? initial.strategies
-      : [{ id: 'primary', name: 'Primary', thesis: initial?.thesis || '' }]
+      : [{ id: 'primary', name: 'Primary', thesis: initial?.thesis || '', metricPreferences: DEFAULT_METRIC_PREFERENCES }]
   )
   const [activeStrategyIdx, setActiveStrategyIdx] = useState(0)
   const [enriching, setEnriching] = useState(false)
@@ -85,7 +87,12 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
 
   function addStrategy() {
     const n = strategies.length + 1
-    setStrategies(prev => [...prev, { id: slugify(`strategy_${n}`), name: `Strategy ${n}`, thesis: '' }])
+    setStrategies(prev => [...prev, {
+      id: slugify(`strategy_${n}`),
+      name: `Strategy ${n}`,
+      thesis: '',
+      metricPreferences: [...DEFAULT_METRIC_PREFERENCES],
+    }])
     setActiveStrategyIdx(strategies.length)
   }
 
@@ -208,6 +215,10 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
             rows={6}
             className="m-textarea"
             placeholder="Stage, sector, geography, value-add for this strategy…"
+          />
+          <MetricPreferencesPicker
+            value={active?.metricPreferences}
+            onChange={(prefs) => updateStrategy(activeStrategyIdx, 'metricPreferences', prefs)}
           />
         </div>
       </div>

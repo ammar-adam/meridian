@@ -9,6 +9,7 @@ import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
 import { StrategySwitcher } from '@/components/context-switcher'
 import { getEditLog, getEditSummary } from '@/lib/edit-tracker'
+import { getStatEditInsight } from '@/lib/metric-preferences'
 import { generatePromptFeedback } from '@/lib/prompt-feedback'
 import { getLearningPreview } from '@/lib/learning-preview'
 import { getFundProfile, getActiveStrategy, getTrackingId } from '@/lib/fund-profile'
@@ -55,6 +56,7 @@ export default function ThesisPage() {
   const maxSection = Math.max(...Object.values(summary?.sectionCounts ?? {}), 1)
   const learning = trackingId ? getLearningPreview(trackingId) : null
   const revealed = inferRevealedPreference(trackingId || 'guest')
+  const statInsight = trackingId ? getStatEditInsight(getEditLog(), trackingId) : null
 
   return (
     <WorkspaceShell
@@ -81,6 +83,16 @@ export default function ThesisPage() {
           />
         ) : (
           <>
+            {statInsight && (
+              <div className="m-card m-card-pad mb-6 border-violet-200 bg-violet-50/50">
+                <p className="m-kicker mb-1">Metric preferences learning</p>
+                <p className="text-[13px] leading-relaxed text-violet-900">{statInsight.message}</p>
+                <Link href="/fund" className="mt-2 inline-block text-[12px] font-medium text-violet-800 hover:underline">
+                  Adjust metric priorities →
+                </Link>
+              </div>
+            )}
+
             {learning && (
               <div className="m-card m-card-pad mb-6 border-emerald-200 bg-emerald-50/60">
                 <p className="text-[13px] font-medium text-emerald-900">Applied to your next briefs</p>
