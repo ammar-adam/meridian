@@ -1,5 +1,6 @@
 import { enforceRateLimit } from '@/lib/api-guard'
 import { getUserId } from '@/lib/auth-server'
+import { requireTeamMember } from '@/lib/team-auth'
 import { createShare, listTeamShares, isShareEnabled } from '@/lib/share-store'
 
 export const maxDuration = 30
@@ -38,6 +39,9 @@ export async function GET(req) {
   if (!teamId) {
     return Response.json({ error: 'teamId query required' }, { status: 400 })
   }
+
+  const auth = await requireTeamMember(teamId)
+  if (auth.error) return auth.error
 
   const shares = await listTeamShares(teamId)
   return Response.json({ shares })

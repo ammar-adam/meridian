@@ -33,6 +33,7 @@ export async function PUT(req) {
     fundsStore: body.fundsStore ?? null,
     memos: body.memos ?? [],
     edits: body.edits ?? [],
+    teamContext: body.teamContext ?? null,
   })
 
   return NextResponse.json({ ok: true })
