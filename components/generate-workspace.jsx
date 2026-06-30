@@ -81,6 +81,10 @@ export default function GenerateWorkspace() {
   const prefetchRef = useRef({ url: '', mode: '', research: null })
   const submittingRef = useRef(false)
 
+  const urlValidation = url.trim() ? validateBriefUrl(url) : null
+  const urlInvalid = urlValidation && !urlValidation.ok
+  const displayUrlError = error || (urlInvalid ? urlValidation.message : '')
+
   useEffect(() => {
     const q = searchParams.get('url')
     if (q) setUrl(q)
@@ -399,11 +403,17 @@ export default function GenerateWorkspace() {
               id="company-url"
               type="text"
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={(e) => {
+                setUrl(e.target.value)
+                if (error) setError('')
+              }}
               placeholder="company.com"
               disabled={loading}
-              className={error ? 'm-input ring-1 ring-red-300' : 'm-input'}
+              className={displayUrlError ? 'm-input ring-1 ring-red-300' : 'm-input'}
             />
+            {displayUrlError && (
+              <p className="mt-2 text-[12px] text-red-600">{displayUrlError}</p>
+            )}
             <div className="mt-3 flex flex-wrap gap-2">
               {Object.values(RESEARCH_MODES).map(m => (
                 <button

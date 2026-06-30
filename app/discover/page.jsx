@@ -16,6 +16,7 @@ import {
 } from '@/lib/source-session'
 import { getFundProfile, getActiveStrategy, resolveApiFundContext, getTrackingId } from '@/lib/fund-profile'
 import { findMemoByDomain } from '@/lib/memo-library'
+import { resolveDiscoverCompanyUrl } from '@/lib/discover-url'
 import { runBatchJob, fetchActiveBatchJob, jobHasPending, recoverInterruptedBatchRows } from '@/lib/batch-runner'
 import IntakeDropzone from '@/components/intake-dropzone'
 import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } from '@/components/pipeline-contacts-panel'
@@ -209,8 +210,11 @@ function DiscoverContent() {
   }
 
   function generateMemo(company) {
-    const url = company.url || (company.domain ? `https://${company.domain}` : '')
-    if (!url) return
+    const url = resolveDiscoverCompanyUrl(company)
+    if (!url) {
+      setError(`${company.name} has no website on file — paste their URL on Brief manually.`)
+      return
+    }
 
     const existing = findMemoByDomain(url, { fundId: fundProfile?.id })
     if (existing) {

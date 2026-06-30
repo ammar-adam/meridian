@@ -61,6 +61,7 @@ function MemoPageContent() {
   const [memoRendered, setMemoRendered] = useState(false)
   const [qualityGate, setQualityGate] = useState(null)
   const [bannerDismissed, setBannerDismissed] = useState(false)
+  const [qualityWarningsExpanded, setQualityWarningsExpanded] = useState(false)
   const [errorBannerDismissed, setErrorBannerDismissed] = useState(false)
   const [outcome, setOutcome] = useState(null)
   const [editCount, setEditCount] = useState(0)
@@ -73,9 +74,11 @@ function MemoPageContent() {
   const [serverPdf, setServerPdf] = useState(false)
   const [shareEnabled, setShareEnabled] = useState(false)
   const [shareError, setShareError] = useState('')
+  const [regenerateUrl, setRegenerateUrl] = useState('')
   const [finishingBrief, setFinishingBrief] = useState(false)
   const [finishError, setFinishError] = useState('')
   const [outcomeBlocked, setOutcomeBlocked] = useState('')
+  const outcomeNudgeSkippedRef = useRef(false)
   const pendingGenerateRef = useRef(false)
   const pendingNavRef = useRef(null)
 
@@ -172,6 +175,11 @@ function MemoPageContent() {
       setTrackingId(meta.trackingId)
       setFundName(meta.fundName || '')
     }
+
+    const briefUrl = sessionMeta?.companyUrl
+      || (sessionMeta?.companyDomain ? `https://${sessionMeta.companyDomain}` : null)
+      || (existing?.companyDomain ? `https://${existing.companyDomain}` : null)
+    setRegenerateUrl(briefUrl || '')
 
     if (source === 'pipeline') {
       const justSaved = sessionStorage.getItem(PIPELINE_SAVED_KEY) === id
@@ -508,7 +516,7 @@ function MemoPageContent() {
   }
 
   function tryNavigate(href) {
-    if (!outcome) {
+    if (!outcome && !outcomeNudgeSkippedRef.current) {
       pendingNavRef.current = href
       setShowOutcomeNudge(true)
       return
@@ -611,15 +619,27 @@ function MemoPageContent() {
   const errors = qualityGate?.flags?.filter(f => f.severity === 'error') ?? []
   const showErrorBanner = errors.length > 0 && !errorBannerDismissed && !finishingBrief && !finishError
   const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief && !finishError
+  const warnCollapsed = warnings.length > 3 && !qualityWarningsExpanded
   const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
   const topOffset = (finishingBrief || finishError || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
   return (
     <div>
       <div className="m-toolbar-bar no-print fixed inset-x-0 top-0 z-40">
-        <button type="button" onClick={() => tryNavigate('/brief')} className="text-[12px] transition hover:opacity-80" style={{ color: 'var(--m-muted)' }}>
-          ← Brief
-        </button>
+        <div className="flex items-center gap-3">
+          <button type="button" onClick={() => tryNavigate('/brief')} className="text-[12px] transition hover:opacity-80" style={{ color: 'var(--m-muted)' }}>
+            ← Brief
+          </button>
+          {regenerateUrl && !isDemo && (
+            <Link
+              href={`/brief?url=${encodeURIComponent(regenerateUrl)}`}
+              className="text-[12px] font-medium transition hover:opacity-80"
+              style={{ color: 'var(--m-accent)' }}
+            >
+              Regenerate
+            </Link>
+          )}
+        </div>
         <div className="flex items-center gap-2 text-[13px] font-medium">
           <span className="flex h-6 w-6 items-center justify-center rounded-md border text-[10px] font-semibold" style={{ borderColor: 'var(--m-border)' }}>M</span>
           {fundName || 'Meridian'}
@@ -674,16 +694,33 @@ function MemoPageContent() {
         <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-amber-200 bg-amber-50 px-4 py-2">
           <div className="mx-auto flex max-w-3xl items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-medium text-amber-800">Verify before sharing</p>
-              <ul className="mt-1 space-y-0.5">
-                {warnings.map((flag, i) => (
-                  <li key={i} className="text-xs text-amber-700">{flag.message}</li>
-                ))}
-              </ul>
+              <p className="text-xs font-medium text-amber-800">
+                {warnCollapsed
+                  ? `Review quality flags (${warnings.length})`
+                  : 'Verify before sharing'}
+              </p>
+              {!warnCollapsed && (
+                <ul className="mt-1 space-y-0.5">
+                  {warnings.map((flag, i) => (
+                    <li key={i} className="text-xs text-amber-700">{flag.message}</li>
+                  ))}
+                </ul>
+              )}
             </div>
-            <button onClick={() => setBannerDismissed(true)} className="shrink-0 text-xs text-amber-600 hover:text-amber-800">
-              Dismiss
-            </button>
+            <div className="flex shrink-0 gap-2">
+              {warnCollapsed && (
+                <button
+                  type="button"
+                  onClick={() => setQualityWarningsExpanded(true)}
+                  className="text-xs font-medium text-amber-800 hover:text-amber-900"
+                >
+                  Show
+                </button>
+              )}
+              <button onClick={() => setBannerDismissed(true)} className="shrink-0 text-xs text-amber-600 hover:text-amber-800">
+                Dismiss
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -742,10 +779,10 @@ function MemoPageContent() {
             {shareEnabled && (
               <>
                 <button type="button" onClick={handleCreateShareLink} className="m-btn-ghost m-btn-sm">
-                  Share link
+                  {shareCopied && shareUrl ? 'Link copied!' : 'Share link'}
                 </button>
                 {shareCopied && shareUrl && (
-                  <span className="text-[11px] font-medium text-emerald-700">Link copied!</span>
+                  <span className="text-[11px] font-medium text-emerald-700">Ready to paste</span>
                 )}
               </>
             )}
@@ -790,6 +827,7 @@ function MemoPageContent() {
               <button
                 onClick={() => {
                   setShowOutcomeNudge(false)
+                  outcomeNudgeSkippedRef.current = true
                   if (pendingNavRef.current) window.location.href = pendingNavRef.current
                 }}
                 className="m-btn-ghost m-btn-sm"

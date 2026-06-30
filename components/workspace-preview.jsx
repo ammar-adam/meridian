@@ -37,7 +37,7 @@ export default function WorkspacePreview() {
             </div>
 
             <div className="mt-4 rounded-md bg-[#8B1A1A]/90 p-3">
-              <div className="text-[9px] font-semibold uppercase tracking-wider text-white/70">The Your Fund Angle</div>
+              <div className="text-[9px] font-semibold uppercase tracking-wider text-white/70">The Fund Angle</div>
               <div className="mt-1 text-[12px] font-medium leading-snug text-white">
                 Predictive layer for govtech sales — enterprise distribution in a $160B market
               </div>

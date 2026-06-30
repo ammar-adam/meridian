@@ -144,7 +144,7 @@ export default function SourceTable({
               <th>Geography</th>
               <th>Sector</th>
               <th>Source</th>
-              <th className="w-28" />
+              <th className="w-24">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -157,7 +157,20 @@ export default function SourceTable({
                 )}
                 <td className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{i + 1}</td>
                 <td>
-                  <div className="font-medium">{c.name}</div>
+                  <button
+                    type="button"
+                    onClick={() => onGenerateMemo(c)}
+                    disabled={!c.url && !c.domain}
+                    className="text-left font-medium hover:underline disabled:opacity-50"
+                    title={c.domain || c.url || 'No website'}
+                  >
+                    {c.name}
+                  </button>
+                  {(c.domain || c.url) && (
+                    <div className="mt-0.5 font-mono text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
+                      {(c.domain || c.url).replace(/^https?:\/\//, '').split('/')[0]}
+                    </div>
+                  )}
                   <div className="mt-0.5 max-w-md text-[12px] leading-snug" style={{ color: 'var(--m-muted)' }}>{c.description}</div>
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
