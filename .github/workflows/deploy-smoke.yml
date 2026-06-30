@@ -39,9 +39,9 @@ jobs:
       - name: Smoke test production
         run: npm run smoke
         env:
-          BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}
+          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}
 
       - name: Integration smoke (vitest)
         run: npm run test:integration
         env:
-          BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}
+          SMOKE_BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}

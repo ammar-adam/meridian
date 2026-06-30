@@ -15,5 +15,9 @@ export default defineConfig({
     include: ['tests/integration/**/*.test.mjs'],
     testTimeout: 120_000,
     reporters: ['default'],
+    // Vite sets BASE_URL="/" — use SMOKE_BASE_URL for production smoke
+    env: {
+      SMOKE_BASE_URL: process.env.SMOKE_BASE_URL || process.env.MERIDIAN_PRODUCTION_URL,
+    },
   },
 })

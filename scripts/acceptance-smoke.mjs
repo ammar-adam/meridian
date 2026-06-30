@@ -2,9 +2,11 @@
  * Run: npm run smoke
  * Optional: BASE_URL=https://meridian-eight-sandy.vercel.app npm run smoke
  */
-import { runSmokeChecks } from '../tests/lib/smoke-checks.mjs'
+import { runSmokeChecks, resolveSmokeBaseUrl, DEFAULT_PRODUCTION } from '../tests/lib/smoke-checks.mjs'
 
-const BASE = process.env.BASE_URL || 'http://localhost:3000'
+const BASE = resolveSmokeBaseUrl(
+  process.env.SMOKE_BASE_URL || process.env.MERIDIAN_PRODUCTION_URL || process.env.BASE_URL || DEFAULT_PRODUCTION
+)
 
 async function run() {
   console.log(`Smoke tests → ${BASE}\n`)

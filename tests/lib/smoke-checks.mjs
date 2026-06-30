@@ -1,7 +1,26 @@
 /**
  * Shared HTTP smoke checks — used by scripts/acceptance-smoke.mjs and deploy CI.
+ * Use SMOKE_BASE_URL in vitest (Vite overwrites BASE_URL to "/").
  */
+const DEFAULT_PRODUCTION = 'https://meridian-eight-sandy.vercel.app'
+
+export function resolveSmokeBaseUrl(override) {
+  const raw = (
+    override
+    || process.env.SMOKE_BASE_URL
+    || process.env.MERIDIAN_PRODUCTION_URL
+    || process.env.BASE_URL
+    || 'http://localhost:3000'
+  ).trim().replace(/\/$/, '')
+
+  if (!raw || raw === '/' || !/^https?:\/\//i.test(raw)) {
+    throw new Error(`Invalid smoke base URL: "${raw}" — set SMOKE_BASE_URL`)
+  }
+  return raw
+}
+
 export async function runSmokeChecks(baseUrl) {
+  const base = resolveSmokeBaseUrl(baseUrl)
   const results = []
 
   async function check(name, fn) {
@@ -14,7 +33,7 @@ export async function runSmokeChecks(baseUrl) {
   }
 
   await check('health', async () => {
-    const res = await fetch(`${baseUrl}/api/health`)
+    const res = await fetch(`${base}/api/health`)
     const data = await res.json()
     if (!res.ok || !data.ok) throw new Error('health not ok')
     if (!data.anthropic || !data.perplexity) throw new Error('API keys not configured')
@@ -28,7 +47,7 @@ export async function runSmokeChecks(baseUrl) {
 
   await check('scrape latency', async () => {
     const start = Date.now()
-    const res = await fetch(`${baseUrl}/api/scrape`, {
+    const res = await fetch(`${base}/api/scrape`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url: 'https://stripe.com' }),
@@ -39,7 +58,7 @@ export async function runSmokeChecks(baseUrl) {
   })
 
   await check('batch endpoint', async () => {
-    const res = await fetch(`${baseUrl}/api/batch`, {
+    const res = await fetch(`${base}/api/batch`, {
       cache: 'no-store',
       headers: { Cookie: 'meridian_did=smoke-test-device-001' },
     })
@@ -49,5 +68,7 @@ export async function runSmokeChecks(baseUrl) {
   })
 
   const failed = results.filter(r => !r.ok)
-  return { results, passed: results.length - failed.length, failed: failed.length }
+  return { results, passed: results.length - failed.length, failed: failed.length, base }
 }
+
+export { DEFAULT_PRODUCTION }
