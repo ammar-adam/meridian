@@ -75,9 +75,11 @@ export default function WorkspaceSync() {
 
     window.addEventListener('meridian-sync-needed', schedulePush)
     window.addEventListener('meridian-context-change', schedulePush)
+    window.addEventListener('meridian-team-change', schedulePush)
     return () => {
       window.removeEventListener('meridian-sync-needed', schedulePush)
       window.removeEventListener('meridian-context-change', schedulePush)
+      window.removeEventListener('meridian-team-change', schedulePush)
       if (timerRef.current) clearTimeout(timerRef.current)
     }
   }, [isSignedIn, pushToCloud])
