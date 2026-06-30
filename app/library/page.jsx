@@ -6,7 +6,7 @@ import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
 import BriefStarters from '@/components/brief-starters'
-import { downloadLibraryCsv } from '@/lib/crm-export'
+import { downloadLibraryCsv, copyLibraryRowForCrm } from '@/lib/crm-export'
 import { createShareLink } from '@/lib/memo-export'
 import { getMemoLibrary, getRelatedMemos, updateMemoMeta } from '@/lib/memo-library'
 import { reconcileLibraryOutcomes, syncShareOutcomesFromServer } from '@/lib/outcome-sync'
@@ -25,6 +25,7 @@ export default function LibraryPage() {
   const [outcomeFilter, setOutcomeFilter] = useState('all')
   const [selected, setSelected] = useState(new Set())
   const [sharing, setSharing] = useState(false)
+  const [crmCopiedId, setCrmCopiedId] = useState(null)
   const router = useRouter()
 
   function reload() {
@@ -90,6 +91,13 @@ export default function LibraryPage() {
     } finally {
       setSharing(false)
     }
+  }
+
+  async function copyForCrm(entry, e) {
+    e?.stopPropagation()
+    await copyLibraryRowForCrm(entry)
+    setCrmCopiedId(entry.id)
+    setTimeout(() => setCrmCopiedId(null), 2000)
   }
 
   function statusLabel(entry) {
@@ -234,9 +242,19 @@ export default function LibraryPage() {
                         </td>
                         <td className="text-[13px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{entry.savedAt?.slice(0, 10)}</td>
                         <td onClick={(e) => e.stopPropagation()}>
-                          <button onClick={() => openMemo(entry.id)} className="m-btn-secondary m-btn-sm">
-                            Open
-                          </button>
+                          <div className="flex gap-1">
+                            <button
+                              type="button"
+                              onClick={(e) => copyForCrm(entry, e)}
+                              className="m-btn-ghost m-btn-sm"
+                              title="Copy plain-text brief for CRM paste"
+                            >
+                              {crmCopiedId === entry.id ? 'Copied!' : 'CRM'}
+                            </button>
+                            <button onClick={() => openMemo(entry.id)} className="m-btn-secondary m-btn-sm">
+                              Open
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     )
