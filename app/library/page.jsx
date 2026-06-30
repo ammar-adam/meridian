@@ -23,6 +23,7 @@ function sortLibrary(entries) {
 export default function LibraryPage() {
   const [library, setLibrary] = useState([])
   const [outcomeFilter, setOutcomeFilter] = useState('all')
+  const [qualityFilter, setQualityFilter] = useState('all')
   const [selected, setSelected] = useState(new Set())
   const [sharing, setSharing] = useState(false)
   const [crmCopiedId, setCrmCopiedId] = useState(null)
@@ -52,8 +53,16 @@ export default function LibraryPage() {
     if (outcomeFilter === 'pending') rows = rows.filter(e => !e.outcome)
     if (outcomeFilter === 'pursue') rows = rows.filter(e => e.outcome === 'pursue')
     if (outcomeFilter === 'pass') rows = rows.filter(e => e.outcome === 'pass')
+    if (qualityFilter === 'flags') {
+      rows = rows.filter(e => (e.qualityWarnCount || 0) > 0 || (e.qualityErrorCount || 0) > 0 || e.qualityPassed === false)
+    }
+    if (qualityFilter === 'clean') {
+      rows = rows.filter(e => e.qualityPassed === true || ((e.qualityWarnCount || 0) === 0 && (e.qualityErrorCount || 0) === 0 && e.qualityPassed !== false))
+    }
     return sortLibrary(rows)
-  }, [library, outcomeFilter])
+  }, [library, outcomeFilter, qualityFilter])
+
+  const flagged = library.filter(e => (e.qualityWarnCount || 0) > 0 || (e.qualityErrorCount || 0) > 0 || e.qualityPassed === false).length
 
   const pending = library.filter(e => !e.outcome).length
 
@@ -98,6 +107,13 @@ export default function LibraryPage() {
     await copyLibraryRowForCrm(entry)
     setCrmCopiedId(entry.id)
     setTimeout(() => setCrmCopiedId(null), 2000)
+  }
+
+  function qualityLabel(entry) {
+    if (entry.qualityErrorCount > 0) return { text: 'Needs fix', cls: 'text-red-700' }
+    if (entry.qualityWarnCount > 0) return { text: `${entry.qualityWarnCount} flag${entry.qualityWarnCount !== 1 ? 's' : ''}`, cls: 'text-amber-700' }
+    if (entry.qualityPassed === true) return { text: 'Verified', cls: 'text-emerald-700' }
+    return { text: '—', cls: 'text-zinc-500' }
   }
 
   function statusLabel(entry) {
@@ -148,6 +164,12 @@ export default function LibraryPage() {
           </FilterChip>
           <FilterChip active={outcomeFilter === 'pursue'} onClick={() => setOutcomeFilter('pursue')}>Pursue</FilterChip>
           <FilterChip active={outcomeFilter === 'pass'} onClick={() => setOutcomeFilter('pass')}>Pass</FilterChip>
+          <span className="mx-1 w-px self-stretch bg-zinc-200" aria-hidden />
+          <FilterChip active={qualityFilter === 'all'} onClick={() => setQualityFilter('all')}>Any quality</FilterChip>
+          <FilterChip active={qualityFilter === 'flags'} onClick={() => setQualityFilter('flags')}>
+            Quality flags{flagged > 0 ? ` (${flagged})` : ''}
+          </FilterChip>
+          <FilterChip active={qualityFilter === 'clean'} onClick={() => setQualityFilter('clean')}>Clean</FilterChip>
         </div>
 
         {filtered.length === 0 ? (
@@ -180,6 +202,7 @@ export default function LibraryPage() {
                     <th>Company</th>
                     <th>Domain</th>
                     <th>Status</th>
+                    <th>Quality</th>
                     <th>Round</th>
                     <th>Outcome</th>
                     <th>Saved</th>
@@ -228,6 +251,7 @@ export default function LibraryPage() {
                           )}
                         </td>
                         <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{statusLabel(entry)}</td>
+                        <td className={`text-[12px] font-medium ${qualityLabel(entry).cls}`}>{qualityLabel(entry).text}</td>
                         <td className="text-[13px]" style={{ color: 'var(--m-muted)' }}>{entry.round}</td>
                         <td>
                           {entry.outcome ? (

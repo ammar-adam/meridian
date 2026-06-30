@@ -120,6 +120,14 @@ function MemoPageContent() {
         sessionStorage.setItem('memoData', JSON.stringify(data))
         sessionStorage.setItem('memoSource', 'library')
         sessionStorage.setItem('memoId', id)
+        if (fromLibrary.qualityFlags) {
+          qg = {
+            passed: fromLibrary.qualityPassed ?? false,
+            flags: fromLibrary.qualityFlags,
+          }
+          sessionStorage.setItem('qualityGate', JSON.stringify(qg))
+          setQualityGate(qg)
+        }
       }
     }
 
@@ -196,6 +204,8 @@ function MemoPageContent() {
           ...saveMeta,
           qualityPassed: qg?.passed ?? null,
           qualityWarnCount: qg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
+          qualityErrorCount: qg?.flags?.filter(f => f.severity === 'error').length ?? 0,
+          qualityFlags: qg?.flags ?? null,
         })
         incrementBriefCount()
       }
@@ -285,6 +295,8 @@ function MemoPageContent() {
         ...saveMeta,
         qualityPassed: nextQg?.passed ?? null,
         qualityWarnCount: nextQg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
+        qualityErrorCount: nextQg?.flags?.filter(f => f.severity === 'error').length ?? 0,
+        qualityFlags: nextQg?.flags ?? null,
       })
       incrementBriefCount()
 

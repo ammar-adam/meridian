@@ -1,5 +1,6 @@
 import { parseThesis } from '@/lib/thesis-parser'
 import { searchCompanyDatabase, getDatabaseSearchMeta } from '@/lib/company-search'
+import { mergeCompanySeeds, postProcessDiscoverResults, MIN_RESULTS } from '@/lib/discover-merge'
 import { SOURCE_RANK_PROMPT, buildRankUserBlocks } from '@/lib/source-prompt'
 import { MODELS } from '@/lib/api-models'
 import { callAnthropic, textBlock } from '@/lib/anthropic'
@@ -59,7 +60,7 @@ export async function POST(req) {
       geographies: fundContext.mandate?.geographies?.length ? fundContext.mandate.geographies : ['North America'],
       keywords: thesis.split(/[,\s]+/).filter(Boolean).slice(0, 5),
       pitchbookQuery: thesis,
-      perplexityQuery: `${thesis} startups seed Series A ${year}`,
+      perplexityQuery: `List 20+ real startups matching: ${thesis}. For each: company name, website domain, one-line description, funding stage, total raised, lead investors, HQ geography. Year ${year}. North America focus if applicable.`,
     }
   }
 
@@ -69,6 +70,7 @@ export async function POST(req) {
 
   const dbSearch = await searchCompanyDatabase(parsed, thesis)
   const { startuphub, pitchbook, all: databaseResults } = dbSearch
+  const mergedSeeds = mergeCompanySeeds(startuphub, pitchbook)
 
   const perplexityQuery = parsed.perplexityQuery ?? `
     Find companies matching this investment thesis: ${thesis}
@@ -76,8 +78,7 @@ export async function POST(req) {
     Focus on: ${parsed.stages?.join(', ') ?? 'Series A'} stage companies in ${parsed.geographies?.join(', ') ?? 'North America'}.
     Sectors: ${parsed.sectors?.join(', ') ?? 'as described'}.
     Year: ${year}.
-    For each company return: name, website domain, one-line description, funding stage, total raised, lead investors, HQ geography.
-    List at least 15 specific companies with real names and domains.
+    List at least 20 specific companies. For each return: name, website domain, one-line description, funding stage, total raised, lead investors, HQ geography.
   `
 
   const perplexityRes = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -101,7 +102,7 @@ export async function POST(req) {
   const perplexityData = await perplexityRes.json()
   const perplexityResearch = perplexityData.choices?.[0]?.message?.content ?? ''
 
-  const rankBlocks = buildRankUserBlocks(thesis, parsed, databaseResults, perplexityResearch, fundContext)
+  const rankBlocks = buildRankUserBlocks(thesis, parsed, mergedSeeds, perplexityResearch, fundContext)
 
   let raw
   try {
@@ -134,13 +135,10 @@ export async function POST(req) {
     return Response.json({ error: 'Failed to parse ranked results' }, { status: 500 })
   }
 
-  companies = companies.map(c => ({
-    ...c,
-    url: c.url || (c.domain ? `https://${c.domain.replace(/^https?:\/\//, '')}` : ''),
-    fitScore: Number(c.fitScore) || 0,
-  })).sort((a, b) => b.fitScore - a.fitScore)
+  companies = postProcessDiscoverResults(companies, mergedSeeds)
 
-  console.log('[source]', thesis.slice(0, 60), `→ ${companies.length} companies (hub: ${startuphub.length}, pb: ${pitchbook.length})`)
+  const thin = companies.length < MIN_RESULTS
+  console.log('[source]', thesis.slice(0, 60), `→ ${companies.length} companies (hub: ${startuphub.length}, pb: ${pitchbook.length}, seeds: ${mergedSeeds.length}${thin ? ', thin' : ''})`)
 
   const dbMeta = getDatabaseSearchMeta(dbSearch)
 
@@ -151,6 +149,8 @@ export async function POST(req) {
       parsed,
       fundId: fundContext.id,
       ...dbMeta,
+      seedCount: mergedSeeds.length,
+      thin,
       perplexityChars: perplexityResearch.length,
       // legacy keys for cached responses
       pitchbookCount: pitchbook.length,
@@ -158,7 +158,9 @@ export async function POST(req) {
     },
   }
 
-  await cacheSet(cacheKey, payload, CACHE_TTL.source)
+  if (!thin) {
+    await cacheSet(cacheKey, payload, CACHE_TTL.source)
+  }
 
   return Response.json({ ...payload, cached: false })
 }

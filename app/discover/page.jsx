@@ -265,7 +265,7 @@ function DiscoverContent() {
   }
 
   const subtitle = meta
-    ? `${filtered.length} results · startuphub ${meta.startuphubConfigured ? meta.startuphubCount : 'web'}${meta.cached ? ' · cached' : ''}`
+    ? `${filtered.length} results · hub ${meta.startuphubConfigured ? meta.startuphubCount : 'off'} · seeds ${meta.seedCount ?? meta.databaseCount ?? 0}${meta.thin ? ' · thin' : ''}${meta.cached ? ' · cached' : ''}`
     : fundProfile?.fundName || 'thesis search'
 
   return (
@@ -365,6 +365,12 @@ function DiscoverContent() {
             ]}
             trailing={<span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{filtered.length}/{companies.length}</span>}
           />
+          {meta?.thin && (
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+              <span className="font-medium">Thin results.</span>
+              {' '}Try a broader thesis, hit Refresh, or confirm StartupHub is configured. Database seeds: {meta.seedCount ?? 0}.
+            </div>
+          )}
           <div className="m-card overflow-hidden">
             <SourceTable
               companies={filtered}
