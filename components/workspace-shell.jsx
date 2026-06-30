@@ -117,11 +117,13 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                   { key: 'pitchbook', label: 'PitchBook' },
                   { key: 'database', label: 'Database' },
                   { key: 'clerk', label: 'Auth' },
-                ].map(({ key, label }) => (
+                  { key: 'serverPdf', label: 'Server PDF', feature: true },
+                  { key: 'shareLinks', label: 'Share links', feature: true },
+                ].map(({ key, label, feature }) => (
                   <div key={key} className="flex justify-between py-0.5 text-[11px]">
                     <span className="text-zinc-500">{label}</span>
-                    <span className={health[key] ? 'text-emerald-400' : 'text-zinc-600'}>
-                      {health[key] ? 'on' : 'off'}
+                    <span className={(feature ? health.features?.[key] : health[key]) ? 'text-emerald-400' : 'text-zinc-600'}>
+                      {(feature ? health.features?.[key] : health[key]) ? 'on' : 'off'}
                     </span>
                   </div>
                 ))}

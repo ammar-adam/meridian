@@ -1,5 +1,6 @@
 import { enforceRateLimit } from '@/lib/api-guard'
 import { requireUserId } from '@/lib/auth-server'
+import { requireTeamMember } from '@/lib/team-auth'
 import { createTeam, joinTeam, getTeam } from '@/lib/team-store'
 import { isDbEnabled } from '@/lib/db/workspace'
 
@@ -48,10 +49,21 @@ export async function GET(req) {
     return Response.json({ error: 'teamId required' }, { status: 400 })
   }
 
+  const auth = await requireTeamMember(teamId)
+  if (auth.error) return auth.error
+
   const team = await getTeam(teamId)
   if (!team) {
     return Response.json({ error: 'Team not found' }, { status: 404 })
   }
 
-  return Response.json({ ...team, durable: isDbEnabled() })
+  const isOwner = team.ownerId === auth.userId
+  return Response.json({
+    teamId: team.teamId,
+    name: team.name,
+    memberCount: team.memberCount ?? 1,
+    createdAt: team.createdAt,
+    inviteCode: isOwner ? team.inviteCode : undefined,
+    durable: isDbEnabled(),
+  })
 }

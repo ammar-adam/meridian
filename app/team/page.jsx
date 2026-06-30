@@ -25,6 +25,11 @@ export default function TeamPage() {
 
   async function loadShares(teamId) {
     const res = await fetch(`/api/share?teamId=${encodeURIComponent(teamId)}`)
+    if (res.status === 401 || res.status === 403) {
+      setError(res.status === 401 ? 'Sign in to view team shares.' : 'You are not a member of this team.')
+      setShares([])
+      return
+    }
     if (res.ok) {
       const data = await res.json()
       setShares(data.shares || [])

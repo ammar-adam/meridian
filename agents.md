@@ -60,7 +60,7 @@ No hardcoded fund branding.
 | Synthesis | Anthropic API (claude-sonnet-4) |
 | Sourcing | PitchBook API (optional) + Perplexity + Claude ranking |
 | Template | HTML with {{VARIABLE}} string replace |
-| PDF | Browser print (Playwright TODO) |
+| PDF | Server Playwright (`/api/pdf`) when `MERIDIAN_ENABLE_SERVER_PDF=true`; browser print fallback |
 
 ---
 
@@ -136,7 +136,7 @@ PITCHBOOK_API_KEY=your_key_here   # optional
 - [x] V2: Quality gates, parallel pipeline, memo library, industry hero fallback
 - [x] V3: Behavioral tracking, pursue/pass, thesis dashboard
 - [x] Thesis-first rebuild: Discover/Brief/Thesis nav, fund profile, batch briefing
-- [ ] Playwright PDF route (TODO in app/api/generate/route.js)
+- [x] Server PDF route (`/api/pdf` via Playwright + `@sparticuz/chromium-min` on Vercel)
 
 ---
 
