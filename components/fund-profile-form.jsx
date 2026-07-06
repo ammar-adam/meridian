@@ -12,6 +12,7 @@ import {
 } from '@/lib/fund-profile'
 import MetricPreferencesPicker from '@/components/metric-preferences-picker'
 import { DEFAULT_METRIC_PREFERENCES } from '@/lib/metric-preferences'
+import { MEMO_TEMPLATE_OPTIONS } from '@/lib/memo-template'
 
 function FieldLabel({ children }) {
   return <label className="mb-1.5 block m-kicker">{children}</label>
@@ -38,6 +39,8 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
       : [{ id: 'primary', name: 'Primary', thesis: initial?.thesis || '', metricPreferences: DEFAULT_METRIC_PREFERENCES }]
   )
   const [activeStrategyIdx, setActiveStrategyIdx] = useState(0)
+  const [memoTemplateId, setMemoTemplateId] = useState(initial?.memoTemplateId || 'default')
+  const [outreachTone, setOutreachTone] = useState(initial?.outreachTone || '')
   const [enriching, setEnriching] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -125,6 +128,8 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
       portfolio: portfolio.filter(p => p.name?.trim()),
       strategies: normalizedStrategies,
       activeStrategyId: normalizedStrategies[activeStrategyIdx]?.id || normalizedStrategies[0].id,
+      memoTemplateId,
+      outreachTone: outreachTone.trim(),
     })
 
     const profile = newFund ? addFund(payload) : saveFundProfile(payload)
@@ -252,6 +257,32 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
           <input value={fundLogoUrl} onChange={e => setFundLogoUrl(e.target.value)} className="m-input font-mono" placeholder="https://…" />
         </div>
       )}
+
+      <div>
+        <FieldLabel>Brief template</FieldLabel>
+        <div className="mt-2 flex flex-col gap-2">
+          {MEMO_TEMPLATE_OPTIONS.map(opt => (
+            <label key={opt.id} className="flex cursor-pointer items-start gap-2 rounded-md border px-3 py-2" style={{ borderColor: memoTemplateId === opt.id ? 'var(--m-accent)' : 'var(--m-border)' }}>
+              <input type="radio" name="memoTemplateId" value={opt.id} checked={memoTemplateId === opt.id} onChange={() => setMemoTemplateId(opt.id)} className="mt-0.5" />
+              <span>
+                <span className="block text-[13px] font-medium">{opt.label}</span>
+                <span className="block text-[11px]" style={{ color: 'var(--m-muted)' }}>{opt.description}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <FieldLabel>Outreach voice (optional)</FieldLabel>
+        <textarea
+          value={outreachTone}
+          onChange={e => setOutreachTone(e.target.value)}
+          rows={3}
+          className="m-textarea"
+          placeholder="Custom instructions for founder outreach emails…"
+        />
+      </div>
 
       {error && <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">{error}</p>}
 

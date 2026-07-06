@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import { populateTemplate } from '@/lib/populate-template'
+import { memoTemplatePath } from '@/lib/memo-template'
 
 export default function SharePage() {
   const params = useParams()
@@ -29,7 +30,8 @@ export default function SharePage() {
       .then(async (payload) => {
         setMeta(payload.meta)
         if (payload.meta?.outcome) setSubmitted(true)
-        const template = await fetch('/memo-template.html').then(r => r.text())
+        const templateId = payload.meta?.memoTemplateId || 'default'
+        const template = await fetch(memoTemplatePath(templateId)).then(r => r.text())
         setHtml(populateTemplate(template, payload.memoData))
         setLoading(false)
       })

@@ -6,6 +6,7 @@ import IntakeDropzone from '@/components/intake-dropzone'
 import { createFundProfile, saveFundProfile } from '@/lib/fund-profile'
 import { DEFAULT_METRIC_PREFERENCES } from '@/lib/metric-preferences'
 import MetricPreferencesPicker from '@/components/metric-preferences-picker'
+import { MEMO_TEMPLATE_OPTIONS } from '@/lib/memo-template'
 import { importPipelineContacts } from '@/lib/pipeline-contacts'
 import { extractDomain, normalizeUrl } from '@/lib/url-utils'
 import { guessFundNameFromUrl } from '@/lib/intake-parser'
@@ -19,6 +20,7 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
   const [error, setError] = useState('')
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [metricPreferences, setMetricPreferences] = useState(DEFAULT_METRIC_PREFERENCES)
+  const [memoTemplateId, setMemoTemplateId] = useState('default')
 
   useEffect(() => {
     if (initialUrl) setFundUrl(initialUrl)
@@ -108,6 +110,8 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       portfolio: preview?.portfolio || [],
       mandate: preview?.mandate,
       thesisInstructions: preview?.thesisInstructions,
+      outreachTone: preview?.outreachTone || '',
+      memoTemplateId,
       strategies: [{
         id: 'primary',
         name: 'Primary',
@@ -185,6 +189,27 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
             onChange={setMetricPreferences}
             compact
           />
+          <div>
+            <p className="m-kicker mb-2">Brief template</p>
+            <div className="flex flex-col gap-2">
+              {MEMO_TEMPLATE_OPTIONS.map(opt => (
+                <label key={opt.id} className="flex cursor-pointer items-start gap-2 rounded-md border px-3 py-2 text-left" style={{ borderColor: memoTemplateId === opt.id ? 'var(--m-accent)' : 'var(--m-border)' }}>
+                  <input
+                    type="radio"
+                    name="memoTemplateId"
+                    value={opt.id}
+                    checked={memoTemplateId === opt.id}
+                    onChange={() => setMemoTemplateId(opt.id)}
+                    className="mt-0.5"
+                  />
+                  <span>
+                    <span className="block text-[13px] font-medium text-zinc-900">{opt.label}</span>
+                    <span className="block text-[11px] text-zinc-500">{opt.description}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
           <button type="button" onClick={handleSave} className="m-btn-primary w-full">
             Save & start screening
           </button>

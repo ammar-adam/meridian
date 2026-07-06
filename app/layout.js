@@ -1,6 +1,12 @@
 import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
 import OnboardingHost from '@/components/onboarding-host'
 import Providers from '@/app/providers'
+import {
+  isClerkConfigured,
+  clerkKeysMatch,
+  clerkPublishableKey,
+  clerkSecretKey,
+} from '@/lib/clerk-config'
 import './globals.css'
 
 const jakarta = Plus_Jakarta_Sans({
@@ -21,10 +27,13 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
+  const clerkEnabled = isClerkConfigured()
+    && clerkKeysMatch(clerkPublishableKey(), clerkSecretKey())
+
   return (
     <html lang="en" className={`${jakarta.variable} ${jetbrains.variable}`}>
       <body className="min-h-screen antialiased">
-        <Providers>
+        <Providers clerkEnabled={clerkEnabled}>
           <OnboardingHost />
           {children}
         </Providers>

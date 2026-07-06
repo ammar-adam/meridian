@@ -56,7 +56,7 @@ No hardcoded fund branding.
 |---|---|
 | Frontend | Next.js 14 app router + Tailwind |
 | Scraping | Native fetch + regex, server-side |
-| Research | Perplexity API (sonar-deep-research for briefs, sonar for discover) |
+| Research | Perplexity API — multi-pass brief research (`lib/research-passes.js`); sonar (quick) / sonar-deep-research (deep) |
 | Synthesis | Anthropic API (claude-sonnet-4) |
 | Sourcing | PitchBook API (optional) + Perplexity + Claude ranking |
 | Template | HTML with {{VARIABLE}} string replace |
@@ -92,13 +92,51 @@ meridian/
 │   ├── pitchbook.js
 │   ├── source-prompt.js
 │   ├── edit-tracker.js
+│   ├── outreach-prompt.js    # Founder outreach synthesis
+│   ├── evertrace.js          # Stealth signal scaffold (Discover)
+│   ├── fund-seeds.js         # Demo fund profiles (Sagard, Panache)
+│   ├── memo-template.js      # Template variant IDs
+│   ├── research-passes.js    # Section-specific Perplexity passes + confidence
+│   ├── research-core.js      # Parallel research orchestrator
 │   └── quality-gate.js
 ├── components/
 │   ├── workspace-shell.jsx
 │   ├── fund-profile-form.jsx
+│   ├── outreach-drawer.jsx
 │   └── source-table.jsx
-└── public/memo-template.html
+└── public/templates/
+    ├── default.html          # Standard one-pager (hero image)
+    └── compact.html          # Text-forward dense layout
 ```
+
+---
+
+## Shipped Features (Panache Sprint)
+
+| Feature | Route / file | Notes |
+|---------|--------------|-------|
+| **Multi-fund profiles** | `lib/fund-profile.js`, fund switcher in workspace shell | Multiple funds in localStorage; active fund + strategy context |
+| **Founder outreach drafts** | `/memo` → Draft outreach, `app/api/outreach` | After Pursue; Claude synthesis from brief + fund context; edits logged as `section: outreach` |
+| **Memo template variants** | `public/templates/`, fund setup selector | `default` and `compact`; per-fund `memoTemplateId` |
+| **EverTrace research** | `docs/evertrace-research.md`, `lib/evertrace.js` | Scaffold only; conditional go pending Canadian coverage demo |
+| **Multi-pass brief research** | `lib/research-passes.js`, `lib/research-core.js` | Quick: 3 parallel passes (product, funding, team); Deep: 6; team escalation when thin; confidence → quality gate |
+
+---
+
+## Brief Research Architecture
+
+```
+/api/research → research-core.js
+  Quick/auto: 3 parallel Perplexity (sonar) passes — product, funding, team
+  Deep:       6 parallel Perplexity (sonar-deep-research) passes
+  Team thin:  +1 escalation pass (LinkedIn/Crunchbase/press)
+  → passes[] with confidence: found | partial | not_found
+  → /api/generate receives researchPasses + merged research string
+  → Claude returns CONFIDENCE_SUMMARY (stripped before render)
+  → quality gate surfaces section-specific verify banners on /memo
+```
+
+Instant mode skips Perplexity (scrape-only via `lib/instant-research.js`).
 
 ---
 
@@ -137,6 +175,10 @@ PITCHBOOK_API_KEY=your_key_here   # optional
 - [x] V3: Behavioral tracking, pursue/pass, thesis dashboard
 - [x] Thesis-first rebuild: Discover/Brief/Thesis nav, fund profile, batch briefing
 - [x] Server PDF route (`/api/pdf` via Playwright + `@sparticuz/chromium-min` on Vercel)
+- [x] Multi-fund profiles with fund switcher and per-fund outreach tone
+- [x] Founder outreach draft generator from Pursue'd memos
+- [x] Per-fund memo template variants (`default`, `compact`)
+- [x] Multi-pass brief research with per-section confidence tracking
 
 ---
 

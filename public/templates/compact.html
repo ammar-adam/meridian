@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{COMPANY_NAME}} — Research brief</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #8B1A1A;
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #888;
+    --border-light: #e8e8e8;
+    --bg: #fff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-size: 11px;
+    line-height: 1.55;
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+  }
+
+  /* ── HERO (compact — no image) ── */
+  .hero {
+    position: relative;
+    height: auto;
+    min-height: 0;
+    background-color: #1a1a1a;
+    background-image: none;
+    overflow: hidden;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, rgba(8,8,8,0.55) 0%, rgba(8,8,8,0.72) 100%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    height: auto;
+    padding: 14px 24px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .hero-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .hero-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .company-identity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .company-logo-img {
+    height: 28px;
+    width: auto;
+    max-width: 120px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+  }
+
+  .company-logo-fallback {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .company-logo-initial {
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+    background: rgba(255,255,255,0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .company-name-text {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    color: white;
+    line-height: 1;
+  }
+
+  .fund-identity {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .fund-logo-img {
+    height: 18px;
+    width: auto;
+    max-width: 80px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+    opacity: 0.85;
+  }
+
+  .fund-name-text {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: rgba(255,255,255,0.88);
+  }
+
+  .company-tagline {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .memo-meta {
+    font-size: 7.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    font-weight: 500;
+  }
+
+  /* ── BODY ── */
+  .body { padding: 0 24px; }
+
+  .section {
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .section-label span {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 2.8px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+  }
+
+  /* PRODUCT */
+  .product-text {
+    font-size: 10.5px;
+    line-height: 1.68;
+    color: var(--text-secondary);
+  }
+
+  .product-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* MARKET */
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 190px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .market-text {
+    font-size: 10.5px;
+    line-height: 1.68;
+    color: var(--text-secondary);
+  }
+
+  .market-stats { display: flex; flex-direction: column; }
+
+  .stat-row {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .stat-row:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .stat-number {
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    color: var(--text-primary);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .stat-label {
+    font-size: 8px;
+    color: var(--text-muted);
+    line-height: 1.35;
+    max-width: 85px;
+  }
+
+  /* DEFENSIBILITY */
+  .defensibility-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .defense-number {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+
+  .defense-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  .defense-text {
+    font-size: 10px;
+    line-height: 1.62;
+    color: var(--text-secondary);
+  }
+
+  /* TEAM */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .team-member {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+  }
+
+  .team-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+
+  .team-role {
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+  }
+
+  .team-name {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  .team-bio {
+    font-size: 9.5px;
+    line-height: 1.52;
+    color: var(--text-secondary);
+  }
+
+  /* PORTFOLIO FIT */
+  .portfolio-intro {
+    font-size: 10.5px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.65;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--border-light);
+  }
+
+  .portfolio-item {
+    padding: 7px 9px;
+    border-right: 1px solid var(--border-light);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .portfolio-item:nth-child(4n) { border-right: none; }
+  .portfolio-item:nth-last-child(-n+4) { border-bottom: none; }
+
+  .portco-logo {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    object-fit: contain;
+    flex-shrink: 0;
+    background: var(--border-light);
+  }
+
+  .portco-logo-fallback {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    background: #e8e8e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 7px;
+    font-weight: 700;
+    color: #666;
+    flex-shrink: 0;
+  }
+
+  .portfolio-company {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .portfolio-fund {
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 1px;
+  }
+
+  /* THESIS FIT */
+  .thesis-band {
+    background: var(--accent);
+    padding: 12px 24px 14px;
+    margin-top: 0;
+  }
+
+  .thesis-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .thesis-label::before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 2px;
+    background: rgba(255,255,255,0.35);
+    flex-shrink: 0;
+  }
+
+  .thesis-label span {
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 2.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .thesis-headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: white;
+    margin-bottom: 13px;
+    line-height: 1.2;
+  }
+
+  .thesis-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .thesis-item-title {
+    font-size: 6.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 4px;
+  }
+
+  .thesis-item-text {
+    font-size: 9.5px;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.84);
+  }
+
+  /* FOOTER */
+  .footer {
+    padding: 8px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .footer-left {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .footer-right {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+
+  @media print {
+    body { width: 210mm; margin: 0; }
+    .hero, .thesis-band {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+
+    <div class="hero-top">
+      <!-- Company identity: tries og:image-derived logo, falls back to initial -->
+      <div class="company-identity">
+        <img
+          class="company-logo-img"
+          src="{{COMPANY_LOGO_URL}}"
+          alt="{{COMPANY_NAME}}"
+          onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';"
+        />
+        <div class="company-logo-fallback" id="logo-fallback" style="display:none;">
+          <div class="company-logo-initial">{{COMPANY_INITIAL}}</div>
+          <span class="company-name-text">{{COMPANY_NAME}}</span>
+        </div>
+      </div>
+
+      <!-- Fund identity -->
+      <div class="fund-identity">
+        <img
+          class="fund-logo-img"
+          src="{{FUND_LOGO_URL}}"
+          alt="{{FUND_NAME}}"
+          onerror="this.style.display='none';"
+        />
+        <span class="fund-name-text">{{FUND_NAME}}</span>
+      </div>
+    </div>
+
+    <div class="hero-bottom">
+      <div class="company-tagline">{{COMPANY_TAGLINE}}</div>
+      <div class="memo-meta">{{ROUND}} &nbsp;·&nbsp; Research brief &nbsp;·&nbsp; {{DATE}}</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── BODY ── -->
+<div class="body">
+
+  <!-- PRODUCT -->
+  <div class="section">
+    <div class="section-label"><span>Product</span></div>
+    <p class="product-text" data-field="PRODUCT_DESCRIPTION">{{PRODUCT_DESCRIPTION}}</p>
+  </div>
+
+  <!-- MARKET -->
+  <div class="section">
+    <div class="section-label"><span>Market</span></div>
+    <div class="market-grid">
+      <p class="market-text" data-field="MARKET_DESCRIPTION">{{MARKET_DESCRIPTION}}</p>
+      <div class="market-stats">
+        <div class="stat-row">
+          <div class="stat-number" data-field="STAT_1_VALUE">{{STAT_1_VALUE}}</div>
+          <div class="stat-label">{{STAT_1_LABEL}}</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-number" data-field="STAT_2_VALUE">{{STAT_2_VALUE}}</div>
+          <div class="stat-label">{{STAT_2_LABEL}}</div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-number" data-field="STAT_3_VALUE">{{STAT_3_VALUE}}</div>
+          <div class="stat-label">{{STAT_3_LABEL}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DEFENSIBILITY -->
+  <div class="section">
+    <div class="section-label"><span>Defensibility</span></div>
+    <div class="defensibility-grid">
+      <div class="defense-item">
+        <div class="defense-number">01</div>
+        <div class="defense-title" data-field="DEFENSE_1_TITLE">{{DEFENSE_1_TITLE}}</div>
+        <p class="defense-text" data-field="DEFENSE_1_TEXT">{{DEFENSE_1_TEXT}}</p>
+      </div>
+      <div class="defense-item">
+        <div class="defense-number">02</div>
+        <div class="defense-title" data-field="DEFENSE_2_TITLE">{{DEFENSE_2_TITLE}}</div>
+        <p class="defense-text" data-field="DEFENSE_2_TEXT">{{DEFENSE_2_TEXT}}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEAM -->
+  <div class="section">
+    <div class="section-label"><span>Team</span></div>
+    <div class="team-grid">
+      <div class="team-member">
+        <div class="team-avatar">{{TEAM_1_INITIALS}}</div>
+        <div>
+          <div class="team-role">{{TEAM_1_ROLE}}</div>
+          <div class="team-name">{{TEAM_1_NAME}}</div>
+          <p class="team-bio" data-field="TEAM_1_BIO">{{TEAM_1_BIO}}</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar">{{TEAM_2_INITIALS}}</div>
+        <div>
+          <div class="team-role">{{TEAM_2_ROLE}}</div>
+          <div class="team-name">{{TEAM_2_NAME}}</div>
+          <p class="team-bio" data-field="TEAM_2_BIO">{{TEAM_2_BIO}}</p>
+        </div>
+      </div>
+      <div class="team-member">
+        <div class="team-avatar">{{TEAM_3_INITIALS}}</div>
+        <div>
+          <div class="team-role">{{TEAM_3_ROLE}}</div>
+          <div class="team-name">{{TEAM_3_NAME}}</div>
+          <p class="team-bio" data-field="TEAM_3_BIO">{{TEAM_3_BIO}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTFOLIO FIT -->
+  <div class="section">
+    <div class="section-label"><span>Portfolio Fit</span></div>
+    <p class="portfolio-intro">{{PORTFOLIO_INTRO}}</p>
+    <div class="portfolio-grid">
+      {{PORTFOLIO_ITEMS}}
+    </div>
+  </div>
+
+</div>
+
+<!-- ── THESIS / FUND ANGLE BAND ── -->
+<div class="thesis-band">
+  <div class="thesis-label"><span>{{FUND_ANGLE_LABEL}}</span></div>
+  <div class="thesis-headline" data-field="THESIS_HEADLINE">{{THESIS_HEADLINE}}</div>
+  <div class="thesis-grid">
+    <div>
+      <div class="thesis-item-title">{{THESIS_1_TITLE}}</div>
+      <p class="thesis-item-text" data-field="THESIS_1_TEXT">{{THESIS_1_TEXT}}</p>
+    </div>
+    <div>
+      <div class="thesis-item-title">{{THESIS_2_TITLE}}</div>
+      <p class="thesis-item-text" data-field="THESIS_2_TEXT">{{THESIS_2_TEXT}}</p>
+    </div>
+    <div>
+      <div class="thesis-item-title">{{THESIS_3_TITLE}}</div>
+      <p class="thesis-item-text" data-field="THESIS_3_TEXT">{{THESIS_3_TEXT}}</p>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-left">Prepared for internal discussion &nbsp;·&nbsp; {{FUND_NAME}} &nbsp;·&nbsp; {{DATE}}</div>
+  <div class="footer-right">Confidential</div>
+</div>
+
+</body>
+</html>

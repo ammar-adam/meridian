@@ -7,7 +7,7 @@ export async function POST(req) {
   const limited = await enforceRateLimit(req, 'generate')
   if (limited) return limited
 
-  const { research, scraped, fundContext, sourceContext, learningContext, forceRegenerate, researchMode } = await req.json()
+  const { research, researchPasses, scraped, fundContext, sourceContext, learningContext, forceRegenerate, researchMode } = await req.json()
 
   if (!fundContext?.fundName) {
     return Response.json({ error: 'Fund profile is required' }, { status: 400 })
@@ -16,6 +16,7 @@ export async function POST(req) {
   try {
     const result = await runGenerate({
       research,
+      researchPasses: researchPasses ?? [],
       scraped,
       fundContext,
       sourceContext,

@@ -265,7 +265,14 @@ function DiscoverContent() {
   }
 
   const subtitle = meta
-    ? `${filtered.length} results · hub ${meta.startuphubConfigured ? meta.startuphubCount : 'off'} · seeds ${meta.seedCount ?? meta.databaseCount ?? 0}${meta.thin ? ' · thin' : ''}${meta.cached ? ' · cached' : ''}`
+    ? [
+      `${filtered.length} results`,
+      meta.startuphubConfigured ? `hub ${meta.startuphubCount}` : 'hub off',
+      meta.researchPasses?.length ? `${meta.researchPasses.length} web passes` : null,
+      meta.canadianMandate ? `CA ${meta.canadianResultCount ?? 0}` : null,
+      meta.thin ? 'thin' : null,
+      meta.cached ? 'cached' : null,
+    ].filter(Boolean).join(' · ')
     : fundProfile?.fundName || 'thesis search'
 
   return (
@@ -350,7 +357,7 @@ function DiscoverContent() {
         <div className="m-loader">
           <div className="m-loader-bar"><div /></div>
           <p className="text-[13px] font-medium">Running discover pipeline</p>
-          <p className="mt-1 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>parse → startuphub → perplexity → rank</p>
+          <p className="mt-1 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>parse → databases → multi-pass web research → rank</p>
         </div>
       )}
 
@@ -365,10 +372,17 @@ function DiscoverContent() {
             ]}
             trailing={<span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{filtered.length}/{companies.length}</span>}
           />
-          {meta?.thin && (
+          {meta?.thinCanadian && (
+            <div className="mb-4 rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-[13px] text-violet-900">
+              <span className="font-medium">Thin Canadian coverage.</span>
+              {' '}StartupHub skews US/global AI. This search ran extra Canadian + stealth web passes, but structured Canadian registry data still needs EverTrace or similar. See <code className="text-[11px]">docs/evertrace-research.md</code>.
+            </div>
+          )}
+          {meta?.thin && !meta?.thinCanadian && (
             <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
               <span className="font-medium">Thin results.</span>
-              {' '}Try a broader thesis, hit Refresh, or confirm StartupHub is configured. Database seeds: {meta.seedCount ?? 0}.
+              {' '}Try a broader thesis or hit Refresh. Database seeds: {meta.seedCount ?? 0}
+              {meta.startuphubRawCount > meta.startuphubCount ? ` (${meta.startuphubRawCount - meta.startuphubCount} filtered by geography)` : ''}.
             </div>
           )}
           <div className="m-card overflow-hidden">

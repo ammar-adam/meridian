@@ -23,6 +23,7 @@ export default function ThesisPage() {
   const [copied, setCopied] = useState(false)
   const [contextLabel, setContextLabel] = useState('')
   const [trackingId, setTrackingId] = useState('')
+  const [statedMandate, setStatedMandate] = useState('')
 
   function loadSummary() {
     const profile = getFundProfile()
@@ -36,6 +37,7 @@ export default function ThesisPage() {
           : profile.fundName
         : ''
     )
+    setStatedMandate(strategy?.thesis || profile?.thesis || GUEST_FUND_API_CONTEXT.thesis)
     const s = getEditSummary(tid)
     setSummary(s)
     setFeedback(generatePromptFeedback(s, getEditLog().filter(e => (e.trackingId ?? e.fundName) === tid)))
@@ -112,7 +114,7 @@ export default function ThesisPage() {
                   {revealed.summary}
                 </p>
                 <p className="mt-3 text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
-                  Stated mandate: {GUEST_FUND_API_CONTEXT.thesis.slice(0, 200)}…
+                  Stated mandate: {statedMandate.slice(0, 200)}…
                 </p>
               </div>
             )}

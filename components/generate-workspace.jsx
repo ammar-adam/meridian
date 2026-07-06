@@ -11,12 +11,13 @@ import {
   runMemoPipeline,
   fetchScrapePreview,
   prefetchResearch,
-  resolveResearchText,
+  resolveResearchResult,
   resolveEffectiveResearchMode,
   needsPerplexity,
   urlsMatchForPrefetch,
 } from '@/lib/memo-pipeline'
 import { buildInstantResearch } from '@/lib/instant-research'
+import { normalizeResearchResult } from '@/lib/research-passes'
 import { buildDraftMemoFromScrape, MEMO_GENERATING_KEY, MEMO_PENDING_BRIEF_KEY } from '@/lib/memo-draft'
 import { formatBriefAge } from '@/lib/cost-estimate'
 import { RESEARCH_MODES } from '@/lib/research-mode'
@@ -118,12 +119,16 @@ export default function GenerateWorkspace() {
         setScrapedCache(scraped)
         const eff = resolveEffectiveResearchMode(researchMode, scraped)
         if (eff === 'instant') {
-          prefetchRef.current = { url, mode: eff, research: buildInstantResearch(scraped) }
+          prefetchRef.current = {
+            url,
+            mode: eff,
+            research: normalizeResearchResult(buildInstantResearch(scraped)),
+          }
           return
         }
-        const research = await prefetchResearch(url, eff, signal)
+        const researchResult = await prefetchResearch(url, eff, signal, scraped)
         if (signal.aborted) return
-        prefetchRef.current = { url, mode: eff, research }
+        prefetchRef.current = { url, mode: eff, research: researchResult }
       } catch (err) {
         if (err.name !== 'AbortError') prefetchRef.current = { url: '', mode: '', research: null }
       }
@@ -221,7 +226,7 @@ export default function GenerateWorkspace() {
         : null
 
       if (effectiveMode !== 'deep') {
-        const research = await resolveResearchText(targetUrl, {
+        const researchResult = await resolveResearchResult(targetUrl, {
           researchMode: mode,
           scraped,
           prefetchedResearch: prefetched,
@@ -238,7 +243,8 @@ export default function GenerateWorkspace() {
         sessionStorage.setItem('memoSource', 'generating')
         sessionStorage.setItem(MEMO_PENDING_BRIEF_KEY, JSON.stringify({
           url: targetUrl,
-          research,
+          research: researchResult.research,
+          researchPasses: researchResult.passes,
           scraped,
           fundContext,
           sourceContext,

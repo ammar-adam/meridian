@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import {
   getAllFunds,
@@ -14,28 +15,45 @@ export function FundSwitcher({ onChange }) {
   const [activeId, setActiveId] = useState('')
 
   useEffect(() => {
-    const all = getAllFunds()
-    const active = getFundProfile()
-    setFunds(all)
-    setActiveId(active?.id || '')
+    function load() {
+      setFunds(getAllFunds())
+      const active = getFundProfile()
+      setActiveId(active?.id || '')
+    }
+    load()
+    window.addEventListener('meridian-context-change', load)
+    return () => window.removeEventListener('meridian-context-change', load)
   }, [])
-
-  if (funds.length <= 1) return null
 
   function handleChange(e) {
     const id = e.target.value
+    if (id === '__add__') return
     setActiveFundId(id)
     setActiveId(id)
     onChange?.()
     window.dispatchEvent(new Event('meridian-context-change'))
   }
 
+  const activeFund = funds.find(f => f.id === activeId)
+
   return (
-    <select value={activeId} onChange={handleChange} className="m-select m-context-select" aria-label="Active fund">
-      {funds.map(f => (
-        <option key={f.id} value={f.id}>{f.fundName}</option>
-      ))}
-    </select>
+    <div className="flex flex-wrap items-center gap-2">
+      {funds.length > 0 ? (
+        <select value={activeId} onChange={handleChange} className="m-select m-context-select" aria-label="Active fund">
+          {funds.map(f => (
+            <option key={f.id} value={f.id}>{f.fundName}</option>
+          ))}
+        </select>
+      ) : (
+        <span className="text-[12px] text-zinc-500">Guest context</span>
+      )}
+      <Link href="/fund/setup" className="m-btn-ghost m-btn-sm text-zinc-600">
+        + Add fund
+      </Link>
+      {activeFund?.memoTemplateId && activeFund.memoTemplateId !== 'default' && (
+        <span className="text-[10px] text-zinc-500">· {activeFund.memoTemplateId} template</span>
+      )}
+    </div>
   )
 }
 

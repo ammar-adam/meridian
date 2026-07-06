@@ -13,12 +13,12 @@ export async function POST(req) {
   const limited = await enforceRateLimit(req, 'pdf')
   if (limited) return limited
 
-  const { memoData } = await req.json()
+  const { memoData, templateId } = await req.json()
   if (!memoData?.COMPANY_NAME) {
     return Response.json({ error: 'memoData is required' }, { status: 400 })
   }
 
-  const cacheKey = `pdf:${stableHash(memoData)}`
+  const cacheKey = `pdf:${stableHash({ memoData, templateId })}`
   const cached = await cacheGet(cacheKey)
   if (cached?.buffer) {
     const buf = Buffer.from(cached.buffer, 'base64')
@@ -33,7 +33,7 @@ export async function POST(req) {
 
   let browser
   try {
-    const html = await renderMemoHtml(memoData)
+    const html = await renderMemoHtml(memoData, templateId)
 
     const { launchPdfBrowser } = await import('@/lib/pdf-browser')
     browser = await launchPdfBrowser()

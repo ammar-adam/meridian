@@ -1,11 +1,21 @@
 import { NextResponse } from 'next/server'
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { ensureDeviceCookie } from '@/lib/middleware-device'
+import {
+  isClerkConfigured,
+  clerkKeysMatch,
+  clerkPublishableKey,
+  clerkSecretKey,
+} from '@/lib/clerk-config'
 
-const isClerkConfigured = Boolean(
-  process.env.CLERK_SECRET_KEY?.trim() &&
-  process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim()
-)
+const clerkReady = isClerkConfigured()
+  && clerkKeysMatch(clerkPublishableKey(), clerkSecretKey())
+
+if (isClerkConfigured() && !clerkReady) {
+  console.error(
+    '[middleware] Clerk keys appear mismatched (pk/sk from different apps or quoted .env values). Auth middleware disabled.',
+  )
+}
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -19,6 +29,7 @@ const isPublicRoute = createRouteMatcher([
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/fund/setup(.*)',
+  '/fund(.*)',
   '/api/health',
   '/api/scrape(.*)',
   '/api/research(.*)',
@@ -27,6 +38,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/share(.*)',
   '/api/brief(.*)',
   '/api/batch(.*)',
+  '/api/founder-email(.*)',
   '/api/cron(.*)',
 ])
 
@@ -44,7 +56,7 @@ const clerkHandler = clerkMiddleware(async (auth, req) => {
 })
 
 export default function middleware(req, event) {
-  if (!isClerkConfigured) {
+  if (!clerkReady) {
     return ensureDeviceCookie(req, NextResponse.next())
   }
   try {

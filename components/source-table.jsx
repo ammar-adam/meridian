@@ -25,6 +25,19 @@ function LearnedBadge({ behavioral }) {
   )
 }
 
+function SourceBadge({ source, unverified }) {
+  const isStealth = unverified || source === 'stealth_signal' || source === 'evertrace'
+  if (isStealth) {
+    return (
+      <span className="m-badge-low border border-amber-300 bg-amber-50 text-amber-900" title="Pre-announcement signal — verify before outreach">
+        Stealth · unverified
+      </span>
+    )
+  }
+  const label = source === 'canadian_web' ? 'Canada web' : (source || 'unknown')
+  return <span className="m-badge-low uppercase">{label}</span>
+}
+
 function confirmBatchBrief(companies) {
   const fund = getFundProfile()
   const needing = filterCompaniesNeedingBrief(companies, { fundId: fund?.id })
@@ -182,7 +195,7 @@ export default function SourceTable({
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.geography || '—'}</td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.sector || '—'}</td>
                 <td>
-                  <span className="m-badge-low uppercase">{c.source}</span>
+                  <SourceBadge source={c.source} unverified={c.unverified} />
                 </td>
                 <td>
                   <div className="flex gap-1">

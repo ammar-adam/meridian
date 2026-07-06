@@ -11,10 +11,14 @@ import PageLoader from '@/components/page-loader'
 function FundSetupContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const returning = hasFundProfile()
+  const [returning, setReturning] = useState(false)
   const [seedUrl, setSeedUrl] = useState('')
   const [seedName, setSeedName] = useState('')
   const nextPath = searchParams.get('next') || '/brief'
+
+  useEffect(() => {
+    setReturning(hasFundProfile())
+  }, [])
 
   useEffect(() => {
     const url = sessionStorage.getItem('meridian_setup_url')

@@ -6,6 +6,14 @@ import { MODELS } from '@/lib/api-models'
 import { callAnthropic, textBlock } from '@/lib/anthropic'
 import { enforceRateLimit } from '@/lib/api-guard'
 import { cacheGet, cacheSet, CACHE_TTL, stableHash } from '@/lib/server-cache'
+import {
+  buildDiscoverResearchPlan,
+  runDiscoverResearch,
+  fetchStructuredStealthSignals,
+  formatResearchForRanker,
+} from '@/lib/discover-research'
+import { isCanadianMandate, normalizeGeographies } from '@/lib/geography-utils'
+import { evertraceSignalToDiscoverSeed } from '@/lib/evertrace'
 
 export const maxDuration = 300
 
@@ -49,6 +57,7 @@ export async function POST(req) {
   }
 
   const year = new Date().getFullYear()
+  const geos = normalizeGeographies(null, fundContext)
 
   let parsed
   try {
@@ -60,7 +69,7 @@ export async function POST(req) {
       geographies: fundContext.mandate?.geographies?.length ? fundContext.mandate.geographies : ['North America'],
       keywords: thesis.split(/[,\s]+/).filter(Boolean).slice(0, 5),
       pitchbookQuery: thesis,
-      perplexityQuery: `List 20+ real startups matching: ${thesis}. For each: company name, website domain, one-line description, funding stage, total raised, lead investors, HQ geography. Year ${year}. North America focus if applicable.`,
+      perplexityQuery: `List 20+ real startups matching: ${thesis}. For each: company name, website domain, one-line description, funding stage, total raised, lead investors, HQ geography. Year ${year}.`,
     }
   }
 
@@ -68,39 +77,15 @@ export async function POST(req) {
     return Response.json({ error: 'Failed to parse thesis' }, { status: 500 })
   }
 
-  const dbSearch = await searchCompanyDatabase(parsed, thesis)
-  const { startuphub, pitchbook, all: databaseResults } = dbSearch
-  const mergedSeeds = mergeCompanySeeds(startuphub, pitchbook)
+  const dbSearch = await searchCompanyDatabase(parsed, thesis, fundContext)
+  const { startuphub, pitchbook } = dbSearch
+  const structuredStealth = await fetchStructuredStealthSignals(parsed, thesis, fundContext)
+  const stealthSeeds = structuredStealth.map(evertraceSignalToDiscoverSeed)
+  const mergedSeeds = mergeCompanySeeds(startuphub, pitchbook, stealthSeeds)
 
-  const perplexityQuery = parsed.perplexityQuery ?? `
-    Find companies matching this investment thesis: ${thesis}
-    Fund mandate: ${fundContext.thesis}
-    Focus on: ${parsed.stages?.join(', ') ?? 'Series A'} stage companies in ${parsed.geographies?.join(', ') ?? 'North America'}.
-    Sectors: ${parsed.sectors?.join(', ') ?? 'as described'}.
-    Year: ${year}.
-    List at least 20 specific companies. For each return: name, website domain, one-line description, funding stage, total raised, lead investors, HQ geography.
-  `
-
-  const perplexityRes = await fetch('https://api.perplexity.ai/chat/completions', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.PERPLEXITY_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: MODELS.perplexitySearch,
-      messages: [{ role: 'user', content: perplexityQuery }],
-    }),
-  })
-
-  if (!perplexityRes.ok) {
-    const err = await perplexityRes.text()
-    console.error('[source] Perplexity error:', err)
-    return Response.json({ error: 'Perplexity search failed' }, { status: 500 })
-  }
-
-  const perplexityData = await perplexityRes.json()
-  const perplexityResearch = perplexityData.choices?.[0]?.message?.content ?? ''
+  const researchPlans = buildDiscoverResearchPlan(parsed, thesis, fundContext)
+  const researchResults = await runDiscoverResearch(researchPlans)
+  const perplexityResearch = formatResearchForRanker(researchResults)
 
   const rankBlocks = buildRankUserBlocks(thesis, parsed, mergedSeeds, perplexityResearch, fundContext)
 
@@ -138,7 +123,14 @@ export async function POST(req) {
   companies = postProcessDiscoverResults(companies, mergedSeeds)
 
   const thin = companies.length < MIN_RESULTS
-  console.log('[source]', thesis.slice(0, 60), `→ ${companies.length} companies (hub: ${startuphub.length}, pb: ${pitchbook.length}, seeds: ${mergedSeeds.length}${thin ? ', thin' : ''})`)
+  const canadianMandate = isCanadianMandate(parsed?.geographies, fundContext)
+  const canadianCount = companies.filter(c => /canada|toronto|montreal|vancouver|calgary|\.ca/i.test(`${c.geography} ${c.domain}`)).length
+
+  console.log(
+    '[source]',
+    thesis.slice(0, 60),
+    `→ ${companies.length} companies (hub: ${startuphub.length}/${dbSearch.startuphubRawCount}, pb: ${pitchbook.length}, stealth: ${stealthSeeds.length}, passes: ${researchResults.map(r => r.id).join('+')}${thin ? ', thin' : ''})`,
+  )
 
   const dbMeta = getDatabaseSearchMeta(dbSearch)
 
@@ -150,9 +142,13 @@ export async function POST(req) {
       fundId: fundContext.id,
       ...dbMeta,
       seedCount: mergedSeeds.length,
+      stealthSeedCount: stealthSeeds.length,
+      researchPasses: researchResults.map(r => ({ id: r.id, label: r.label, ok: r.ok, unverified: !!r.unverified })),
+      canadianMandate,
+      canadianResultCount: canadianCount,
       thin,
+      thinCanadian: canadianMandate && canadianCount < 5,
       perplexityChars: perplexityResearch.length,
-      // legacy keys for cached responses
       pitchbookCount: pitchbook.length,
       pitchbookConfigured: dbMeta.pitchbookConfigured,
     },

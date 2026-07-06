@@ -1,11 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { populateTemplate } from '@/lib/populate-template'
 import { saveMemo, updateMemoMeta } from '@/lib/memo-library'
 import { logEdit, logOutcome, getEditsForMemo, removeOutcome, getOutcomeForMemo } from '@/lib/edit-tracker'
 import { getFundProfile, getTrackingId, getActiveStrategy } from '@/lib/fund-profile'
+import { memoTemplatePath, resolveMemoTemplateId } from '@/lib/memo-template'
+import OutreachDrawer from '@/components/outreach-drawer'
 import { readMemoMetaFromSession } from '@/lib/memo-context'
 import { getMemoById } from '@/lib/memo-library'
 import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-export'
@@ -52,13 +54,14 @@ function MemoPageContent() {
   const searchParams = useSearchParams()
   const memoRef = useRef(null)
   const memoDataRef = useRef(null)
+  const editCleanupRef = useRef(null)
+  const lastHtmlRef = useRef('')
   const [html, setHtml] = useState('')
   const [memoData, setMemoData] = useState(null)
   const [memoId, setMemoId] = useState('')
   const [trackingId, setTrackingId] = useState('demo')
   const [fundName, setFundName] = useState('')
   const [loading, setLoading] = useState(true)
-  const [memoRendered, setMemoRendered] = useState(false)
   const [qualityGate, setQualityGate] = useState(null)
   const [bannerDismissed, setBannerDismissed] = useState(false)
   const [qualityWarningsExpanded, setQualityWarningsExpanded] = useState(false)
@@ -78,6 +81,9 @@ function MemoPageContent() {
   const [finishingBrief, setFinishingBrief] = useState(false)
   const [finishError, setFinishError] = useState('')
   const [outcomeBlocked, setOutcomeBlocked] = useState('')
+  const [outreachOpen, setOutreachOpen] = useState(false)
+  const [showOutreachPrompt, setShowOutreachPrompt] = useState(false)
+  const [companyDomain, setCompanyDomain] = useState('')
   const outcomeNudgeSkippedRef = useRef(false)
   const pendingGenerateRef = useRef(false)
   const pendingNavRef = useRef(null)
@@ -96,6 +102,7 @@ function MemoPageContent() {
   useEffect(() => {
     const profile = getFundProfile()
     const sessionMeta = readMemoMetaFromSession()
+    setCompanyDomain(sessionMeta?.companyDomain || '')
     const queryId = searchParams.get('id')
 
     let data = null
@@ -226,7 +233,7 @@ function MemoPageContent() {
     setEditCount(getEditsForMemo(id).filter(e => e.fieldName !== '_outcome').length)
     setOutcome(getOutcomeForMemo(id))
 
-    fetch('/memo-template.html')
+    fetch(memoTemplatePath(resolveMemoTemplateId(profile)))
       .then((res) => res.text())
       .then((template) => {
         setHtml(populateTemplate(template, data))
@@ -234,11 +241,6 @@ function MemoPageContent() {
       })
       .catch(() => setLoading(false))
   }, [searchParams])
-
-  useEffect(() => {
-    if (!html) return
-    setMemoRendered(true)
-  }, [html])
 
   useEffect(() => {
     if (searchParams.get('generating') !== '1') return undefined
@@ -300,7 +302,7 @@ function MemoPageContent() {
       })
       incrementBriefCount()
 
-      return fetch('/memo-template.html')
+      return fetch(memoTemplatePath(resolveMemoTemplateId(getFundProfile())))
         .then(res => res.text())
         .then(template => {
           setHtml(populateTemplate(template, nextData))
@@ -377,7 +379,7 @@ function MemoPageContent() {
           qualityWarnCount: nextQg?.flags?.filter(f => f.severity === 'warn').length ?? 0,
         })
         incrementBriefCount()
-        return fetch('/memo-template.html')
+        return fetch(memoTemplatePath(resolveMemoTemplateId(getFundProfile())))
           .then(res => res.text())
           .then(template => {
             setHtml(populateTemplate(template, nextData))
@@ -420,63 +422,83 @@ function MemoPageContent() {
     updateMemoMeta(memoId, { editCount: newEditCount })
   }, [memoId, persistMemoData, trackingId, editCount])
 
-  useEffect(() => {
-    if (!memoRendered || !memoRef.current || !memoData) return
+  const onFieldEditRef = useRef(onFieldEdit)
+  onFieldEditRef.current = onFieldEdit
 
-    const cleanups = []
-    const editableFields = memoRef.current.querySelectorAll('[data-field]')
+  useLayoutEffect(() => {
+    if (!html || !memoData) return undefined
 
-    editableFields.forEach((el) => {
-      el.setAttribute('contenteditable', 'true')
-      el.setAttribute('spellcheck', 'false')
-      el.style.outline = 'none'
-      el.style.cursor = 'text'
+    const attachEditableFields = () => {
+      if (!memoRef.current) return () => {}
 
-      const onMouseEnter = () => {
-        el.style.background = 'rgba(139, 26, 26, 0.04)'
-        el.style.borderRadius = '2px'
-      }
-      const onMouseLeave = () => {
-        if (document.activeElement !== el) {
+      const cleanups = []
+      const editableFields = memoRef.current.querySelectorAll('[data-field]')
+
+      editableFields.forEach((el) => {
+        el.setAttribute('contenteditable', 'true')
+        el.setAttribute('spellcheck', 'false')
+        el.style.outline = 'none'
+        el.style.cursor = 'text'
+
+        const onMouseEnter = () => {
+          el.style.background = 'rgba(139, 26, 26, 0.04)'
+          el.style.borderRadius = '2px'
+        }
+        const onMouseLeave = () => {
+          if (document.activeElement !== el) {
+            el.style.background = el.dataset.edited === 'true'
+              ? 'rgba(139, 26, 26, 0.03)'
+              : ''
+          }
+        }
+        const onFocus = () => {
+          el.style.background = 'rgba(139, 26, 26, 0.06)'
+        }
+        const onBlur = () => {
+          const fieldName = el.getAttribute('data-field')
+          const currentValue = memoDataRef.current?.[fieldName] ?? ''
+          const newValue = el.innerText.trim()
+
           el.style.background = el.dataset.edited === 'true'
             ? 'rgba(139, 26, 26, 0.03)'
             : ''
+
+          if (newValue !== stripHtml(currentValue)) {
+            el.dataset.edited = 'true'
+            el.style.boxShadow = 'inset 2px 0 0 rgba(139, 26, 26, 0.35)'
+            onFieldEditRef.current(fieldName, currentValue, newValue)
+          }
         }
-      }
-      const onFocus = () => {
-        el.style.background = 'rgba(139, 26, 26, 0.06)'
-      }
-      const onBlur = () => {
-        const fieldName = el.getAttribute('data-field')
-        const currentValue = memoDataRef.current?.[fieldName] ?? ''
-        const newValue = el.innerText.trim()
 
-        el.style.background = el.dataset.edited === 'true'
-          ? 'rgba(139, 26, 26, 0.03)'
-          : ''
+        el.addEventListener('mouseenter', onMouseEnter)
+        el.addEventListener('mouseleave', onMouseLeave)
+        el.addEventListener('focus', onFocus)
+        el.addEventListener('blur', onBlur)
 
-        if (newValue !== stripHtml(currentValue)) {
-          el.dataset.edited = 'true'
-          el.style.boxShadow = 'inset 2px 0 0 rgba(139, 26, 26, 0.35)'
-          onFieldEdit(fieldName, currentValue, newValue)
-        }
-      }
-
-      el.addEventListener('mouseenter', onMouseEnter)
-      el.addEventListener('mouseleave', onMouseLeave)
-      el.addEventListener('focus', onFocus)
-      el.addEventListener('blur', onBlur)
-
-      cleanups.push(() => {
-        el.removeEventListener('mouseenter', onMouseEnter)
-        el.removeEventListener('mouseleave', onMouseLeave)
-        el.removeEventListener('focus', onFocus)
-        el.removeEventListener('blur', onBlur)
+        cleanups.push(() => {
+          el.removeEventListener('mouseenter', onMouseEnter)
+          el.removeEventListener('mouseleave', onMouseLeave)
+          el.removeEventListener('focus', onFocus)
+          el.removeEventListener('blur', onBlur)
+        })
       })
-    })
 
-    return () => cleanups.forEach(fn => fn())
-  }, [memoRendered, memoData, onFieldEdit])
+      return () => cleanups.forEach(fn => fn())
+    }
+
+    if (memoRef.current && lastHtmlRef.current !== html) {
+      memoRef.current.innerHTML = html
+      lastHtmlRef.current = html
+    }
+
+    editCleanupRef.current?.()
+    editCleanupRef.current = attachEditableFields()
+
+    return () => {
+      editCleanupRef.current?.()
+      editCleanupRef.current = null
+    }
+  }, [html, memoData])
 
   useEffect(() => {
     if (!outcome) {
@@ -506,6 +528,9 @@ function MemoPageContent() {
     const libraryEntry = memoId ? getMemoById(memoId) : null
 
     setOutcome(selected)
+    if (selected === 'pursue') {
+      setShowOutreachPrompt(true)
+    }
     if (!current || !memoId) return
 
     logOutcome({
@@ -597,6 +622,7 @@ function MemoPageContent() {
         createdBy: team?.memberName,
         allowOutcome: true,
         memoId,
+        memoTemplateId: resolveMemoTemplateId(getFundProfile()),
       })
       if (memoId && shareId) {
         updateMemoMeta(memoId, { lastShareId: shareId })
@@ -619,7 +645,7 @@ function MemoPageContent() {
     }
     setPdfLoading(true)
     try {
-      await downloadMemoPdf(merged)
+      await downloadMemoPdf(merged, { templateId: resolveMemoTemplateId(getFundProfile()) })
     } catch {
       window.print()
     } finally {
@@ -628,10 +654,14 @@ function MemoPageContent() {
   }
 
   const warnings = qualityGate?.flags?.filter(f => f.severity === 'warn') ?? []
+  const confidenceWarnings = warnings.filter(f => f.confidence && f.field !== 'CONFIDENCE_SUMMARY')
+  const otherWarnings = warnings.filter(f => !f.confidence || f.field === 'CONFIDENCE_SUMMARY')
+  const sortedWarnings = [...confidenceWarnings, ...otherWarnings]
   const errors = qualityGate?.flags?.filter(f => f.severity === 'error') ?? []
   const showErrorBanner = errors.length > 0 && !errorBannerDismissed && !finishingBrief && !finishError
   const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief && !finishError
-  const warnCollapsed = warnings.length > 3 && !qualityWarningsExpanded
+  const warnCollapsed = sortedWarnings.length > 3 && !qualityWarningsExpanded
+  const hasConfidenceIssues = confidenceWarnings.length > 0 || (qualityGate?.confidenceSummary?.length > 0)
   const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
   const topOffset = (finishingBrief || finishError || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
@@ -709,11 +739,13 @@ function MemoPageContent() {
               <p className="text-xs font-medium text-amber-800">
                 {warnCollapsed
                   ? `Review quality flags (${warnings.length})`
-                  : 'Verify before sharing'}
+                  : hasConfidenceIssues
+                    ? 'Some sections need manual verification before forwarding'
+                    : 'Verify before sharing'}
               </p>
               {!warnCollapsed && (
                 <ul className="mt-1 space-y-0.5">
-                  {warnings.map((flag, i) => (
+                  {sortedWarnings.map((flag, i) => (
                     <li key={i} className="text-xs text-amber-700">{flag.message}</li>
                   ))}
                 </ul>
@@ -758,7 +790,6 @@ function MemoPageContent() {
       <div
         ref={memoRef}
         style={{ width: '210mm', margin: '0 auto', paddingTop: topOffset }}
-        dangerouslySetInnerHTML={{ __html: html }}
       />
 
       <div className="no-print fixed inset-x-0 bottom-0 z-50 border-t bg-white/95 px-4 py-4 backdrop-blur-sm" style={{ borderColor: 'var(--m-border)' }}>
@@ -809,6 +840,18 @@ function MemoPageContent() {
               </>
             ) : (
               <>
+                {showOutreachPrompt && (
+                  <p className="mb-1 text-[11px] font-medium text-emerald-800">
+                    Draft outreach to the founder?
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setOutreachOpen(true)}
+                  className="m-btn-accent m-btn-sm"
+                >
+                  Draft outreach
+                </button>
                 <button type="button" onClick={handleDownloadPdf} disabled={pdfLoading} className="m-btn-secondary m-btn-sm">
                   {pdfLoading ? 'PDF…' : serverPdf ? 'Download PDF' : 'Print / PDF'}
                 </button>
@@ -852,6 +895,20 @@ function MemoPageContent() {
       )}
 
       <div style={{ height: '5rem' }} aria-hidden />
+
+      <OutreachDrawer
+        open={outreachOpen}
+        onClose={() => {
+          setOutreachOpen(false)
+          setShowOutreachPrompt(false)
+        }}
+        memoData={memoData}
+        memoId={memoId}
+        trackingId={trackingId}
+        fundName={fundName}
+        initialFounderName={memoData?.TEAM_1_NAME || ''}
+        companyDomain={companyDomain}
+      />
     </div>
   )
 }

@@ -33,4 +33,21 @@ describe('memo-library', () => {
     const hit = findMemoByDomain('https://stripe.com', { fundId: 'guest', maxAgeMs: 0 })
     expect(hit?.id).toBe('stripe_test_1')
   })
+
+  it('saveMemo upserts by domain+fundId instead of duplicating', async () => {
+    const { saveMemo, getMemoLibrary } = await import('../../lib/memo-library.js')
+    const data = { COMPANY_NAME: 'Tuhk', ROUND: 'Seed', DATE: 'July 2026' }
+    const first = saveMemo(data, 'tuhk_111', { companyDomain: 'tuhk.com', fundId: 'panache_ventures' })
+    const second = saveMemo(
+      { ...data, ROUND: 'Seed (updated)' },
+      'tuhk_999',
+      { companyDomain: 'tuhk.com', fundId: 'panache_ventures' },
+    )
+
+    expect(second).toBe(first)
+    const library = getMemoLibrary()
+    const tuhkRows = library.filter(e => e.companyDomain === 'tuhk.com' && e.fundId === 'panache_ventures')
+    expect(tuhkRows).toHaveLength(1)
+    expect(tuhkRows[0].data.ROUND).toBe('Seed (updated)')
+  })
 })

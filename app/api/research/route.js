@@ -11,7 +11,7 @@ export async function POST(req) {
 
   try {
     const result = await runResearch(url, { forceRegenerate, researchMode, scraped })
-    console.log('[research]', url, `${result.research?.length || 0} chars`)
+    console.log('[research]', url, `${result.passCount ?? 0} passes, ${result.research?.length || 0} chars`)
     return Response.json(result)
   } catch (err) {
     console.error('[research]', err.message)
