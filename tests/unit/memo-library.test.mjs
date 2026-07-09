@@ -34,6 +34,24 @@ describe('memo-library', () => {
     expect(hit?.id).toBe('stripe_test_1')
   })
 
+  it('saveMemo upserts legacy null-fundId rows when saving with explicit fundId guest', async () => {
+    const { saveMemo, getMemoLibrary } = await import('../../lib/memo-library.js')
+    const data = { COMPANY_NAME: 'Chimoney', ROUND: 'Seed', DATE: 'July 2026' }
+    saveMemo(data, 'chimoney_legacy', { companyDomain: 'chimoney.io', fundId: null })
+    const id = saveMemo(
+      { ...data, ROUND: 'Seed (updated)' },
+      'chimoney_new',
+      { companyDomain: 'chimoney.io', fundId: 'guest' },
+    )
+
+    const library = getMemoLibrary()
+    const rows = library.filter(e => e.companyDomain === 'chimoney.io')
+    expect(rows).toHaveLength(1)
+    expect(id).toBe('chimoney_legacy')
+    expect(rows[0].data.ROUND).toBe('Seed (updated)')
+    expect(rows[0].fundId).toBe('guest')
+  })
+
   it('saveMemo upserts by domain+fundId instead of duplicating', async () => {
     const { saveMemo, getMemoLibrary } = await import('../../lib/memo-library.js')
     const data = { COMPANY_NAME: 'Tuhk', ROUND: 'Seed', DATE: 'July 2026' }
