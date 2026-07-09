@@ -25,17 +25,52 @@ function LearnedBadge({ behavioral }) {
   )
 }
 
-function SourceBadge({ source, unverified }) {
+function SourceBadge({ source, unverified, sourceConfidence }) {
   const isStealth = unverified || source === 'stealth_signal' || source === 'evertrace'
-  if (isStealth) {
+  if (isStealth || source === 'domain_registry') {
     return (
-      <span className="m-badge-low border border-amber-300 bg-amber-50 text-amber-900" title="Pre-announcement signal — verify before outreach">
-        Stealth · unverified
+      <span className="m-badge-low border border-amber-300 bg-amber-50 text-amber-900" title="Weak or pre-announcement signal — verify before outreach">
+        {source === 'domain_registry' ? 'Registry · low' : 'Stealth · unverified'}
+      </span>
+    )
+  }
+  if (source === 'incubator') {
+    return (
+      <span className="m-badge-high border border-emerald-300 bg-emerald-50 text-emerald-900" title="Pre-vetted incubator cohort">
+        Incubator
+      </span>
+    )
+  }
+  if (source === 'grant') {
+    return (
+      <span className="m-badge-mid border border-sky-300 bg-sky-50 text-sky-900" title="Public grant recipient disclosure">
+        Grant
+      </span>
+    )
+  }
+  if (source === 'event_host') {
+    return (
+      <span className="m-badge-mid" title="Event host / organizer signal">
+        Event host
       </span>
     )
   }
   const label = source === 'canadian_web' ? 'Canada web' : (source || 'unknown')
   return <span className="m-badge-low uppercase">{label}</span>
+}
+
+function ProvenanceLine({ provenance, sourceConfidence }) {
+  if (!provenance) return null
+  const tone = sourceConfidence === 'high'
+    ? 'text-emerald-800'
+    : sourceConfidence === 'low'
+      ? 'text-amber-800'
+      : 'text-zinc-600'
+  return (
+    <div className={`mt-1 text-[11px] font-medium leading-snug ${tone}`} title="Source provenance">
+      {provenance}
+    </div>
+  )
 }
 
 function confirmBatchBrief(companies) {
@@ -185,6 +220,7 @@ export default function SourceTable({
                     </div>
                   )}
                   <div className="mt-0.5 max-w-md text-[12px] leading-snug" style={{ color: 'var(--m-muted)' }}>{c.description}</div>
+                  <ProvenanceLine provenance={c.provenance} sourceConfidence={c.sourceConfidence} />
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
                 <td>
@@ -195,7 +231,7 @@ export default function SourceTable({
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.geography || '—'}</td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.sector || '—'}</td>
                 <td>
-                  <SourceBadge source={c.source} unverified={c.unverified} />
+                  <SourceBadge source={c.source} unverified={c.unverified} sourceConfidence={c.sourceConfidence} />
                 </td>
                 <td>
                   <div className="flex gap-1">

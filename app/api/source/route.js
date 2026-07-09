@@ -14,6 +14,7 @@ import {
 } from '@/lib/discover-research'
 import { isCanadianMandate, normalizeGeographies } from '@/lib/geography-utils'
 import { evertraceSignalToDiscoverSeed } from '@/lib/evertrace'
+import { runSourcingAdapters } from '@/lib/sourcing/run-adapters'
 
 export const maxDuration = 300
 
@@ -81,7 +82,8 @@ export async function POST(req) {
   const { startuphub, pitchbook } = dbSearch
   const structuredStealth = await fetchStructuredStealthSignals(parsed, thesis, fundContext)
   const stealthSeeds = structuredStealth.map(evertraceSignalToDiscoverSeed)
-  const mergedSeeds = mergeCompanySeeds(startuphub, pitchbook, stealthSeeds)
+  const sourcing = await runSourcingAdapters({ parsed, thesis, fundContext, resolve: true })
+  const mergedSeeds = mergeCompanySeeds(startuphub, pitchbook, stealthSeeds, sourcing.seeds)
 
   const researchPlans = buildDiscoverResearchPlan(parsed, thesis, fundContext)
   const researchResults = await runDiscoverResearch(researchPlans)
@@ -129,7 +131,7 @@ export async function POST(req) {
   console.log(
     '[source]',
     thesis.slice(0, 60),
-    `→ ${companies.length} companies (hub: ${startuphub.length}/${dbSearch.startuphubRawCount}, pb: ${pitchbook.length}, stealth: ${stealthSeeds.length}, passes: ${researchResults.map(r => r.id).join('+')}${thin ? ', thin' : ''})`,
+    `→ ${companies.length} companies (hub: ${startuphub.length}/${dbSearch.startuphubRawCount}, pb: ${pitchbook.length}, stealth: ${stealthSeeds.length}, sourcing: ${sourcing.seeds.length}, passes: ${researchResults.map(r => r.id).join('+')}${thin ? ', thin' : ''})`,
   )
 
   const dbMeta = getDatabaseSearchMeta(dbSearch)
@@ -143,6 +145,7 @@ export async function POST(req) {
       ...dbMeta,
       seedCount: mergedSeeds.length,
       stealthSeedCount: stealthSeeds.length,
+      sourcing: sourcing.meta,
       researchPasses: researchResults.map(r => ({ id: r.id, label: r.label, ok: r.ok, unverified: !!r.unverified })),
       canadianMandate,
       canadianResultCount: canadianCount,

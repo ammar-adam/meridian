@@ -94,6 +94,9 @@ meridian/
 │   ├── edit-tracker.js
 │   ├── outreach-prompt.js    # Founder outreach synthesis
 │   ├── evertrace.js          # Stealth signal scaffold (Discover)
+│   ├── canada-registry.js    # Corporations Canada CSV snapshot
+│   ├── domain-check.js       # Free DNS/HTTP domain probe
+│   ├── sourcing/             # Multi-source adapters + entity resolution
 │   ├── fund-seeds.js         # Demo fund profiles (Sagard, Panache)
 │   ├── memo-template.js      # Template variant IDs
 │   ├── research-passes.js    # Section-specific Perplexity passes + confidence
@@ -119,6 +122,7 @@ meridian/
 | **Founder outreach drafts** | `/memo` → Draft outreach, `app/api/outreach` | After Pursue; Claude synthesis from brief + fund context; edits logged as `section: outreach` |
 | **Memo template variants** | `public/templates/`, fund setup selector | `default` and `compact`; per-fund `memoTemplateId` |
 | **EverTrace research** | `docs/evertrace-research.md`, `lib/evertrace.js` | Scaffold only; conditional go pending Canadian coverage demo |
+| **Multi-source data layer** | `lib/sourcing/`, `docs/meridian-vision.md`, `docs/data-sourcing-wedge-vision.md` | Domain registry, Velocity cohorts, IRAP grants, entity resolution |
 | **Multi-pass brief research** | `lib/research-passes.js`, `lib/research-core.js` | Quick: 3 parallel passes (product, funding, team); Deep: 6; team escalation when thin; confidence → quality gate |
 
 ---

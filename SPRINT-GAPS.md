@@ -1,5 +1,12 @@
 # Panache Sprint — Honest Completion Status
 
+## Strategic context
+
+Read before any data-sourcing work:
+
+- [docs/meridian-vision.md](docs/meridian-vision.md) — Reframe 4: community-access data is the moat
+- [docs/data-sourcing-wedge-vision.md](docs/data-sourcing-wedge-vision.md) — Waterloo → Ontario → national entry sequence
+
 This documents what was **actually** delivered vs. what the sprint spec implied. The prior "done" summary overstated manual verification and understated sourcing gaps.
 
 ## What was genuinely shipped
@@ -48,10 +55,38 @@ Panache's actual problem — **stealth founder discovery before public launch** 
 ## Still out of scope (needs separate sprint)
 
 - Full EverTrace paid integration (demo + API key required)
-- Canadian corporate registry direct data access
+- Live Corporations Canada ingest in every Discover request at national scale (adapter exists; keep keyword-capped)
+- Automated Luma discover API (explicitly declined — see docs/event-host-sources.md)
 - Manual acceptance test script for all routes
 - Auth/team sync for fund profiles
 - Drag-and-drop template editor
+
+## Multi-source data layer (this sprint)
+
+| Adapter | Status | Evidence |
+|---------|--------|----------|
+| Domain registry | **Works** | Corporations Canada CSV + DNS; see `scripts/verify-domain-registry.mjs` |
+| Velocity incubator | **Works** | May 2026 cohort populated in `lib/sourcing/incubator-adapter.js` |
+| IRAP grants | **Works** | Public NRC CSV exists; curated seed in `lib/sourcing/grant-adapter.js` |
+| Event hosts | **Curated only** | No safe Luma API; manual Waterloo hosts — `docs/event-host-sources.md` |
+| Entity resolver | **Works** | Perplexity person↔company; honest failures left partial |
+| Discover provenance UI | **Shipped** | Source badges + provenance line in `source-table.jsx` |
+
+Strategic docs: [docs/meridian-vision.md](docs/meridian-vision.md), [docs/data-sourcing-wedge-vision.md](docs/data-sourcing-wedge-vision.md)
+
+## Data Layer Improvement Sprint — running log
+
+| When | Part | Note |
+|------|------|------|
+| start | 0 | Falsifiable baseline: SCADABLE, Simantic, Photon-IV vs Perplexity + StartupHub |
+| done | 0 | **3/3 pass** — Meridian has founders+description; Perplexity surfaces name but not founders; StartupHub no hits (Photon-IV hub rate-limited to 0). See `docs/falsifiable-test-results.md` |
+| done | 1 | Registry probe: baseline 25→3 (12%); after prioritize+parallel+cache: 100→18 (18%), 250→39 (15.6%), 500→73 (14.6%) all &lt;8s wall. Default Discover limit set to **250**. Yield rate ~15–18% — most keyword matches genuinely lack live guessed domains |
+| done | 2 | DMZ Fall’25+Spring’26 populated (18); CDL AI 2025/26 (5); Communitech + MaRS documented **not viable** (job board / gated Connect) |
+| done | 3 | Velocity expanded: May’26 (8) + Feb’26 (13) + Pitch’25 (5) = **26** Velocity rows |
+| done | 4 | Accuracy sample n=13: 3 accurate / 5 inaccurate / 5 inconclusive. Registry noise + Perplexity false-negatives on Velocity; mitigations: non-startup name filter; skip resolver on registry |
+| done | build | `npm run build` after changes |
+
+**Incubator totals:** velocity 26 + dmz 18 + cdl 5 = **49** entities; 3/5 source keys populated (communitech/mars empty by design).
 
 ## Memo pipeline notes (post-validation cleanup)
 
