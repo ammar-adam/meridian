@@ -1,0 +1,93 @@
+{
+  "baseline": {
+    "probed": 25,
+    "resolved": 3
+  },
+  "tiers": [
+    {
+      "limit": 100,
+      "registryRows": 130634,
+      "keywordMatches": 2964,
+      "probed": 100,
+      "resolved": 18,
+      "yieldRate": 0.18,
+      "elapsedMs": 4491,
+      "concurrency": 20,
+      "cacheHits": 0,
+      "since": "2023-01-01",
+      "fetchedAt": "2026-07-09T20:12:48.878Z",
+      "wallMs": 4492,
+      "sample": [
+        {
+          "name": "PayTech Women Canada",
+          "domain": "paytechwomen.com"
+        },
+        {
+          "name": "Aismart Digital Ltd.",
+          "domain": "aismartdigital.com"
+        },
+        {
+          "name": "Raiseview Capital Inc.",
+          "domain": "raiseviewcapital.com"
+        }
+      ]
+    },
+    {
+      "limit": 250,
+      "registryRows": 130634,
+      "keywordMatches": 2964,
+      "probed": 250,
+      "resolved": 39,
+      "yieldRate": 0.156,
+      "elapsedMs": 5505,
+      "concurrency": 20,
+      "cacheHits": 100,
+      "since": "2023-01-01",
+      "fetchedAt": "2026-07-09T20:12:53.400Z",
+      "wallMs": 5505,
+      "sample": [
+        {
+          "name": "PayTech Women Canada",
+          "domain": "paytechwomen.com"
+        },
+        {
+          "name": "Aismart Digital Ltd.",
+          "domain": "aismartdigital.com"
+        },
+        {
+          "name": "Raiseview Capital Inc.",
+          "domain": "raiseviewcapital.com"
+        }
+      ]
+    },
+    {
+      "limit": 500,
+      "registryRows": 130634,
+      "keywordMatches": 2964,
+      "probed": 500,
+      "resolved": 73,
+      "yieldRate": 0.146,
+      "elapsedMs": 7760,
+      "concurrency": 20,
+      "cacheHits": 250,
+      "since": "2023-01-01",
+      "fetchedAt": "2026-07-09T20:12:58.853Z",
+      "wallMs": 7760,
+      "sample": [
+        {
+          "name": "PayTech Women Canada",
+          "domain": "paytechwomen.com"
+        },
+        {
+          "name": "Aismart Digital Ltd.",
+          "domain": "aismartdigital.com"
+        },
+        {
+          "name": "Raiseview Capital Inc.",
+          "domain": "raiseviewcapital.com"
+        }
+      ]
+    }
+  ],
+  "recommended": 500
+}

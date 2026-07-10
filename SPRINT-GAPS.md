@@ -85,8 +85,9 @@ Strategic docs: [docs/meridian-vision.md](docs/meridian-vision.md), [docs/data-s
 | done | 3 | Velocity expanded: May’26 (8) + Feb’26 (13) + Pitch’25 (5) = **26** Velocity rows |
 | done | 4 | Accuracy sample n=13: 3 accurate / 5 inaccurate / 5 inconclusive. Registry noise + Perplexity false-negatives on Velocity; mitigations: non-startup name filter; skip resolver on registry |
 | done | build | `npm run build` after changes |
+| done | enrich | Velocity/DMZ founder+domain pass + CDL Cancer/Neuro; 66 entities, 25 founders / 25 domains / 18 fully enriched (was 1) |
 
-**Incubator totals:** velocity 26 + dmz 18 + cdl 5 = **49** entities; 3/5 source keys populated (communitech/mars empty by design).
+**Incubator totals:** velocity 26 + dmz 18 + cdl 22 = **66** entities; 3/5 source keys populated (communitech/mars empty by design).
 
 ## Memo pipeline notes (post-validation cleanup)
 

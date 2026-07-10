@@ -1,0 +1,168 @@
+{
+  "checkedAt": "2026-07-09T21:24:56.264Z",
+  "sampleSize": 13,
+  "counts": {
+    "accurate": 3,
+    "inaccurate": 5,
+    "inconclusive": 5
+  },
+  "accurateRateExcludingInconclusive": 0.375,
+  "verdicts": [
+    {
+      "companyName": "Innowind",
+      "source": "incubator",
+      "provenance": "Velocity February 2026 (2026-02-09)",
+      "personName": null,
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": null,
+      "verdict": "accurate",
+      "notes": "Innowind is a real company in the 2026 Velocity cohort improving wind energy with AI-controlled robotic fins.",
+      "raw": "```json\n{\n\"companyExists\":true,\n\"founderMatch\":null,\n\"verdict\":\"accurate\",\n\"notes\":\"Innowind is a real company in the 2026 Velocity cohort improving wind energy with AI-controlled robotic fins.\"\n}\n```"
+    },
+    {
+      "companyName": "Eventist",
+      "source": "incubator",
+      "provenance": "Velocity February 2026 (2026-02-09)",
+      "personName": "Ciara Azam, Daniel Whitney",
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": true,
+      "verdict": "accurate",
+      "notes": "Multiple sources confirm Eventist exists and was co-founded by Ciara A. and Daniel Whitney.",
+      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": true,\n\"verdict\": \"accurate\",\n\"notes\": \"Multiple sources confirm Eventist exists and was co-founded by Ciara A. and Daniel Whitney.\"\n}"
+    },
+    {
+      "companyName": "Applied Intelligence",
+      "source": "incubator",
+      "provenance": "Velocity February 2026 (2026-02-09)",
+      "personName": null,
+      "domain": null,
+      "companyExists": false,
+      "founderMatch": false,
+      "verdict": "inaccurate",
+      "notes": "No startup named Applied Intelligence exists; the term refers to a concept or course, not a company.",
+      "raw": "{\n\"companyExists\": false,\n\"founderMatch\": false,\n\"verdict\": \"inaccurate\",\n\"notes\": \"No startup named Applied Intelligence exists; the term refers to a concept or course, not a company.\"\n}"
+    },
+    {
+      "companyName": "Appfi",
+      "source": "incubator",
+      "provenance": "Velocity February 2026 (2026-02-09)",
+      "personName": null,
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": true,
+      "verdict": "accurate",
+      "notes": "Appfi is explicitly listed as a Velocity company building iPhone apps without coding.",
+      "raw": "```json\n{\n\"companyExists\": true,\n\"founderMatch\": true,\n\"verdict\": \"accurate\",\n\"notes\": \"Appfi is explicitly listed as a Velocity company building iPhone apps without coding.\"\n}\n```"
+    },
+    {
+      "companyName": "Flomaru",
+      "source": "incubator",
+      "provenance": "Velocity February 2026 (2026-02-09)",
+      "personName": "Ali Shaverdi, Amal Aqel",
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": false,
+      "verdict": "inaccurate",
+      "notes": "Company Flomaru exists but founder names Ali Shaverdi and Amal Aqel do not match the actual founder Ali Shaverdi only.",
+      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": false,\n\"verdict\": \"inaccurate\",\n\"notes\": \"Company Flomaru exists but founder names Ali Shaverdi and Amal Aqel do not match the actual founder Ali Shaverdi only.\"\n}"
+    },
+    {
+      "companyName": "ItemIQ",
+      "source": "incubator",
+      "provenance": "Velocity February 2026 (2026-02-09)",
+      "personName": "Saad Khan, Arhem Rana",
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": null,
+      "verdict": "inconclusive",
+      "notes": "Company ItemIQ is verified but founder names are not confirmed in the provided sources.",
+      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": null,\n\"verdict\": \"inconclusive\",\n\"notes\": \"Company ItemIQ is verified but founder names are not confirmed in the provided sources.\"\n}"
+    },
+    {
+      "companyName": "Focal Healthcare Inc.",
+      "source": "grant",
+      "provenance": "IRAP Contributions to Firms recipient (2023-2024)",
+      "personName": null,
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": null,
+      "verdict": "inconclusive",
+      "notes": "Company is verified as a real Canadian medical device firm but founder identity cannot be confirmed from available data.",
+      "raw": "{\"companyExists\":true,\"founderMatch\":null,\"verdict\":\"inconclusive\",\"notes\":\"Company is verified as a real Canadian medical device firm but founder identity cannot be confirmed from available data.\"}"
+    },
+    {
+      "companyName": "Adviice Inc.",
+      "source": "grant",
+      "provenance": "IRAP Contributions to Firms recipient (2024-2025)",
+      "personName": null,
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": null,
+      "verdict": "inconclusive",
+      "notes": "Company verified via public website and IRAP funding criteria but founder identity not disclosed.",
+      "raw": "{\"companyExists\":true,\"founderMatch\":null,\"verdict\":\"inconclusive\",\"notes\":\"Company verified via public website and IRAP funding criteria but founder identity not disclosed.\"}"
+    },
+    {
+      "companyName": "Stilo Corporation",
+      "source": "grant",
+      "provenance": "IRAP Contributions to Firms recipient (2024-2025)",
+      "personName": null,
+      "domain": null,
+      "companyExists": true,
+      "founderMatch": null,
+      "verdict": "inconclusive",
+      "notes": "The company and ownership change are verified, but startup due diligence cannot be confirmed without project details.",
+      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": null,\n\"verdict\": \"inconclusive\",\n\"notes\": \"The company and ownership change are verified, but startup due diligence cannot be confirmed without project details.\"\n}"
+    },
+    {
+      "companyName": "DataCore Tech Corp.",
+      "source": "domain_registry",
+      "provenance": "Incorporated 2024-12-11, domain datacoretech.com live",
+      "personName": null,
+      "domain": "datacoretech.com",
+      "companyExists": false,
+      "founderMatch": false,
+      "verdict": "inaccurate",
+      "notes": "The claim conflicts with the established DataCore Software founded in 1998, not a 2024 entity.",
+      "raw": "{\"companyExists\":false,\"founderMatch\":false,\"verdict\":\"inaccurate\",\"notes\":\"The claim conflicts with the established DataCore Software founded in 1998, not a 2024 entity.\"}"
+    },
+    {
+      "companyName": "Doris Baird Foundation",
+      "source": "domain_registry",
+      "provenance": "Incorporated 2026-06-11, domain dorisbairdfoundation.com live",
+      "personName": null,
+      "domain": "dorisbairdfoundation.com",
+      "companyExists": false,
+      "founderMatch": false,
+      "verdict": "inaccurate",
+      "notes": "No verified organization named 'Doris Baird Foundation' exists; the deceased Doris Baird's obituary is from 2011, and the only similar entity is the established Baird Foundation Inc (1967).",
+      "raw": "```json\n{\n\"companyExists\":false,\n\"founderMatch\":false,\n\"verdict\":\"inaccurate\",\n\"notes\":\"No verified organization named 'Doris Baird Foundation' exists; the deceased Doris Baird's obituary is from 2011, and the only similar entity is the established Baird Foundation Inc (1967).\"\n}"
+    },
+    {
+      "companyName": "Ekai Technolabs Inc.",
+      "source": "domain_registry",
+      "provenance": "Incorporated 2023-09-28, domain ekaitechnolabs.com live",
+      "personName": null,
+      "domain": "ekaitechnolabs.com",
+      "companyExists": false,
+      "founderMatch": null,
+      "verdict": "inaccurate",
+      "notes": "The claimed company is an Inc. entity incorporated in 2023, but the only matching ZaubaCorp record is an LLP entity incorporated in 2017 and struck off.",
+      "raw": "{\"companyExists\":false,\"founderMatch\":null,\"verdict\":\"inaccurate\",\"notes\":\"The claimed company is an Inc. entity incorporated in 2023, but the only matching ZaubaCorp record is an LLP entity incorporated in 2017 and struck off.\"}"
+    },
+    {
+      "companyName": "AIMSTONE CAPITAL INC.",
+      "source": "domain_registry",
+      "provenance": "Incorporated 2023-05-11, domain aimstonecapital.com live",
+      "personName": null,
+      "domain": "aimstonecapital.com",
+      "companyExists": null,
+      "founderMatch": null,
+      "verdict": "inconclusive",
+      "notes": "unparseable response",
+      "raw": "{'companyExists': True, 'founderMatch': None, 'verdict': 'inconclusive', 'notes': 'Company exists but founder details are not available in the provided sources.'}"
+    }
+  ]
+}

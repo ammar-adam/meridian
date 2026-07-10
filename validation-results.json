@@ -1,0 +1,642 @@
+[
+  {
+    "test": 1,
+    "name": "Cold start",
+    "status": "FAIL",
+    "evidence": {
+      "landingTitle": "",
+      "seeds": {
+        "fundNames": [],
+        "seedMarker": null
+      },
+      "routeResults": [
+        {
+          "route": "/",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/brief",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/discover",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/library",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/thesis",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/lists",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/fund",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        },
+        {
+          "route": "/fund/setup",
+          "status": 500,
+          "newErrors": [
+            "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+            "Cannot read properties of undefined (reading 'set')"
+          ]
+        }
+      ],
+      "consoleErrors": [
+        "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "Cannot read properties of undefined (reading 'set')"
+      ]
+    },
+    "notes": "Fund seeds missing or incomplete"
+  },
+  {
+    "test": 2,
+    "name": "Brief — well-documented company",
+    "status": "PASS",
+    "evidence": {
+      "scrapePreviewMs": 2255,
+      "totalBriefMs": 75760,
+      "passCount": 3,
+      "thesis": {
+        "THESIS_HEADLINE": "We back commercial-stage AI companies where enterprise distribution and vertical domain expertise create durable competitive moats in production environments.",
+        "THESIS_1_TITLE": "AI-Native Infrastructure at Commercial Scale",
+        "THESIS_1_TEXT": "We invest in companies deploying AI to solve mission-critical enterprise problems with proven product-market fit. Stripe exemplifies this thesis through its Agentic Commerce Suite and Machine Payments Protocol, purpose-built infrastructure enabling AI agents to execute financial transactions autonomously. Their Radar fraud detection system processes hundreds of billions in annual transaction volume using proprietary ML models trained on Stripe's unique dataset—a data moat no competitor can replicate. Like Cohere's enterprise LLM platform and Ada's customer service automation, Stripe demonstrates how AI creates exponential value when embedded in high-stakes production workflows serving millions of end users.",
+        "THESIS_2_TITLE": "Vertical Domain Expertise as Competitive Moat",
+        "THESIS_2_TEXT": "The strongest AI companies combine technical excellence with deep domain knowledge that takes years to build. Stripe's unified API architecture across payments, billing, fraud, tax, and banking represents 15+ years of solving edge cases in financial infrastructure—from handling failed payment retries to calculating VAT across 150+ countries. This accumulated institutional knowledge creates switching costs and network effects that pure-play AI startups cannot match. We seek companies where vertical expertise compounds over time, making the AI models increasingly difficult to replicate as they ingest proprietary domain-specific data.",
+        "THESIS_3_TITLE": "Enterprise Distribution at Scale",
+        "THESIS_3_TEXT": "Commercial traction validates that customers will pay for AI solutions in production. Stripe processes payments for millions of businesses globally, from startups to Fortune 500 enterprises, demonstrating the enterprise go-to-market playbook we prioritize. Their developer-first distribution strategy—integrate once via single API, expand into adjacent products—mirrors our portfolio construction philosophy. We invest in companies with repeatable sales motions, proven expansion revenue, and the infrastructure to serve both SMB and enterprise segments. Stage discipline matters: we back companies past the pilot phase, generating meaningful recurring revenue with clear paths to profitability."
+      },
+      "qualityGate": {
+        "passed": true,
+        "flags": [
+          {
+            "field": "THESIS_2_TEXT",
+            "severity": "warn",
+            "message": "Thesis point is generic — does not reference specific portfolio company or fund criterion"
+          },
+          {
+            "field": "THESIS_3_TEXT",
+            "severity": "warn",
+            "message": "Thesis point is generic — does not reference specific portfolio company or fund criterion"
+          }
+        ],
+        "confidenceSummary": []
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test": 3,
+    "name": "Brief — thin/early-stage company",
+    "status": "PARTIAL",
+    "evidence": {
+      "url": "https://www.hypermode.com",
+      "passConfidences": [
+        "product:found",
+        "funding:not_found",
+        "team:not_found"
+      ],
+      "memoAllFields": {
+        "COMPANY_NAME": "Hypermode",
+        "COMPANY_INITIAL": "H",
+        "COMPANY_TAGLINE": "AI development platform that turns natural language into production-ready agents without code.",
+        "COMPANY_LOGO_URL": "https://www.hypermode.com/icon-light-32x32.png",
+        "HERO_IMAGE_URL": "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80",
+        "ROUND": "Seed",
+        "DATE": "July 2026",
+        "PRODUCT_DESCRIPTION": "Hypermode Agents is a natural-language-first platform for building, deploying, and managing agentic AI systems. Domain experts describe desired outcomes (e.g., \"reconcile Stripe disputes and post to Slack\") and Hypermode converts that intent into executable logic without code. The platform includes Threads (conversational refinement interface), Connections (secure API/tool integrations to 2,000+ services), Concierge (guided agent builder), and Code Export (agents export as scalable microservices for platform teams). Sidekick, included on the Hobby plan, automates executive workflows like calendar management and meeting prep.",
+        "MARKET_DESCRIPTION": "Enterprise teams are moving from prototype AI to production systems but face organizational friction: domain experts can't build without engineers, distributed AI execution is hard to debug, and integration requires specialized skills. The AI agent platform market is emerging as a critical layer between model APIs and business workflows. Hypermode's users include engineers at MIT, Uber, ZS, and FactSet—institutions where agent deployment directly impacts operational efficiency. The broader AI infrastructure market is estimated to exceed $50B by 2028, with agentic workflows becoming the primary consumption pattern.",
+        "STAT_1_VALUE": "$9M",
+        "STAT_1_LABEL": "Total raised",
+        "STAT_2_VALUE": "2,000+",
+        "STAT_2_LABEL": "Integrations available (Pro tier)",
+        "STAT_3_VALUE": "$50B",
+        "STAT_3_LABEL": "Addressable market",
+        "DEFENSE_1_TITLE": "Conversational iteration eliminates code-to-intent friction.",
+        "DEFENSE_1_TEXT": "Hypermode's natural-language interface and Threads conversational loop allow domain experts to refine agent behavior without context switching to code, eliminating the loss-of-requirements problem in traditional AI workflows. The Code Export path gives platform teams an escape hatch to production microservices, creating a unique bridge between no-code experimentation and full-stack deployment.",
+        "DEFENSE_2_TITLE": "Production-grade infrastructure baked in from the start.",
+        "DEFENSE_2_TEXT": "Built-in observability, model routing, secure connections, and a managed vector-graph data plane reduce the operational toil that makes most agent prototypes undeployable. Competing solutions force teams to wire these layers manually or migrate to specialized platforms; Hypermode ships with them.",
+        "TEAM_1_INITIALS": "KVG",
+        "TEAM_1_ROLE": "Founder & CEO (until mid-2025 acquisition by Istari Digital)",
+        "TEAM_1_NAME": "Kevin Van Gundy",
+        "TEAM_1_BIO": "Previously COO at Vercel, where he supported the company through scaling. Before that, spent a decade leading growth across tech roles. Founded Hypermode in 2023 with the mandate to make every developer an AI engineer.",
+        "TEAM_2_INITIALS": "",
+        "TEAM_2_ROLE": "",
+        "TEAM_2_NAME": "",
+        "TEAM_2_BIO": "",
+        "TEAM_3_INITIALS": "",
+        "TEAM_3_ROLE": "",
+        "TEAM_3_NAME": "",
+        "TEAM_3_BIO": "",
+        "PORTFOLIO_INTRO": "Our portfolio spans fintech infrastructure, vertical SaaS, and deep-tech automation—backing technical teams redefining industries:",
+        "PORTFOLIO_ITEMS": "Neo FinancialCanadian fintech rebuilding consumer banking and rewards infrastructureHopperMontreal-based travel fintech leveraging predictive analytics for airfare and hotel bookingVentionCloud-based manufacturing automation platform enabling design-to-deployment for industrial robotics",
+        "FUND_ANGLE_LABEL": "Canadian Technical Founders, Pre-Seed/Seed",
+        "THESIS_HEADLINE": "We back technical Canadian founders at the earliest stages—pre-seed and seed—with $100K–$1.5M first checks. Our edge is speed, intimacy, and hands-on support that scales alongside founder ambition.",
+        "THESIS_1_TITLE": "Technical Depth from Day Zero",
+        "THESIS_1_TEXT": "We invest in builders who write code, architect systems, and understand infrastructure at the metal. Companies like Vention (manufacturing automation) and Neo Financial (fintech) demonstrate the caliber of technical excellence we seek—founders who can ship product, iterate rapidly, and build category-defining platforms from first principles.",
+        "THESIS_2_TITLE": "Canadian Innovation, Global Ambition",
+        "THESIS_2_TEXT": "Our mandate is exclusively Canadian founders tackling global markets. Geography matters: we leverage our local network, regulatory fluency, and ecosystem relationships to accelerate companies from Montreal to Vancouver. Hopper's travel fintech success exemplifies how Canadian-rooted companies can achieve billion-dollar outcomes by combining local grit with international scale.",
+        "THESIS_3_TITLE": "Speed and Conviction at Pre-Seed/Seed",
+        "THESIS_3_TEXT": "We deploy $100K–$1.5M first checks when larger US brands are still doing diligence. Our small fund size enables intimate partnerships—founder dinners, direct Slack access, and hands-on support on hiring, product roadmap, and go-to-market. We win deals by moving fast and staying close through the chaotic early journey from prototype to product-market fit.",
+        "FUND_NAME": "Panache Ventures",
+        "FUND_LOGO_URL": ""
+      },
+      "confidenceBanner": [
+        "Funding history incomplete — verify round size and lead investors",
+        "Team background could not be fully verified — confirm founder details before forwarding",
+        "Sections needing manual verification: funding, team",
+        "Stat uses market-level data — confirm before GP forward",
+        "Thesis point is generic — does not reference specific portfolio company or fund criterion"
+      ],
+      "qualityGate": {
+        "passed": false,
+        "flags": [
+          {
+            "field": "confidence_funding",
+            "section": "funding",
+            "severity": "warn",
+            "message": "Funding history incomplete — verify round size and lead investors",
+            "confidence": true
+          },
+          {
+            "field": "confidence_team",
+            "section": "team",
+            "severity": "warn",
+            "message": "Team background could not be fully verified — confirm founder details before forwarding",
+            "confidence": true
+          },
+          {
+            "field": "CONFIDENCE_SUMMARY",
+            "severity": "warn",
+            "message": "Sections needing manual verification: funding, team",
+            "confidence": true
+          },
+          {
+            "field": "STAT_3_VALUE",
+            "severity": "warn",
+            "message": "Stat uses market-level data — confirm before GP forward"
+          },
+          {
+            "field": "TEAM_2_NAME",
+            "severity": "error",
+            "message": "Team name is a placeholder — verify founder identity before sharing"
+          },
+          {
+            "field": "TEAM_3_NAME",
+            "severity": "error",
+            "message": "Team name is a placeholder — verify founder identity before sharing"
+          },
+          {
+            "field": "THESIS_3_TEXT",
+            "severity": "warn",
+            "message": "Thesis point is generic — does not reference specific portfolio company or fund criterion"
+          }
+        ],
+        "confidenceSummary": [
+          "funding",
+          "team"
+        ]
+      }
+    },
+    "notes": "Possible invented stats: STAT_1_VALUE"
+  },
+  {
+    "test": 4,
+    "name": "Fund switching, same company",
+    "status": "PASS",
+    "evidence": {
+      "sagard": {
+        "THESIS_HEADLINE": "We back commercial-stage AI companies where enterprise distribution and vertical domain expertise create durable competitive moats in production environments.",
+        "THESIS_1_TITLE": "AI-Native Infrastructure at Commercial Scale",
+        "THESIS_1_TEXT": "We invest in companies deploying AI to solve mission-critical enterprise problems with proven product-market fit. Stripe exemplifies this thesis through its Agentic Commerce Suite and Machine Payments Protocol, purpose-built infrastructure enabling AI agents to execute financial transactions autonomously. Their Radar fraud detection system processes hundreds of billions in annual transaction volume using proprietary ML models trained on Stripe's unique dataset—a data moat no competitor can replicate. Like Cohere's enterprise LLM platform and Ada's customer service automation, Stripe demonstrates how AI creates exponential value when embedded in high-stakes production workflows serving millions of end users.",
+        "THESIS_2_TITLE": "Vertical Domain Expertise as Competitive Moat",
+        "THESIS_2_TEXT": "The strongest AI companies combine technical excellence with deep domain knowledge that takes years to build. Stripe's unified API architecture across payments, billing, fraud, tax, and banking represents 15+ years of solving edge cases in financial infrastructure—from handling failed payment retries to calculating VAT across 150+ countries. This accumulated institutional knowledge creates switching costs and network effects that pure-play AI startups cannot match. We seek companies where vertical expertise compounds over time, making the AI models increasingly difficult to replicate as they ingest proprietary domain-specific data.",
+        "THESIS_3_TITLE": "Enterprise Distribution at Scale",
+        "THESIS_3_TEXT": "Commercial traction validates that customers will pay for AI solutions in production. Stripe processes payments for millions of businesses globally, from startups to Fortune 500 enterprises, demonstrating the enterprise go-to-market playbook we prioritize. Their developer-first distribution strategy—integrate once via single API, expand into adjacent products—mirrors our portfolio construction philosophy. We invest in companies with repeatable sales motions, proven expansion revenue, and the infrastructure to serve both SMB and enterprise segments. Stage discipline matters: we back companies past the pilot phase, generating meaningful recurring revenue with clear paths to profitability."
+      },
+      "panache": {
+        "THESIS_HEADLINE": "We back technical Canadian founders building category-defining infrastructure at pre-seed and seed—before US brands arrive.",
+        "THESIS_1_TITLE": "Infrastructure-First Technical Founders",
+        "THESIS_1_TEXT": "We invest in technical teams building foundational platforms that replace fragmented tooling with unified APIs. Like Stripe's modular architecture (Payments → Billing → Tax → Treasury via one integration), companies like Vention consolidate manufacturing automation into a single cloud platform, and Neo Financial rebuilt Canadian banking infrastructure from scratch. We seek founders who architect systems, not features—entrepreneurs who write code, understand compounding network effects, and build economic infrastructure that captures value as entire industries digitize.",
+        "THESIS_2_TITLE": "Speed & Intimacy at the Critical Moment",
+        "THESIS_2_TEXT": "Canadian founders face a funding gap: too early for US mega-funds, too technical for generalist local capital. We move in 48 hours with $100K–$1.5M first checks when the product is live but pre-traction. Stripe raised $2M seed in 2011 after Y Combinator with working payment APIs; Hopper raised seed in Montreal before predictive travel pricing proved unit economics. We don't wait for Series A metrics—we commit when the architecture is elegant, the founder is technical, and the category is inevitable. Our mandate requires Canadian incorporation, pre-seed/seed stage, and software infrastructure plays.",
+        "THESIS_3_TITLE": "Hands-On Support for Global Ambition",
+        "THESIS_3_TEXT": "We help Canadian infrastructure companies compete globally against US incumbents. Stripe scaled from online payments to Treasury, Issuing, and agentic commerce by layering products atop payment rails; Neo Financial expanded from digital banking to credit cards and mortgages by owning the full stack. We provide hands-on go-to-market support, US expansion playbooks, and operational rigor—coaching founders to think in decades, not quarters. Portfolio companies gain access to our network of follow-on investors (Thrive, a16z, Sequoia-caliber firms) and tactical expertise in API-first distribution, compliance infrastructure, and developer adoption."
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test": 5,
+    "name": "Discover — Canadian mandate",
+    "status": "PASS",
+    "evidence": {
+      "companyCount": 10,
+      "meta": {
+        "thesis": "fintech infrastructure, pre-seed, Ontario",
+        "parsed": {
+          "sectors": [
+            "Fintech",
+            "Financial Services",
+            "Payments",
+            "Banking Infrastructure",
+            "B2B SaaS"
+          ],
+          "stages": [
+            "Pre-Seed",
+            "Seed"
+          ],
+          "geographies": [
+            "Canada",
+            "Ontario",
+            "Toronto"
+          ],
+          "keywords": [
+            "fintech infrastructure",
+            "payment infrastructure",
+            "banking API",
+            "embedded finance",
+            "financial services platform",
+            "payment processing",
+            "open banking",
+            "financial technology",
+            "treasury management",
+            "card issuing"
+          ],
+          "fundingMin": 100000,
+          "fundingMax": 3000000,
+          "foundedAfter": 2020,
+          "pitchbookQuery": "fintech infrastructure pre-seed seed Ontario Canada founded:2020-2026 funding:100K-3M",
+          "perplexityQuery": "Find at least 20 real Canadian fintech infrastructure startups based in Ontario (especially Toronto) at pre-seed or seed stage founded between 2020-2026. Focus on companies building: payment infrastructure, banking APIs, embedded finance platforms, card issuing, treasury management, open banking solutions, or B2B fintech tools. For each startup provide: exact company name, website domain, current funding stage, total funding raised, headquarters city, founding year, and 1-sentence description. Prioritize technical founders building developer-first or API-first products similar to companies like Neo Financial. Include only verified real companies operating in 2026."
+        },
+        "fundId": "panache_ventures",
+        "startuphubConfigured": true,
+        "startuphubCount": 2,
+        "startuphubRawCount": 2,
+        "pitchbookConfigured": false,
+        "pitchbookCount": 0,
+        "pitchbookRawCount": 0,
+        "databaseCount": 2,
+        "seedCount": 2,
+        "stealthSeedCount": 0,
+        "researchPasses": [
+          {
+            "id": "general",
+            "label": "General web research",
+            "ok": true,
+            "unverified": false
+          },
+          {
+            "id": "canadian_web",
+            "label": "Canadian startup focus",
+            "ok": true,
+            "unverified": false
+          },
+          {
+            "id": "stealth_signal",
+            "label": "Stealth / early signals (unverified)",
+            "ok": true,
+            "unverified": true
+          }
+        ],
+        "canadianMandate": true,
+        "canadianResultCount": 9,
+        "thin": true,
+        "thinCanadian": false,
+        "perplexityChars": 10051
+      },
+      "results": [
+        {
+          "name": "Chimoney",
+          "domain": "chimoney.io",
+          "stage": "Pre-Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 92,
+          "unverified": false
+        },
+        {
+          "name": "Tuhk",
+          "domain": "tuhk.com",
+          "stage": "Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 85,
+          "unverified": false
+        },
+        {
+          "name": "Fintech Financial Services",
+          "domain": "fintechfinancial.ca",
+          "stage": "Undisclosed",
+          "geography": "Toronto, Ontario",
+          "source": "startuphub",
+          "fitScore": 72,
+          "unverified": false
+        },
+        {
+          "name": "Modem",
+          "domain": "modem.dev",
+          "stage": "Pre-Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 68,
+          "unverified": false
+        },
+        {
+          "name": "Common Wealth",
+          "domain": "commonwealthapp.ca",
+          "stage": "Series A",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 65,
+          "unverified": false
+        },
+        {
+          "name": "Una Software",
+          "domain": "una.io",
+          "stage": "Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 62,
+          "unverified": false
+        },
+        {
+          "name": "FriedmannAI",
+          "domain": "friedmannai.com",
+          "stage": "Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 59,
+          "unverified": false
+        },
+        {
+          "name": "Guava",
+          "domain": "guava.insure",
+          "stage": "Pre-Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 56,
+          "unverified": false
+        },
+        {
+          "name": "Trusty",
+          "domain": "trusty.care",
+          "stage": "Pre-Seed",
+          "geography": "Toronto, Ontario",
+          "source": "perplexity",
+          "fitScore": 52,
+          "unverified": false
+        },
+        {
+          "name": "Rapidata",
+          "domain": "rapidata.ai",
+          "stage": "Undisclosed",
+          "geography": "Zurich, Switzerland",
+          "source": "startuphub",
+          "fitScore": 35,
+          "unverified": false
+        }
+      ],
+      "nonStartupHubCount": 8
+    },
+    "notes": ""
+  },
+  {
+    "test": 6,
+    "name": "Batch brief from Discover",
+    "status": "PASS",
+    "evidence": {
+      "selected": [
+        "Chimoney",
+        "Tuhk",
+        "Fintech Financial Services"
+      ],
+      "batchResults": [
+        {
+          "url": "https://chimoney.io",
+          "companyName": "Chimoney",
+          "memoId": "chimoney_1783216543044",
+          "headline": "Backing technical Canadian founders building the picks and shovels of fintech — from agent-native payment rails to manufacturing automation — at the pre-seed and seed stage with $100K-$1.5M first checks.",
+          "status": "done"
+        },
+        {
+          "url": "https://tuhk.com",
+          "companyName": "Tuhk",
+          "memoId": "tuhk_1783216582849",
+          "headline": "Backing technical Canadian founders who reunite fintech ecosystems with real-time intelligence infrastructure",
+          "status": "done"
+        },
+        {
+          "url": "https://fintechfinancial.ca",
+          "companyName": "Fintech Financial",
+          "memoId": "fintech_financial_1783216651771",
+          "headline": "Backing technical Canadian founders building infrastructure that modernizes legacy industries",
+          "status": "done"
+        }
+      ],
+      "uniqueHeadlines": [
+        "Backing technical Canadian founders building the picks and shovels of fintech — from agent-native payment rails to manufacturing automation — at the pre-seed and seed stage with $100K-$1.5M first checks.",
+        "Backing technical Canadian founders who reunite fintech ecosystems with real-time intelligence infrastructure",
+        "Backing technical Canadian founders building infrastructure that modernizes legacy industries"
+      ]
+    },
+    "notes": ""
+  },
+  {
+    "test": 7,
+    "name": "Outreach draft",
+    "status": "PASS",
+    "evidence": {
+      "subject": "Machine Payments Protocol and agent infrastructure",
+      "body": "Hi Patrick,\n\nThe Machine Payments Protocol you announced for 2026 is the first credible answer to a question our portfolio has been asking for months: how do AI agents actually transact without human approval loops breaking the workflow?\n\nWe've seen this friction firsthand at Ada, where customer service agents need to process refunds or apply credits but hit payment rails built for human checkout flows. Your Link wallet approach—giving agents programmatic access while maintaining fraud controls through Radar's transaction-level ML—solves the identity and trust problem that's blocked autonomous commerce at scale.\n\nSagard backs commercial-stage AI companies where production deployment creates compounding data moats. Radar already demonstrates this: your fraud models improve with every transaction across your network, a dataset advantage no competitor can replicate. The Machine Payments Protocol extends that same logic to agentic workflows.\n\nWould you have 20 minutes in the next two weeks to discuss how we're thinking about agent infrastructure and where Stripe's roadmap intersects with emerging enterprise use cases?\n\nBest,\n[Partner Name]\nSagard AI Fund",
+      "personalizationSource": "Email centers on Stripe's newly announced Machine Payments Protocol and Agentic Commerce Suite (2026 roadmap), connecting it to a specific pain point observed in Sagard portfolio company Ada around agent-initiated transactions, and referencing Radar's proprietary ML dataset as proof of compounding data moat thesis."
+    },
+    "notes": ""
+  },
+  {
+    "test": 8,
+    "name": "Founder email guess",
+    "status": "FAIL",
+    "evidence": {
+      "founderNameFromMemo": "Patrick Collison",
+      "outreachDrawerFields": [
+        "founderName (manual input only)",
+        "subject",
+        "body",
+        "personalizationSource"
+      ],
+      "emailGuessFeature": "NOT IMPLEMENTED in codebase"
+    },
+    "notes": "No email pattern guessing or confidence labels exist in outreach-drawer.jsx or outreach API"
+  },
+  {
+    "test": 9,
+    "name": "Inline edit + tracking",
+    "status": "PASS",
+    "evidence": {
+      "id": "validation_1783216671101",
+      "memoId": "stripe_1783216207122",
+      "companyName": "Stripe",
+      "fundName": "Sagard AI Fund",
+      "trackingId": "sagard_ai_fund:primary",
+      "fieldName": "THESIS_1_TEXT",
+      "originalValue": "We invest in companies deploying AI to solve mission-critical enterprise problems with proven product-market fit. Stripe exemplifies this thesis through its Agentic Commerce Suite and Machine Payments Protocol, purpose-built infrastructure enabling AI agents to execute financial transactions autonomously. Their Radar fraud detection system processes hundreds of billions in annual transaction volume using proprietary ML models trained on Stripe's unique dataset—a data moat no competitor can replicate. Like Cohere's enterprise LLM platform and Ada's customer service automation, Stripe demonstrates how AI creates exponential value when embedded in high-stakes production workflows serving millions of end users.",
+      "newValue": "Validation edit — analyst corrected thesis angle",
+      "editedAt": "2026-07-05T01:57:51.101Z",
+      "section": "thesis",
+      "isThesisEdit": true,
+      "delta": 668
+    },
+    "notes": "Simulated edit via same localStorage mechanism as logEdit()"
+  },
+  {
+    "test": 10,
+    "name": "Share link + outcome sync",
+    "status": "PASS",
+    "evidence": {
+      "before": {
+        "outcome": null
+      },
+      "after": {
+        "id": "stripe_1783216207122",
+        "companyName": "Stripe",
+        "savedAt": "2026-07-05T01:57:52.213Z",
+        "data": {
+          "COMPANY_NAME": "Stripe",
+          "COMPANY_INITIAL": "S",
+          "COMPANY_TAGLINE": "unified payments and billing API that lets businesses accept money, manage subscriptions, and automate financial operations with a single integration.",
+          "COMPANY_LOGO_URL": "https://images.stripeassets.com/fzn2n1nzq965/1hgcBNd12BfT9VLgbId7By/01d91920114b124fb4cf6d448f9f06eb/favicon.svg",
+          "HERO_IMAGE_URL": "https://images.stripeassets.com/fzn2n1nzq965/XtX984S1GJVsVOXFC7kMu/01988281e867728dfb09aa7793a6e3b9/Stripe.jpg?q=80",
+          "ROUND": "Series I",
+          "DATE": "March 2023",
+          "PRODUCT_DESCRIPTION": "<strong>Stripe Payments</strong> accepts 100+ payment methods across 135+ currencies with Link one-click checkout and prebuilt Optimized Checkout UIs. <strong>Billing</strong> manages subscriptions, usage-based metering, and invoicing with Adaptive Pricing for 150+ countries. <strong>Connect</strong> enables marketplaces to split payments and onboard sellers; <strong>Terminal</strong> unifies online and offline point-of-sale. <strong>Radar</strong> uses proprietary ML for real-time fraud detection, while <strong>Tax</strong> automates sales tax and VAT calculation across jurisdictions. New <strong>Agentic Commerce Suite</strong> (2026) includes Machine Payments Protocol for AI agents to transact and Link wallet for programmatic agent access.",
+          "MARKET_DESCRIPTION": "The global payments market exceeded $2 trillion in 2023 and continues expanding as businesses digitize and demand unified financial infrastructure. Stripe serves startups through enterprises across e-commerce, SaaS, and marketplaces. The shift toward embedded finance and AI-driven commerce creates new use cases: agent-initiated transactions, multicurrency expansion, and compliance automation are accelerating adoption of platform-native payment solutions.",
+          "STAT_1_VALUE": "$9.81B",
+          "STAT_1_LABEL": "Total raised",
+          "STAT_2_VALUE": "$6.87B",
+          "STAT_2_LABEL": "Series I round size",
+          "STAT_3_VALUE": "$50B",
+          "STAT_3_LABEL": "Post-money valuation (2023)",
+          "DEFENSE_1_TITLE": "Unified API moat locks in customer expansion",
+          "DEFENSE_1_TEXT": "Stripe's single integration point for payments, billing, tax, fraud, and connect creates switching costs. Customers activate additional products without new API work—Treasury, Issuing, Capital, and Sigma are all composed on the core Payments platform. This architecture makes it cheaper for a customer to expand within Stripe than to rip-and-replace with point solutions.",
+          "DEFENSE_2_TITLE": "Proprietary ML on real-time transaction data",
+          "DEFENSE_2_TEXT": "Radar leverages Stripe's position as operator of 135+ currencies and 100+ payment methods to detect fraud patterns competitors cannot see. Scale and velocity of transaction data create a feedback loop: more transaction volume improves model accuracy, which improves conversion rates and churn, which attracts more merchants. This flywheel is difficult for new entrants to replicate at Stripe's current scale.",
+          "TEAM_1_INITIALS": "PC",
+          "TEAM_1_ROLE": "CEO",
+          "TEAM_1_NAME": "Patrick Collison",
+          "TEAM_1_BIO": "Cofounder of Auctomatic, an online auction management platform acquired by LiveCurrent Media in 2008 for ~$5M. Built first Stripe prototype in 2009 while studying at MIT.",
+          "TEAM_2_INITIALS": "JC",
+          "TEAM_2_ROLE": "President",
+          "TEAM_2_NAME": "John Collison",
+          "TEAM_2_BIO": "Cofounder of Auctomatic alongside Patrick. Attended Harvard University as president of the Harvard Undergraduate Council before MIT. Launched Stripe in 2010 after recognizing the gap in online payment infrastructure.",
+          "TEAM_3_INITIALS": "DT",
+          "TEAM_3_ROLE": "CFO",
+          "TEAM_3_NAME": "Dhivya Suryadevara",
+          "TEAM_3_BIO": "Former CFO of General Motors. Joined Stripe as CFO in 2020, bringing extensive experience in financial operations and strategic planning from the automotive and financial services industries.",
+          "PORTFOLIO_INTRO": "Our portfolio companies deploy AI to transform enterprise workflows in customer service, language understanding, and payments infrastructure:",
+          "PORTFOLIO_ITEMS": "<div class=\"portfolio-item\"><div class=\"portfolio-item-name\">Cohere</div><div class=\"portfolio-item-description\">Enterprise LLM platform enabling businesses to deploy customized language models with data sovereignty and production-grade security</div></div><div class=\"portfolio-item\"><div class=\"portfolio-item-name\">Ada</div><div class=\"portfolio-item-description\">AI-powered customer service automation platform reducing support costs while improving resolution rates for global enterprises</div></div><div class=\"portfolio-item\"><div class=\"portfolio-item-name\">Stripe</div><div class=\"portfolio-item-description\">Unified payments infrastructure with AI-native fraud detection (Radar) and Agentic Commerce Suite enabling autonomous agent transactions</div></div>",
+          "FUND_ANGLE_LABEL": "Commercial AI Infrastructure",
+          "THESIS_HEADLINE": "We back commercial-stage AI companies where enterprise distribution and vertical domain expertise create durable competitive moats in production environments.",
+          "THESIS_1_TITLE": "AI-Native Infrastructure at Commercial Scale",
+          "THESIS_1_TEXT": "We invest in companies deploying AI to solve mission-critical enterprise problems with proven product-market fit. Stripe exemplifies this thesis through its Agentic Commerce Suite and Machine Payments Protocol, purpose-built infrastructure enabling AI agents to execute financial transactions autonomously. Their Radar fraud detection system processes hundreds of billions in annual transaction volume using proprietary ML models trained on Stripe's unique dataset—a data moat no competitor can replicate. Like Cohere's enterprise LLM platform and Ada's customer service automation, Stripe demonstrates how AI creates exponential value when embedded in high-stakes production workflows serving millions of end users.",
+          "THESIS_2_TITLE": "Vertical Domain Expertise as Competitive Moat",
+          "THESIS_2_TEXT": "The strongest AI companies combine technical excellence with deep domain knowledge that takes years to build. Stripe's unified API architecture across payments, billing, fraud, tax, and banking represents 15+ years of solving edge cases in financial infrastructure—from handling failed payment retries to calculating VAT across 150+ countries. This accumulated institutional knowledge creates switching costs and network effects that pure-play AI startups cannot match. We seek companies where vertical expertise compounds over time, making the AI models increasingly difficult to replicate as they ingest proprietary domain-specific data.",
+          "THESIS_3_TITLE": "Enterprise Distribution at Scale",
+          "THESIS_3_TEXT": "Commercial traction validates that customers will pay for AI solutions in production. Stripe processes payments for millions of businesses globally, from startups to Fortune 500 enterprises, demonstrating the enterprise go-to-market playbook we prioritize. Their developer-first distribution strategy—integrate once via single API, expand into adjacent products—mirrors our portfolio construction philosophy. We invest in companies with repeatable sales motions, proven expansion revenue, and the infrastructure to serve both SMB and enterprise segments. Stage discipline matters: we back companies past the pilot phase, generating meaningful recurring revenue with clear paths to profitability.",
+          "FUND_NAME": "Sagard AI Fund",
+          "FUND_LOGO_URL": ""
+        },
+        "outcome": null,
+        "gpOutcome": "pursue",
+        "lastShareId": "TyiqP2Lu",
+        "fundName": "Sagard AI Fund",
+        "gpReviewer": "GP Validator"
+      },
+      "shareMeta": {
+        "memoId": "stripe_1783216207122",
+        "teamId": null,
+        "outcome": "pursue",
+        "fundName": "Sagard AI Fund",
+        "createdBy": null,
+        "editCount": 0,
+        "outcomeAt": "2026-07-05T01:57:56.373Z",
+        "companyName": "Stripe",
+        "outcomeNote": null,
+        "allowOutcome": true,
+        "reviewerName": "GP Validator"
+      }
+    },
+    "notes": ""
+  },
+  {
+    "test": 11,
+    "name": "Thesis dashboard",
+    "status": "PASS",
+    "evidence": {
+      "pursueRate": "100%",
+      "outcomeCount": 1,
+      "editCount": 1,
+      "pageText": "WELCOME TO MERIDIAN\n\nYour first brief in about a minute\n\nPaste any company URL. Get a one-page memo with a fund-native thesis band — the section GPs actually forward.\n\n01\nPaste a company URL (or try the NationGraph demo — zero API cost)\n02\nReview the memo, edit inline, pursue or pass\n03\nDrop your fund URL — every brief gets sharper\nGenerate my first brief\nSee sample brief (NationGraph)\nSkip intro\n\nPersonalize with fund URL →\n\nM\nMeridian\nSagard AI Fund\nCORE\nBrief\nURL → memo\nLists\nBatch briefs\nLibrary\nSaved briefs\nMORE\nLearn\n1\nPursue/pass signals\nDiscover\nThesis search (advanced)\nTeam\nShared links (beta)\nFund settings\nThesis & portfolio\nAPIS\nClaude\non\nResearch\non\nStartupHub\non\nPitchBook\noff\nDatabase\non\nAuth\non\nServer PDF\non\nShare links\non\nThesis\n\nSignals for Sagard AI Fund\n\nSign in\n+ New brief\nSagard AI Fund\nPanache Ventures\n+ Add fund\nBrief\n›\nLists\n›\nLibrary\n›\nLearn\n›\nDiscover\n›\nFund\nREVIEWED\n1 total\n1 pursue\n\nSign in to sync pursue/pass signals and fund profile across devices.\n\nGP-FORWARD VALIDATION\n\nRun 9 more briefs to hit beta target.\n\nExport CSV\nBriefs\n1/10\nPursue\n1/3\nGP-forward\n0%\n0%\nGP-forward rate\nPursued with no thesis edits\n100%\nZero-edit forward\nPursued with zero edits\n100%\nThesis edit rate\n1\nReviewed\nRun another brief →\n\nApplied to your next briefs\n\nMeridian uses 2 signals from your reviews (1 pursue · 1 thesis fixes) when generating the thesis band.\n\nGenerate another brief →\n\nREVEALED PREFERENCE\n\nYou pursued 1 companies recently, including Stripe. Overall pursue rate: 100%.\n\nStated mandate: Sagard AI Fund is a $150M venture fund backing commercial-stage AI companies where enterprise distribution and vertical domain expertise create durable moats.…\n\nSAGARD AI FUND\n\n1\nREVIEWED\n100%\nPURSUE RATE\n1\nPURSUE\n0\nPASS\n\nThesis edit rate: 100%\n\nCorrections by section\nTHESIS\n1\nThesis corrections\nStripe · THESIS_1_TEXT\nWe invest in companies deploying AI to solve mission-critical enterprise problems with proven product-market fit. Stripe exemplifies this thesis through",
+      "hasEmptyState": false
+    },
+    "notes": ""
+  },
+  {
+    "test": 12,
+    "name": "Template variants",
+    "status": "PASS",
+    "evidence": {
+      "defaultHasHeroImage": true,
+      "compactHasHeroImage": true,
+      "compactHeroHeight": true,
+      "defaultHeroHeight128": true,
+      "panacheTemplateId": "compact"
+    },
+    "notes": ""
+  },
+  {
+    "test": 13,
+    "name": "Print/PDF output",
+    "status": "PASS",
+    "evidence": {
+      "path": "Playwright /api/pdf (MERIDIAN_ENABLE_SERVER_PDF=true)",
+      "ok": true,
+      "bytes": 181904,
+      "contentType": "application/pdf"
+    },
+    "notes": ""
+  }
+]
