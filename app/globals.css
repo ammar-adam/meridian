@@ -629,3 +629,10 @@ html {
     display: none !important;
   }
 }
+
+/* Hide Clerk "Development mode" floating badge when using pk_test keys.
+   Remove once Vercel NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is pk_live_. */
+body > div:has(a[href*="dashboard.clerk.com"]),
+body > div:has(a[href*="clerk.com/apps"]) {
+  display: none !important;
+}
