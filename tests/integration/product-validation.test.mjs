@@ -2,25 +2,17 @@
  * Full product validation — run: npx vitest run --config vitest.integration.config.mjs tests/integration/product-validation.test.mjs
  * Requires: dev server, API keys, DATABASE_URL for share tests
  */
-import fs from 'node:fs'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { describe, it, expect } from 'vitest'
 import { chromium } from 'playwright'
 import { SAGARD_AI_FUND, PANACHE_VENTURES } from '@/lib/fund-seeds'
 import { toApiFundContext, createFundProfile } from '@/lib/fund-profile'
 import { renderMemoHtml } from '@/lib/render-memo-html'
 import { isServerPdfEnabled } from '@/lib/pdf-config'
+import { loadEnvLocal, repoRootFrom } from '../lib/load-env-local.mjs'
 
-const root = path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url))))
-for (const line of fs.readFileSync(path.join(root, '.env.local'), 'utf8').split('\n')) {
-  const t = line.trim()
-  if (!t || t.startsWith('#')) continue
-  const i = t.indexOf('=')
-  if (i <= 0) continue
-  const k = t.slice(0, i).trim()
-  if (!process.env[k]) process.env[k] = t.slice(i + 1).trim()
-}
+const root = repoRootFrom(import.meta.url)
+loadEnvLocal(root)
 
 const BASE = process.env.VALIDATION_BASE_URL || 'http://localhost:3001'
 const SAGARD_CTX = toApiFundContext(createFundProfile(SAGARD_AI_FUND))

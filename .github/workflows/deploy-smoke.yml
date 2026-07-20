@@ -42,6 +42,7 @@ jobs:
           SMOKE_BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}
 
       - name: Integration smoke (vitest)
-        run: npm run test:integration
+        # Deploy gate: HTTP smoke only. Live API suites need secrets + .env.local — skip here.
+        run: npx vitest run --config vitest.integration.config.mjs tests/integration/smoke.test.mjs
         env:
           SMOKE_BASE_URL: ${{ github.event.inputs.base_url || vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}

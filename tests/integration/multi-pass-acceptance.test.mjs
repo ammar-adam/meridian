@@ -1,32 +1,12 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { describe, it, expect } from 'vitest'
-import { runScrape } from '@/lib/scrape-core'
 import { runScrape } from '@/lib/scrape-core'
 import { runResearch } from '@/lib/research-core'
 import { runBriefPipeline } from '@/lib/memo-pipeline-server'
 import { advanceBatchJob } from '@/lib/batch-advance-server'
+import { loadEnvLocal, repoRootFrom } from '../lib/load-env-local.mjs'
 
-const root = path.dirname(path.dirname(path.dirname(fileURLToPath(import.meta.url))))
-
-function loadEnvFile(filePath) {
-  if (!fs.existsSync(filePath)) return
-  for (const line of fs.readFileSync(filePath, 'utf8').split('\n')) {
-    const trimmed = line.trim()
-    if (!trimmed || trimmed.startsWith('#')) continue
-    const eq = trimmed.indexOf('=')
-    if (eq <= 0) continue
-    const key = trimmed.slice(0, eq).trim()
-    let val = trimmed.slice(eq + 1).trim()
-    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-      val = val.slice(1, -1)
-    }
-    if (!process.env[key]) process.env[key] = val
-  }
-}
-
-loadEnvFile(path.join(root, '.env.local'))
+const root = repoRootFrom(import.meta.url)
+loadEnvLocal(root)
 
 const hasKeys = !!(process.env.PERPLEXITY_API_KEY && process.env.ANTHROPIC_API_KEY)
 
