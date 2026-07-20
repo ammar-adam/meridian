@@ -23,8 +23,13 @@ import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } fr
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
 import { logDiscoverDemote } from '@/lib/edit-tracker'
 import { applyBehavioralRank } from '@/lib/behavioral-rank'
+import { openWedgeDemoMemo } from '@/lib/demo-memo'
 
 const EXAMPLE_THESIS = 'AI infrastructure for financial services, Series A, North America'
+
+/** Mentor-demo thesis — reliably surfaces Velocity / DMZ / CDL enriched seeds */
+export const MENTOR_DEMO_THESIS =
+  'Canadian pre-seed and seed startups from Waterloo and Toronto accelerators (Velocity, DMZ, CDL) — AI, fintech, healthtech, and deep tech'
 
 function DiscoverContent() {
   const [thesis, setThesis] = useState('')
@@ -332,10 +337,28 @@ function DiscoverContent() {
                 disabled={loading}
                 className="m-textarea"
               />
-              <div className="mt-4 flex items-center justify-between">
-                <button type="button" onClick={() => setThesis(EXAMPLE_THESIS)} className="m-btn-ghost m-btn-sm">
-                  Use example
-                </button>
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-2">
+                  <button type="button" onClick={() => setThesis(EXAMPLE_THESIS)} className="m-btn-ghost m-btn-sm">
+                    Use example
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setThesis(MENTOR_DEMO_THESIS)}
+                    className="m-btn-ghost m-btn-sm"
+                    title="Canada accelerator wedge — Velocity, DMZ, CDL"
+                  >
+                    Mentor demo thesis
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openWedgeDemoMemo(router, 'scadable')}
+                    className="m-btn-ghost m-btn-sm"
+                    title="Zero-API fallback brief if live Brief flakes"
+                  >
+                    Fallback brief
+                  </button>
+                </div>
                 <button type="submit" disabled={loading || !thesis.trim()} className="m-btn-primary">
                   Run search
                 </button>
@@ -373,9 +396,9 @@ function DiscoverContent() {
             trailing={<span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{filtered.length}/{companies.length}</span>}
           />
           {meta?.thinCanadian && (
-            <div className="mb-4 rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-[13px] text-violet-900">
-              <span className="font-medium">Thin Canadian coverage.</span>
-              {' '}StartupHub skews US/global AI. This search ran extra Canadian + stealth web passes, but structured Canadian registry data still needs EverTrace or similar. See <code className="text-[11px]">docs/evertrace-research.md</code>.
+            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+              <span className="font-medium">Thin Canadian web hits.</span>
+              {' '}StartupHub skews US/global. Prefer incubator and grant rows with provenance when present — treat registry as low-confidence skim.
             </div>
           )}
           {meta?.thin && !meta?.thinCanadian && (

@@ -35,8 +35,12 @@ function SourceBadge({ source, unverified, sourceConfidence }) {
     )
   }
   if (source === 'incubator') {
+    const enriched = sourceConfidence === 'high'
     return (
-      <span className="m-badge-high border border-emerald-300 bg-emerald-50 text-emerald-900" title="Pre-vetted incubator cohort">
+      <span
+        className="m-badge-high border border-emerald-300 bg-emerald-50 text-emerald-900"
+        title={enriched ? 'Incubator cohort with structured founders/domain' : 'Pre-vetted incubator cohort'}
+      >
         Incubator
       </span>
     )
@@ -59,16 +63,21 @@ function SourceBadge({ source, unverified, sourceConfidence }) {
   return <span className="m-badge-low uppercase">{label}</span>
 }
 
-function ProvenanceLine({ provenance, sourceConfidence }) {
-  if (!provenance) return null
+function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
+  if (!provenance && !personName) return null
   const tone = sourceConfidence === 'high'
     ? 'text-emerald-800'
-    : sourceConfidence === 'low'
+    : sourceConfidence === 'low' || source === 'domain_registry'
       ? 'text-amber-800'
       : 'text-zinc-600'
   return (
     <div className={`mt-1 text-[11px] font-medium leading-snug ${tone}`} title="Source provenance">
-      {provenance}
+      {personName ? (
+        <div className="text-zinc-700">
+          Founders: {personName}
+        </div>
+      ) : null}
+      {provenance || null}
     </div>
   )
 }
@@ -220,7 +229,12 @@ export default function SourceTable({
                     </div>
                   )}
                   <div className="mt-0.5 max-w-md text-[12px] leading-snug" style={{ color: 'var(--m-muted)' }}>{c.description}</div>
-                  <ProvenanceLine provenance={c.provenance} sourceConfidence={c.sourceConfidence} />
+                  <ProvenanceLine
+                    provenance={c.provenance}
+                    sourceConfidence={c.sourceConfidence}
+                    source={c.source}
+                    personName={c.personName}
+                  />
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
                 <td>

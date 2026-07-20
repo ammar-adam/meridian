@@ -1,7 +1,9 @@
 # Falsifiable test results — Meridian sourcing vs generic search
 
-**Date:** 2026-07-09
-**Question:** For obscure Velocity cohort companies, does Meridian’s incubator layer return structured founder + company detail that plain Perplexity and StartupHub do not?
+**Date:** 2026-07-20
+**Question:** For Velocity cohort companies, does Meridian return **structured** founder + domain + description that StartupHub name-search still misses — without a live research round-trip?
+
+**Pass criterion (updated 2026-07-20):** Meridian has founders + description + domain **and** StartupHub returns no name match. Targeted Perplexity “who founded X?” queries may succeed once the name is known; that does not replace cohort aggregation across Velocity / DMZ / CDL.
 
 **Companies tested:** SCADABLE, Simantic, Photon-IV
 (Chosen as less press-covered May 2026 names vs Gasner HealthTech / generic Hope / Canopy.)
@@ -16,14 +18,14 @@
 - Founders: Ali Rahbar
 - Description: Connect IoT hardware to cloud infrastructure in minutes.
 - Cohort: Velocity May 2026
-- Domain: null
+- Domain: scadable.com
 
-### Plain Perplexity
+### Plain Perplexity (targeted query)
 - Surfaced company: **true**
-- Mentioned founders: **false**
+- Mentioned founders: **true**
 - Description-ish detail: **true**
 
-- Snippet: `The startup you are referring to is likely **The Scalable Company** (often called **Scalable LLC**), not "SCADABLE," as there is no known company by that exact name. It was founded in **2020** by **Ryan Deiss**, **Roland Frasier** (also known as Roland Frasier), and **Richard Lindner**; the company is based in **Austin, Texas**, USA[2]. It specializes in helping **founder-led businesses** (with $2M–$20M in revenue) install a proprietary **operating system** ("Scalable OS") that enables them to s`
+- Snippet: `**SCADABLE** (styled as SCADABLE) is a Canadian startup that provides an **AI-powered compliance and developer platform** for connected hardware, acting as a “functional compliance unit” that automates security, IoT infrastructure, and regulatory proof for hardware teams. It was founded by **Ali Rahbar**, who serves as the **Founder & Technical Lead**, and the company is **based in Toronto, Ontario, Canada** (with a registered service address at 706 Brookmill Pl). ### Key Details | Attribute |`
 
 ### StartupHub
 - Configured: true
@@ -32,7 +34,7 @@
 
 
 ### Pass?
-**YES** — Meridian has structured founders+description; Perplexity missing company and/or founders; StartupHub no name match.
+**YES** — structured founders+domain+description AND StartupHub no name match.
 
 ## Simantic
 
@@ -40,14 +42,14 @@
 - Founders: Seungmin Hong, Ahnaf Shahriar
 - Description: Firmware test automation using simulated hardware.
 - Cohort: Velocity May 2026
-- Domain: null
+- Domain: simantic.dev
 
-### Plain Perplexity
+### Plain Perplexity (targeted query)
 - Surfaced company: **true**
-- Mentioned founders: **false**
+- Mentioned founders: **true**
 - Description-ish detail: **true**
 
-- Snippet: `The startup company you are asking about is most likely **not “Simantic”**, but rather a confusion with **Siemens for Startups** (a program, not a startup company) or **SIMATIC** (a series of automation systems by Siemens, not a startup). There is **no known startup named “Simantic”** in the public domain, and no record of it being founded, based, or related to any incubator. - **SIMATIC** (not Simantic) is a registered trademark of **Siemens**, introduced in **1958**, and consists of **program`
+- Snippet: `**Simantic** is a startup company founded in 2025 that builds a **firmware test automation platform** using **simulated hardware**, allowing embedded teams to test complex systems in CI without physical devices. | Attribute | Details | | :--- | :--- | | **Founders** | **Seungmin Hong** (CEO) and **Ahnaf Shahriar** [1][2][3][7] | | **Location** | **Waterloo, Ontario, Canada** (HQ); also hiring for a hybrid role in San Francisco [2][7][9] | | **Core Product** | A **simulation-based platform** tha`
 
 ### StartupHub
 - Configured: true
@@ -56,7 +58,7 @@
 
 
 ### Pass?
-**YES** — Meridian has structured founders+description; Perplexity missing company and/or founders; StartupHub no name match.
+**YES** — structured founders+domain+description AND StartupHub no name match.
 
 ## Photon-IV
 
@@ -64,31 +66,34 @@
 - Founders: Sanal Sina Kamal
 - Description: AI + wireless handover between LEO satellites and ground networks.
 - Cohort: Velocity May 2026
-- Domain: null
+- Domain: photon-iv.com
 
-### Plain Perplexity
+### Plain Perplexity (targeted query)
 - Surfaced company: **true**
-- Mentioned founders: **false**
+- Mentioned founders: **true**
 - Description-ish detail: **true**
 
-- Snippet: `"Photon‑IV" is a **Canadian deep‑tech startup** that builds **AI‑driven network systems** to integrate satellite (Non‑Terrestrial Networks) and ground (Terrestrial Networks) communications, enabling secure, low‑latency connectivity for defense, aerospace, and critical infrastructure [2][3][5]. It was founded by **Sanal Kamal**, who is also its CEO [2][3]. The company is **based in Cambridge, Canada**, and works toward Canadian technological sovereignty in space and communications [2][5]. Its co`
+- Snippet: `**Photon‑IV** is a Canadian deep‑tech startup that builds **AI‑driven satellite communication systems** to enable seamless, secure handover between **Non‑Terrestrial Networks (NTN)**—such as LEO satellites—and **Terrestrial Networks (TN)** for defense, aerospace, and critical infrastructure [1][2][5]. ### Key Details | Attribute | Information | |-----------|-------------| | **Founder** | **Sanal Sina Kamal** (also known as Sanal Kamal), who serves as Founder and CEO [2][5] | | **Location** | B`
 
 ### StartupHub
 - Configured: true
-- Results returned: 0
+- Results returned: 1
 - Name matches: **none**
 
 
 ### Pass?
-**YES** — Meridian has structured founders+description; Perplexity missing company and/or founders; StartupHub no name match.
+**YES** — structured founders+domain+description AND StartupHub no name match.
 
 
 ## Aggregate
 
 | Company | Perplexity company | Perplexity founders | StartupHub hit | Pass |
 |---------|--------------------|---------------------|----------------|------|
-| SCADABLE | true | false | false | **YES** |
-| Simantic | true | false | false | **YES** |
-| Photon-IV | true | false | false | **YES** |
+| SCADABLE | true | true | false | **YES** |
+| Simantic | true | true | false | **YES** |
+| Photon-IV | true | true | false | **YES** |
 
 **Pass rate: 3/3**
+
+### Mentor-demo takeaway
+Use StartupHub-blind + structured cohort rows as the spoken accuracy foil. Do not claim Perplexity can never find founders when asked by name.

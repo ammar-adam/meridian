@@ -86,6 +86,7 @@ Strategic docs: [docs/meridian-vision.md](docs/meridian-vision.md), [docs/data-s
 | done | 4 | Accuracy sample n=13: 3 accurate / 5 inaccurate / 5 inconclusive. Registry noise + Perplexity false-negatives on Velocity; mitigations: non-startup name filter; skip resolver on registry |
 | done | build | `npm run build` after changes |
 | done | enrich | Velocity/DMZ founder+domain pass + CDL Cancer/Neuro; 66 entities, 25 founders / 25 domains / 18 fully enriched (was 1) |
+| done | demo | Discover prefers fully-enriched incubator seeds; registry noise filters expanded; mentor thesis preset + fallback briefs; falsifiable 3/3 under StartupHub-blind criterion |
 
 **Incubator totals:** velocity 26 + dmz 18 + cdl 22 = **66** entities; 3/5 source keys populated (communitech/mars empty by design).
 

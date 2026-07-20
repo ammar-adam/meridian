@@ -122,16 +122,22 @@ export async function POST(req) {
     return Response.json({ error: 'Failed to parse ranked results' }, { status: 500 })
   }
 
-  companies = postProcessDiscoverResults(companies, mergedSeeds)
+  const canadianMandate = isCanadianMandate(parsed?.geographies, fundContext)
+  const preferEnrichedIncubators = canadianMandate
+    || /canada|waterloo|ontario|toronto|velocity|dmz|cdl/i.test(thesis || '')
+
+  companies = postProcessDiscoverResults(companies, mergedSeeds, { preferEnrichedIncubators })
 
   const thin = companies.length < MIN_RESULTS
-  const canadianMandate = isCanadianMandate(parsed?.geographies, fundContext)
   const canadianCount = companies.filter(c => /canada|toronto|montreal|vancouver|calgary|\.ca/i.test(`${c.geography} ${c.domain}`)).length
+  const incubatorCount = companies.filter(c => c.source === 'incubator').length
+  // Don't shame the UI with EverTrace when community incubator seeds already dominate.
+  const thinCanadian = canadianMandate && canadianCount < 5 && incubatorCount < 3
 
   console.log(
     '[source]',
     thesis.slice(0, 60),
-    `→ ${companies.length} companies (hub: ${startuphub.length}/${dbSearch.startuphubRawCount}, pb: ${pitchbook.length}, stealth: ${stealthSeeds.length}, sourcing: ${sourcing.seeds.length}, passes: ${researchResults.map(r => r.id).join('+')}${thin ? ', thin' : ''})`,
+    `→ ${companies.length} companies (hub: ${startuphub.length}/${dbSearch.startuphubRawCount}, pb: ${pitchbook.length}, stealth: ${stealthSeeds.length}, sourcing: ${sourcing.seeds.length}, incubators: ${incubatorCount}, passes: ${researchResults.map(r => r.id).join('+')}${thin ? ', thin' : ''})`,
   )
 
   const dbMeta = getDatabaseSearchMeta(dbSearch)
@@ -149,8 +155,9 @@ export async function POST(req) {
       researchPasses: researchResults.map(r => ({ id: r.id, label: r.label, ok: r.ok, unverified: !!r.unverified })),
       canadianMandate,
       canadianResultCount: canadianCount,
+      incubatorResultCount: incubatorCount,
       thin,
-      thinCanadian: canadianMandate && canadianCount < 5,
+      thinCanadian,
       perplexityChars: perplexityResearch.length,
       pitchbookCount: pitchbook.length,
       pitchbookConfigured: dbMeta.pitchbookConfigured,

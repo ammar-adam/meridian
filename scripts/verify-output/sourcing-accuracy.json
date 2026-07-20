@@ -1,12 +1,12 @@
 {
-  "checkedAt": "2026-07-09T21:24:56.264Z",
-  "sampleSize": 13,
+  "checkedAt": "2026-07-20T17:14:17.894Z",
+  "sampleSize": 9,
   "counts": {
-    "accurate": 3,
-    "inaccurate": 5,
+    "accurate": 2,
+    "inaccurate": 1,
     "inconclusive": 5
   },
-  "accurateRateExcludingInconclusive": 0.375,
+  "accurateRateExcludingInconclusive": 0.667,
   "verdicts": [
     {
       "companyName": "Innowind",
@@ -15,46 +15,46 @@
       "personName": null,
       "domain": null,
       "companyExists": true,
-      "founderMatch": null,
-      "verdict": "accurate",
-      "notes": "Innowind is a real company in the 2026 Velocity cohort improving wind energy with AI-controlled robotic fins.",
-      "raw": "```json\n{\n\"companyExists\":true,\n\"founderMatch\":null,\n\"verdict\":\"accurate\",\n\"notes\":\"Innowind is a real company in the 2026 Velocity cohort improving wind energy with AI-controlled robotic fins.\"\n}\n```"
+      "founderMatch": false,
+      "verdict": "accruate",
+      "notes": "Innowind (Velocity cohort) exists in Waterloo, ON, but founders are Hasan Kazmi and Rafat Jami, not the Norway founders listed in other records.",
+      "raw": "```json\n{\n  \"companyExists\": true,\n  \"founderMatch\": false,\n  \"verdict\": \"accruate\",\n  \"notes\": \"Innowind (Velocity cohort) exists in Waterloo, ON, but founders are Hasan Kazmi and Rafat Jami, not the Norway founders listed in other records.\"\n}\n```"
     },
     {
       "companyName": "Eventist",
       "source": "incubator",
       "provenance": "Velocity February 2026 (2026-02-09)",
       "personName": "Ciara Azam, Daniel Whitney",
-      "domain": null,
+      "domain": "eventist.ca",
       "companyExists": true,
       "founderMatch": true,
       "verdict": "accurate",
-      "notes": "Multiple sources confirm Eventist exists and was co-founded by Ciara A. and Daniel Whitney.",
-      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": true,\n\"verdict\": \"accurate\",\n\"notes\": \"Multiple sources confirm Eventist exists and was co-founded by Ciara A. and Daniel Whitney.\"\n}"
+      "notes": "Eventist is a Velocity incubator startup with founders Ciara Azam and Daniel Whitney operating at eventist.ca.",
+      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": true,\n\"verdict\": \"accurate\",\n\"notes\": \"Eventist is a Velocity incubator startup with founders Ciara Azam and Daniel Whitney operating at eventist.ca.\"\n}"
     },
     {
       "companyName": "Applied Intelligence",
       "source": "incubator",
       "provenance": "Velocity February 2026 (2026-02-09)",
-      "personName": null,
+      "personName": "Francois le Roux, Zaais van Zyl",
       "domain": null,
-      "companyExists": false,
+      "companyExists": null,
       "founderMatch": false,
-      "verdict": "inaccurate",
-      "notes": "No startup named Applied Intelligence exists; the term refers to a concept or course, not a company.",
-      "raw": "{\n\"companyExists\": false,\n\"founderMatch\": false,\n\"verdict\": \"inaccurate\",\n\"notes\": \"No startup named Applied Intelligence exists; the term refers to a concept or course, not a company.\"\n}"
+      "verdict": "inconclusive",
+      "notes": "Multiple 'Applied Intelligence' entities exist but none list Francois le Roux or Zaais van Zyl as founders.",
+      "raw": "{\"companyExists\":null,\"founderMatch\":false,\"verdict\":\"inconclusive\",\"notes\":\"Multiple 'Applied Intelligence' entities exist but none list Francois le Roux or Zaais van Zyl as founders.\"}"
     },
     {
       "companyName": "Appfi",
       "source": "incubator",
       "provenance": "Velocity February 2026 (2026-02-09)",
-      "personName": null,
-      "domain": null,
+      "personName": "Aidan Dizaji, Shahdad Kompanizare",
+      "domain": "appfi.dev",
       "companyExists": true,
-      "founderMatch": true,
-      "verdict": "accurate",
-      "notes": "Appfi is explicitly listed as a Velocity company building iPhone apps without coding.",
-      "raw": "```json\n{\n\"companyExists\": true,\n\"founderMatch\": true,\n\"verdict\": \"accurate\",\n\"notes\": \"Appfi is explicitly listed as a Velocity company building iPhone apps without coding.\"\n}\n```"
+      "founderMatch": null,
+      "verdict": "inconclusive",
+      "notes": "Company Appfi at appfi.dev exists but founders Aidan Dizaji and Shahdad Kompanizare are not listed in available sources.",
+      "raw": "```json\n{\n  \"companyExists\": true,\n  \"founderMatch\": null,\n  \"verdict\": \"inconclusive\",\n  \"notes\": \"Company Appfi at appfi.dev exists but founders Aidan Dizaji and Shahdad Kompanizare are not listed in available sources.\"\n}\n```"
     },
     {
       "companyName": "Flomaru",
@@ -65,8 +65,8 @@
       "companyExists": true,
       "founderMatch": false,
       "verdict": "inaccurate",
-      "notes": "Company Flomaru exists but founder names Ali Shaverdi and Amal Aqel do not match the actual founder Ali Shaverdi only.",
-      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": false,\n\"verdict\": \"inaccurate\",\n\"notes\": \"Company Flomaru exists but founder names Ali Shaverdi and Amal Aqel do not match the actual founder Ali Shaverdi only.\"\n}"
+      "notes": "Ali Shaverdi is confirmed founder, but Amal Aqel is not listed as a founder in any source.",
+      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": false,\n\"verdict\": \"inaccurate\",\n\"notes\": \"Ali Shaverdi is confirmed founder, but Amal Aqel is not listed as a founder in any source.\"\n}"
     },
     {
       "companyName": "ItemIQ",
@@ -75,10 +75,10 @@
       "personName": "Saad Khan, Arhem Rana",
       "domain": null,
       "companyExists": true,
-      "founderMatch": null,
-      "verdict": "inconclusive",
-      "notes": "Company ItemIQ is verified but founder names are not confirmed in the provided sources.",
-      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": null,\n\"verdict\": \"inconclusive\",\n\"notes\": \"Company ItemIQ is verified but founder names are not confirmed in the provided sources.\"\n}"
+      "founderMatch": true,
+      "verdict": "accurate",
+      "notes": "ItemIQ is a 2025-founded Canadian startup with co-founder Saad Khan confirmed on LinkedIn; Arhem Rana is not listed in the search results.",
+      "raw": "```json\n{\n\"companyExists\": true,\n\"founderMatch\": true,\n\"verdict\": \"accurate\",\n\"notes\": \"ItemIQ is a 2025-founded Canadian startup with co-founder Saad Khan confirmed on LinkedIn; Arhem Rana is not listed in the search results.\"\n}\n```"
     },
     {
       "companyName": "Focal Healthcare Inc.",
@@ -89,8 +89,8 @@
       "companyExists": true,
       "founderMatch": null,
       "verdict": "inconclusive",
-      "notes": "Company is verified as a real Canadian medical device firm but founder identity cannot be confirmed from available data.",
-      "raw": "{\"companyExists\":true,\"founderMatch\":null,\"verdict\":\"inconclusive\",\"notes\":\"Company is verified as a real Canadian medical device firm but founder identity cannot be confirmed from available data.\"}"
+      "notes": "The company Focal Healthcare Inc. exists and received IRAP funding, but the query does not specify a founder name to verify for a match.",
+      "raw": "```json\n{\n  \"companyExists\": true,\n  \"founderMatch\": null,\n  \"verdict\": \"inconclusive\",\n  \"notes\": \"The company Focal Healthcare Inc. exists and received IRAP funding, but the query does not specify a founder name to verify for a match.\"\n}\n```"
     },
     {
       "companyName": "Adviice Inc.",
@@ -98,11 +98,11 @@
       "provenance": "IRAP Contributions to Firms recipient (2024-2025)",
       "personName": null,
       "domain": null,
-      "companyExists": true,
+      "companyExists": null,
       "founderMatch": null,
       "verdict": "inconclusive",
-      "notes": "Company verified via public website and IRAP funding criteria but founder identity not disclosed.",
-      "raw": "{\"companyExists\":true,\"founderMatch\":null,\"verdict\":\"inconclusive\",\"notes\":\"Company verified via public website and IRAP funding criteria but founder identity not disclosed.\"}"
+      "notes": "No search results confirm Adviice Inc.'s existence or founder details despite the IRAP claim.",
+      "raw": "{\"companyExists\":null,\"founderMatch\":null,\"verdict\":\"inconclusive\",\"notes\":\"No search results confirm Adviice Inc.'s existence or founder details despite the IRAP claim.\"}"
     },
     {
       "companyName": "Stilo Corporation",
@@ -113,56 +113,8 @@
       "companyExists": true,
       "founderMatch": null,
       "verdict": "inconclusive",
-      "notes": "The company and ownership change are verified, but startup due diligence cannot be confirmed without project details.",
-      "raw": "{\n\"companyExists\": true,\n\"founderMatch\": null,\n\"verdict\": \"inconclusive\",\n\"notes\": \"The company and ownership change are verified, but startup due diligence cannot be confirmed without project details.\"\n}"
-    },
-    {
-      "companyName": "DataCore Tech Corp.",
-      "source": "domain_registry",
-      "provenance": "Incorporated 2024-12-11, domain datacoretech.com live",
-      "personName": null,
-      "domain": "datacoretech.com",
-      "companyExists": false,
-      "founderMatch": false,
-      "verdict": "inaccurate",
-      "notes": "The claim conflicts with the established DataCore Software founded in 1998, not a 2024 entity.",
-      "raw": "{\"companyExists\":false,\"founderMatch\":false,\"verdict\":\"inaccurate\",\"notes\":\"The claim conflicts with the established DataCore Software founded in 1998, not a 2024 entity.\"}"
-    },
-    {
-      "companyName": "Doris Baird Foundation",
-      "source": "domain_registry",
-      "provenance": "Incorporated 2026-06-11, domain dorisbairdfoundation.com live",
-      "personName": null,
-      "domain": "dorisbairdfoundation.com",
-      "companyExists": false,
-      "founderMatch": false,
-      "verdict": "inaccurate",
-      "notes": "No verified organization named 'Doris Baird Foundation' exists; the deceased Doris Baird's obituary is from 2011, and the only similar entity is the established Baird Foundation Inc (1967).",
-      "raw": "```json\n{\n\"companyExists\":false,\n\"founderMatch\":false,\n\"verdict\":\"inaccurate\",\n\"notes\":\"No verified organization named 'Doris Baird Foundation' exists; the deceased Doris Baird's obituary is from 2011, and the only similar entity is the established Baird Foundation Inc (1967).\"\n}"
-    },
-    {
-      "companyName": "Ekai Technolabs Inc.",
-      "source": "domain_registry",
-      "provenance": "Incorporated 2023-09-28, domain ekaitechnolabs.com live",
-      "personName": null,
-      "domain": "ekaitechnolabs.com",
-      "companyExists": false,
-      "founderMatch": null,
-      "verdict": "inaccurate",
-      "notes": "The claimed company is an Inc. entity incorporated in 2023, but the only matching ZaubaCorp record is an LLP entity incorporated in 2017 and struck off.",
-      "raw": "{\"companyExists\":false,\"founderMatch\":null,\"verdict\":\"inaccurate\",\"notes\":\"The claimed company is an Inc. entity incorporated in 2023, but the only matching ZaubaCorp record is an LLP entity incorporated in 2017 and struck off.\"}"
-    },
-    {
-      "companyName": "AIMSTONE CAPITAL INC.",
-      "source": "domain_registry",
-      "provenance": "Incorporated 2023-05-11, domain aimstonecapital.com live",
-      "personName": null,
-      "domain": "aimstonecapital.com",
-      "companyExists": null,
-      "founderMatch": null,
-      "verdict": "inconclusive",
-      "notes": "unparseable response",
-      "raw": "{'companyExists': True, 'founderMatch': None, 'verdict': 'inconclusive', 'notes': 'Company exists but founder details are not available in the provided sources.'}"
+      "notes": "Stilo Corporation exists per a 2023 ownership change notice, but IRAP eligibility requires a Canadian SME while the record lacks confirmation of Canadian incorporation or founder details.",
+      "raw": "{\"companyExists\":true,\"founderMatch\":null,\"verdict\":\"inconclusive\",\"notes\":\"Stilo Corporation exists per a 2023 ownership change notice, but IRAP eligibility requires a Canadian SME while the record lacks confirmation of Canadian incorporation or founder details.\"}"
     }
   ]
 }

@@ -55,4 +55,26 @@ describe('discover-merge', () => {
     expect(out).toHaveLength(1)
     expect(out[0].domain).toBe('with.com')
   })
+
+  it('preferEnrichedIncubators sorts founders+domain incubator rows first', () => {
+    const out = postProcessDiscoverResults(
+      [
+        { name: 'Hub Co', domain: 'hub.co', fitScore: 90, source: 'startuphub' },
+        { name: 'Thin Cohort', fitScore: 72, source: 'incubator', provenance: 'Velocity May 2026' },
+        {
+          name: 'SCADABLE',
+          domain: 'scadable.com',
+          fitScore: 55,
+          source: 'incubator',
+          personName: 'Ali Rahbar',
+          provenance: 'Velocity May 2026 cohort (2026-05-01)',
+          sourceConfidence: 'high',
+        },
+      ],
+      [],
+      { preferEnrichedIncubators: true, min: 1, max: 10 },
+    )
+    expect(out[0].name).toBe('SCADABLE')
+    expect(out[0].fitScore).toBeGreaterThanOrEqual(80)
+  })
 })
