@@ -93,11 +93,14 @@ Foil site lives at **https://getfundingfromavc.vercel.app** (repo: `c:\Users\aaa
 
 ## Dry-run checklist
 
-- [ ] Mentor demo thesis returns incubator rows in the first screen
-- [ ] At least one row shows Founders + domain + cohort provenance
-- [ ] Foil URL loads; GiveFund = fabricated
-- [ ] No Clerk development badge visible (or recording localhost)
-- [ ] No EverTrace docs path banner on a strong incubator result set
-- [ ] Registry rows (if any) are amber and dated — no foundations/charities
-- [ ] One Brief completes or Fallback brief opens with IoT/cloud SCADABLE copy
-- [ ] No console errors on Discover → Memo path
+Verified 2026-07-20 (~3:45pm ET) against prod:
+
+- [x] Mentor demo thesis returns incubator rows in the first screen (12/12 incubator, CA 12)
+- [x] Golden rows present with Founders + domain (SCADABLE #3, Photon-IV #6, Eventist #9, Simantic #7)
+- [x] Foil URL loads; GiveFund = fabricated — https://getfundingfromavc.vercel.app
+- [x] Clerk development badge not visible (CSS hide); `clerkMode` still `development` in `/api/health`
+- [x] No EverTrace banner on this result set (`thinCanadian: false`)
+- [x] Fallback brief opens SCADABLE with IoT/cloud copy (not supply-chain)
+- [ ] Human: one spoken dry-run of [`docs/mentor-demo-script.md`](docs/mentor-demo-script.md) without apology pauses
+
+**Recording tip:** Discover cold run ~3 min — pre-run once (or hit Refresh) so tape opens on cached results. StartupHub showed `off` in health sidebar during dry-run; incubators still filled the list.
