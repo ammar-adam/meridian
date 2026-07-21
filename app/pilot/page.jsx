@@ -19,7 +19,7 @@ export default function PilotPage() {
 
   if (!study && !error) {
     return (
-      <WorkspaceShell title="Pilot proof" subtitle="Data wedge case study">
+      <WorkspaceShell title="Coverage proof" subtitle="The data wedge, measured">
         <PageLoader />
       </WorkspaceShell>
     )
@@ -27,7 +27,7 @@ export default function PilotPage() {
 
   if (error || !study) {
     return (
-      <WorkspaceShell title="Pilot proof" subtitle="Data wedge case study">
+      <WorkspaceShell title="Coverage proof" subtitle="The data wedge, measured">
         <WorkspacePage width="narrow">
           <p className="m-alert-error">{error || 'Unavailable'}</p>
         </WorkspacePage>
@@ -39,7 +39,7 @@ export default function PilotPage() {
 
   return (
     <WorkspaceShell
-      title="Pilot proof"
+      title="Coverage proof"
       subtitle={`${study.fund} · ${study.window}`}
       actions={(
         <Link href={study.cta.href} className="m-btn-primary m-btn-sm">
@@ -49,7 +49,7 @@ export default function PilotPage() {
     >
       <WorkspacePage width="medium">
         <div className="mb-8">
-          <p className="m-kicker mb-1">Would a fund pay?</p>
+          <p className="m-kicker mb-1">Coverage, measured — not claimed</p>
           <h2 className="text-[24px] font-semibold tracking-tight text-zinc-900">{study.title}</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-600">
             {study.thesis}

@@ -501,7 +501,6 @@ export default function GenerateWorkspace() {
             description="Continue reviewing or open the full library"
             actions={
               <div className="flex gap-2">
-                <Link href="/lists" className="m-btn-ghost m-btn-sm">Batch list</Link>
                 <Link href="/library" className="m-btn-ghost m-btn-sm">View all</Link>
               </div>
             }

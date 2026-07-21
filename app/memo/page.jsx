@@ -828,6 +828,13 @@ function MemoPageContent() {
             )}
             {!outcome ? (
               <>
+                <button
+                  type="button"
+                  onClick={() => setOutreachOpen(true)}
+                  className="m-btn-secondary m-btn-sm"
+                >
+                  Draft outreach
+                </button>
                 <button onClick={() => handleOutcome('pass')} className="m-btn-secondary m-btn-sm px-5">
                   Pass
                 </button>

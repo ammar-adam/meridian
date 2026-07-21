@@ -1,7 +1,8 @@
 'use client'
 
 /**
- * Founder reachability actions — LinkedIn search + email guess.
+ * Founder reachability actions — real channels only.
+ * Emails shown are verified; pattern guesses never render.
  */
 export default function ReachabilityActions({ reach, compact = false }) {
   if (!reach?.reachable && !reach?.founders?.length) return null
@@ -29,7 +30,7 @@ export default function ReachabilityActions({ reach, compact = false }) {
           <a
             href={`mailto:${email}`}
             className="font-medium text-zinc-700 hover:underline"
-            title={reach.founders?.[0]?.emailConfidence === 'pattern' ? 'Pattern guess — verify before send' : ''}
+            title="Verified email"
             onClick={(e) => e.stopPropagation()}
           >
             {email}
@@ -70,11 +71,10 @@ export default function ReachabilityActions({ reach, compact = false }) {
             <a
               href={`mailto:${f.emails[0]}`}
               className="font-mono text-zinc-600 hover:underline"
-              title={f.emailConfidence === 'pattern' ? 'Pattern guess — verify before send' : 'Verified'}
+              title="Verified email"
               onClick={(e) => e.stopPropagation()}
             >
               {f.emails[0]}
-              {f.emailConfidence === 'pattern' ? ' · guess' : ''}
             </a>
           )}
         </div>

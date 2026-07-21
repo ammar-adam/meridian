@@ -24,9 +24,7 @@ const NAV_GROUPS = [
   {
     label: 'More',
     items: [
-      { href: '/pilot', label: 'Pilot proof', desc: 'Data wedge case study' },
-      { href: '/lists', label: 'Lists', desc: 'Batch briefs' },
-      { href: '/team', label: 'Team', desc: 'Shared links (beta)' },
+      { href: '/pilot', label: 'Coverage proof', desc: 'Data wedge, measured' },
     ],
   },
 ]

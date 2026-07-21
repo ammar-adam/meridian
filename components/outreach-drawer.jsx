@@ -18,8 +18,6 @@ export default function OutreachDrawer({
   const [subject, setSubject] = useState('')
   const [body, setBody] = useState('')
   const [personalizationSource, setPersonalizationSource] = useState('')
-  const [emailGuesses, setEmailGuesses] = useState([])
-  const [emailLoading, setEmailLoading] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
@@ -31,43 +29,10 @@ export default function OutreachDrawer({
     setSubject('')
     setBody('')
     setPersonalizationSource('')
-    setEmailGuesses([])
     setError('')
     setCopied(false)
     originalsRef.current = { subject: '', body: '' }
   }, [open, initialFounderName, memoData])
-
-  const lookupEmails = useCallback(async (name, domain) => {
-    const trimmed = name?.trim()
-    if (!trimmed || !domain) {
-      setEmailGuesses([])
-      return
-    }
-    setEmailLoading(true)
-    try {
-      const res = await fetch('/api/founder-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ founderName: trimmed, domain }),
-      })
-      const data = await res.json()
-      if (res.ok) setEmailGuesses(data.candidates || [])
-      else setEmailGuesses([])
-    } catch {
-      setEmailGuesses([])
-    } finally {
-      setEmailLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (!open || !founderName.trim() || !companyDomain) {
-      setEmailGuesses([])
-      return
-    }
-    const timer = setTimeout(() => lookupEmails(founderName, companyDomain), 400)
-    return () => clearTimeout(timer)
-  }, [open, founderName, companyDomain, lookupEmails])
 
   const generate = useCallback(async () => {
     if (!memoData) return
@@ -166,24 +131,6 @@ export default function OutreachDrawer({
             placeholder="From research or LinkedIn"
             className="m-input mb-2 text-[13px]"
           />
-
-          {founderName.trim() && companyDomain && (
-            <div className="mb-4 rounded-md border border-amber-200 bg-amber-50/80 px-3 py-2">
-              <p className="text-[11px] font-medium text-amber-900">Unverified email guesses — confirm before sending</p>
-              {emailLoading && (
-                <p className="mt-1 text-[11px] text-amber-800">Looking up patterns…</p>
-              )}
-              {!emailLoading && emailGuesses.length === 0 && (
-                <p className="mt-1 text-[11px] text-amber-800">No pattern guesses (need first + last name).</p>
-              )}
-              {!emailLoading && emailGuesses.slice(0, 2).map(g => (
-                <p key={g.email} className="mt-1 text-[12px] text-amber-950">
-                  <span className="font-mono">{g.email}</span>
-                  <span className="ml-2 text-[10px] text-amber-700">({g.confidence})</span>
-                </p>
-              ))}
-            </div>
-          )}
 
           {!hasDraft ? (
             <div className="rounded-md border border-dashed p-6 text-center" style={{ borderColor: 'var(--m-border)' }}>
