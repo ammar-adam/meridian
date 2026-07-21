@@ -29,7 +29,7 @@ describe('coverage proof', () => {
 })
 
 describe('reachability', () => {
-  it('is reachable with founders + domain via LinkedIn search and email pattern', () => {
+  it('is reachable with founders + domain via LinkedIn search; never invents emails', () => {
     const r = buildReachability({
       name: 'Simantic',
       personName: 'Seungmin Hong, Ahnaf Shahriar',
@@ -37,9 +37,21 @@ describe('reachability', () => {
     })
     expect(r.reachable).toBe(true)
     expect(r.channels).toContain('linkedin')
-    expect(r.channels).toContain('email')
+    expect(r.channels).not.toContain('email')
     expect(r.primaryLinkedIn).toContain('linkedin.com/search')
-    expect(r.primaryEmail).toContain('@simantic.dev')
+    expect(r.primaryEmail).toBe(null)
+  })
+
+  it('surfaces verified emails when provided', () => {
+    const r = buildReachability({
+      name: 'Simantic',
+      personName: 'Seungmin Hong',
+      domain: 'simantic.dev',
+      founderEmails: ['seungmin@simantic.dev'],
+    })
+    expect(r.channels).toContain('email')
+    expect(r.primaryEmail).toBe('seungmin@simantic.dev')
+    expect(r.founders[0].emailConfidence).toBe('verified')
   })
 })
 
