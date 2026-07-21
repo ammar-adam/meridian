@@ -30,14 +30,16 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
 
   const firstSeen = ledger?.firstSeen || coverage?.cohortDate
   const ageDays = ledger?.ageDays
+  const meridianFirstSeen = ledger?.meridianFirstSeen
+  const indexTest = ledger?.indexTest
 
   return (
-    <div className={`mt-1.5 rounded border px-2 py-1.5 ${chip}`} title={ledger?.verification?.detail || coverage?.detail}>
+    <div className={`mt-1.5 rounded border px-2 py-1.5 ${chip}`}>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] font-medium">
         <span>{ledger?.verification?.label || coverage?.label}</span>
-        {firstSeen && (
+        {indexTest?.testedAt && (
           <span className="font-mono text-[10px] opacity-80">
-            First seen {firstSeen}{ageDays != null ? ` · ${ageDays}d` : ''}
+            checked {indexTest.testedAt}
           </span>
         )}
         {stage && (
@@ -46,8 +48,21 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
           </span>
         )}
       </div>
+      <div className="mt-0.5 flex flex-wrap gap-x-3 gap-y-0.5 font-mono text-[10px] opacity-80">
+        {firstSeen && (
+          <span>Cohort {firstSeen}{ageDays != null ? ` · ${ageDays}d ago` : ''}</span>
+        )}
+        {meridianFirstSeen && (
+          <span title="When Meridian first recorded this company (server-side ledger)">
+            On Meridian since {String(meridianFirstSeen).slice(0, 10)}
+          </span>
+        )}
+      </div>
       {(ledger?.provenance || coverage?.provenance) && (
         <div className="mt-0.5 text-[10px] leading-snug opacity-90">{ledger?.provenance || coverage?.provenance}</div>
+      )}
+      {ledger?.verification?.detail && (
+        <div className="mt-0.5 text-[10px] leading-snug opacity-75">{ledger.verification.detail}</div>
       )}
     </div>
   )

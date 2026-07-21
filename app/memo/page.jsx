@@ -40,6 +40,16 @@ function captureMemoFromDom(container) {
   return captured
 }
 
+/** Provenance front matter for the dossier — renders only when real meta exists. */
+function withReceiptLine(data, meta) {
+  const m = meta || readMemoMetaFromSession()
+  const domain = m?.companyDomain || ''
+  const via = m?.searchThesis ? 'Sourced via thesis search' : (domain ? 'Direct brief' : '')
+  const parts = [domain, via, data?.DATE ? `Compiled ${data.DATE}` : ''].filter(Boolean)
+  if (!parts.length) return data
+  return { ...data, RECEIPT_LINE: parts.join('  ·  ') }
+}
+
 export default function MemoPage() {
   return (
     <Suspense fallback={<PageLoader />}>
@@ -235,7 +245,7 @@ function MemoPageContent() {
     fetch(memoTemplatePath(resolveMemoTemplateId(profile)))
       .then((res) => res.text())
       .then((template) => {
-        setHtml(populateTemplate(template, data))
+        setHtml(populateTemplate(template, withReceiptLine(data, meta)))
         setLoading(false)
       })
       .catch(() => setLoading(false))
@@ -304,7 +314,7 @@ function MemoPageContent() {
       return fetch(memoTemplatePath(resolveMemoTemplateId(getFundProfile())))
         .then(res => res.text())
         .then(template => {
-          setHtml(populateTemplate(template, nextData))
+          setHtml(populateTemplate(template, withReceiptLine(nextData)))
           router.replace('/memo')
         })
     }
@@ -381,7 +391,7 @@ function MemoPageContent() {
         return fetch(memoTemplatePath(resolveMemoTemplateId(getFundProfile())))
           .then(res => res.text())
           .then(template => {
-            setHtml(populateTemplate(template, nextData))
+            setHtml(populateTemplate(template, withReceiptLine(nextData)))
             router.replace('/memo')
           })
       })

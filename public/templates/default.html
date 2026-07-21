@@ -147,6 +147,30 @@
     font-weight: 500;
   }
 
+  /* ── RECEIPT STRIP (provenance front matter) ── */
+  .receipt-strip {
+    padding: 7px 32px;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 7.5px;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .receipt-strip::before {
+    content: '';
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
   /* ── BODY ── */
   .body { padding: 0 32px; }
 
@@ -520,6 +544,29 @@
   </div>
 </div>
 
+<!-- ── RECEIPT (provenance front matter) ── -->
+<div class="receipt-strip">{{RECEIPT_LINE}}</div>
+
+<!-- ── THESIS / FUND ANGLE BAND — leads the dossier ── -->
+<div class="thesis-band">
+  <div class="thesis-label"><span>{{FUND_ANGLE_LABEL}}</span></div>
+  <div class="thesis-headline" data-field="THESIS_HEADLINE">{{THESIS_HEADLINE}}</div>
+  <div class="thesis-grid">
+    <div>
+      <div class="thesis-item-title">{{THESIS_1_TITLE}}</div>
+      <p class="thesis-item-text" data-field="THESIS_1_TEXT">{{THESIS_1_TEXT}}</p>
+    </div>
+    <div>
+      <div class="thesis-item-title">{{THESIS_2_TITLE}}</div>
+      <p class="thesis-item-text" data-field="THESIS_2_TEXT">{{THESIS_2_TEXT}}</p>
+    </div>
+    <div>
+      <div class="thesis-item-title">{{THESIS_3_TITLE}}</div>
+      <p class="thesis-item-text" data-field="THESIS_3_TEXT">{{THESIS_3_TEXT}}</p>
+    </div>
+  </div>
+</div>
+
 <!-- ── BODY ── -->
 <div class="body">
 
@@ -608,26 +655,6 @@
     </div>
   </div>
 
-</div>
-
-<!-- ── THESIS / FUND ANGLE BAND ── -->
-<div class="thesis-band">
-  <div class="thesis-label"><span>{{FUND_ANGLE_LABEL}}</span></div>
-  <div class="thesis-headline" data-field="THESIS_HEADLINE">{{THESIS_HEADLINE}}</div>
-  <div class="thesis-grid">
-    <div>
-      <div class="thesis-item-title">{{THESIS_1_TITLE}}</div>
-      <p class="thesis-item-text" data-field="THESIS_1_TEXT">{{THESIS_1_TEXT}}</p>
-    </div>
-    <div>
-      <div class="thesis-item-title">{{THESIS_2_TITLE}}</div>
-      <p class="thesis-item-text" data-field="THESIS_2_TEXT">{{THESIS_2_TEXT}}</p>
-    </div>
-    <div>
-      <div class="thesis-item-title">{{THESIS_3_TITLE}}</div>
-      <p class="thesis-item-text" data-field="THESIS_3_TEXT">{{THESIS_3_TEXT}}</p>
-    </div>
-  </div>
 </div>
 
 <!-- FOOTER -->
