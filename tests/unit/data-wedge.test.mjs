@@ -55,6 +55,19 @@ describe('incubator fast discover wedge', () => {
   })
 })
 
+describe('incubator flow discover wedge', () => {
+  it('expands community rows while keeping high reachability', async () => {
+    const { buildIncubatorFlowDiscover } = await import('../../lib/discover-fast.js')
+    const payload = buildIncubatorFlowDiscover(
+      'Canadian AI pre-seed from Velocity DMZ CDL',
+      { id: 'panache_ventures', fundName: 'Panache Ventures', mandate: { geographies: ['Canada'] } },
+    )
+    expect(payload.companies.length).toBeGreaterThanOrEqual(12)
+    expect(payload.meta.reachability.rate).toBeGreaterThanOrEqual(0.7)
+    expect(payload.meta.coverage.communityFirst).toBeGreaterThan(5)
+  })
+})
+
 describe('flow digest + pilot', () => {
   it('builds a digest with stats', () => {
     const companies = annotateReachability(annotateCoverage([

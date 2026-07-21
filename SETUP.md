@@ -133,7 +133,9 @@ Creator shares `/share/[id]` → GP clicks Pursue / Pass / Need more info → ou
 3. Add env vars from section 2
 4. Deploy
 
-**Clerk (production):** On Vercel, set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` to `pk_live_…` / `sk_live_…` (not `pk_test_…`). Confirm `/api/health` reports `clerkMode: "production"`, then remove the CSS hide block in `app/globals.css` (the “Hide Clerk Development mode” comment). Until live keys are set, that CSS hide remains required — do not rely on it as a permanent solution. Sidebar Status only surfaces failing *required* services (Claude / Research / Database); optional APIs like PitchBook are not advertised when off.
+**Clerk (production):** On Vercel, set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` to `pk_live_…` / `sk_live_…` (not `pk_test_…`). Confirm `/api/health` reports `clerkMode: "production"` and `clerkDemoRisk: false`, then remove the CSS hide block in `app/globals.css`. Until live keys are set, that CSS hide remains required. Sidebar Status only surfaces failing *required* services (Claude / Research / Database); optional APIs like PitchBook are not advertised when off.
+
+**Monday digest:** Set `SLACK_WEBHOOK_URL` + `CRON_SECRET`. `vercel.json` schedules `GET /api/cron/flow-digest` Mondays 14:00 UTC (Pro cron). From the product, Flow → “Send to Slack” / Copy digest works without cron.
 
 Production: **https://meridian-eight-sandy.vercel.app**
 

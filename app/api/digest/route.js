@@ -1,5 +1,5 @@
 import { enforceRateLimit } from '@/lib/api-guard'
-import { buildIncubatorFastDiscover } from '@/lib/discover-fast'
+import { buildIncubatorFlowDiscover } from '@/lib/discover-fast'
 import { buildFlowDigest } from '@/lib/flow-digest'
 import { cohortAgeDays } from '@/lib/mandate-watch'
 
@@ -60,7 +60,7 @@ export async function POST(req) {
     if (!thesis) {
       return Response.json({ error: 'thesis or companies required' }, { status: 400 })
     }
-    const payload = buildIncubatorFastDiscover(thesis, fundContext)
+    const payload = buildIncubatorFlowDiscover(thesis, fundContext)
     companies = payload.companies
     meta = payload.meta
   }

@@ -1,4 +1,4 @@
-import { buildIncubatorFastDiscover } from '@/lib/discover-fast'
+import { buildIncubatorFlowDiscover } from '@/lib/discover-fast'
 import { buildFlowDigest } from '@/lib/flow-digest'
 import { SAGARD_AI_FUND, PANACHE_VENTURES } from '@/lib/fund-seeds'
 
@@ -66,7 +66,7 @@ export async function GET(req) {
       thesis: watch.thesis,
       mandate: watch.mandate || { geographies: ['Canada'], stages: ['pre-seed', 'seed'] },
     }
-    const payload = buildIncubatorFastDiscover(watch.thesis, fundContext)
+    const payload = buildIncubatorFlowDiscover(watch.thesis, fundContext)
     const companies = (payload.companies || []).map(c => ({
       ...c,
       isNew: Boolean(c.isFresh || c.coverage?.status === 'community_first'),
