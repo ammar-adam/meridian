@@ -28,6 +28,7 @@ import {
 } from '@/lib/mandate-watch'
 import { coverageSummary } from '@/lib/coverage-proof'
 import { reachabilitySummary } from '@/lib/reachability'
+import { ledgerSummary } from '@/lib/freshness-ledger'
 import FlowDigestCard from '@/components/flow-digest-card'
 
 function formatVisit(iso) {
@@ -181,6 +182,7 @@ function FlowContent() {
   const summary = useMemo(() => flowSummary(companies || []), [companies])
   const coverage = useMemo(() => coverageSummary(companies || []), [companies])
   const reach = useMemo(() => reachabilitySummary(companies || []), [companies])
+  const ledger = useMemo(() => ledgerSummary(companies || []), [companies])
   const newRows = useMemo(() => (companies || []).filter(c => c.isNew), [companies])
   const feedRows = companies || []
   const thesisText = watch?.thesis || getActiveStrategy(fund)?.thesis || ''
@@ -246,11 +248,13 @@ function FlowContent() {
             Meridian surfaces what still lives inside communities. Watch once — digest what&apos;s new.
           </p>
           {feedRows.length > 0 && (
-            <p className="mt-3 font-mono text-[12px] text-emerald-800">
-              {coverage.communityFirst}/{coverage.total} community-first ·{' '}
-              {Math.round((reach.rate || 0) * 100)}% founder-reachable ·{' '}
-              {coverage.withCohort} with cohort dates
-            </p>
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-emerald-800">
+              <span>{coverage.communityFirst}/{coverage.total} community-first</span>
+              <span>{Math.round((reach.rate || 0) * 100)}% reachable ({Math.round((reach.founderRate || 0) * 100)}% founder)</span>
+              <span>{ledger.withFirstSeen} with first-seen dates</span>
+              {ledger.verifiedMiss > 0 && <span>{ledger.verifiedMiss} verified not-in-index</span>}
+              {ledger.medianAgeDays != null && <span>median {ledger.medianAgeDays}d fresh</span>}
+            </div>
           )}
           {!watch && (
             <button type="button" onClick={handleWatch} className="m-btn-primary mt-4">

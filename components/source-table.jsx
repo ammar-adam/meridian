@@ -7,6 +7,7 @@ import { estimateBatchCost } from '@/lib/cost-estimate'
 import { isPowerBatchEnabled, setPowerBatchEnabled } from '@/lib/discover-state'
 import CoverageProof from '@/components/coverage-proof'
 import ReachabilityActions from '@/components/reachability-actions'
+import { copyCompanyForCrm } from '@/lib/crm-export'
 
 function FitBadge({ score }) {
   const cls = score >= 80 ? 'm-badge-high' : score >= 60 ? 'm-badge-mid' : 'm-badge-low'
@@ -130,6 +131,7 @@ export default function SourceTable({
 }) {
   const [selected, setSelected] = useState(new Set())
   const [powerBatch, setPowerBatch] = useState(isPowerBatchEnabled())
+  const [copiedCrm, setCopiedCrm] = useState(null)
 
   function toggle(name) {
     setSelected(prev => {
@@ -258,7 +260,7 @@ export default function SourceTable({
                     source={c.source}
                     personName={c.personName}
                   />
-                  <CoverageProof coverage={c.coverage} />
+                  <CoverageProof coverage={c.coverage} ledger={c.ledger} stage={c.stage} />
                   <ReachabilityActions reach={c.reach} compact />
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
@@ -272,7 +274,7 @@ export default function SourceTable({
                 <td>
                   <div className="flex flex-col gap-1">
                     <SourceBadge source={c.source} unverified={c.unverified} sourceConfidence={c.sourceConfidence} />
-                    <CoverageProof coverage={c.coverage} compact />
+                    <CoverageProof coverage={c.coverage} ledger={c.ledger} compact />
                   </div>
                 </td>
                 <td>
@@ -283,6 +285,20 @@ export default function SourceTable({
                       className="m-btn-primary m-btn-sm"
                     >
                       Brief
+                    </button>
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        try {
+                          await copyCompanyForCrm(c)
+                          setCopiedCrm(c.name)
+                          setTimeout(() => setCopiedCrm(null), 1500)
+                        } catch { /* clipboard blocked */ }
+                      }}
+                      className="m-btn-ghost m-btn-sm opacity-70 hover:opacity-100"
+                      title="Copy company for CRM / Affinity"
+                    >
+                      {copiedCrm === c.name ? 'Copied' : 'CRM'}
                     </button>
                     <button
                       type="button"
