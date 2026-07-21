@@ -60,11 +60,5 @@
     "app/api/workspace/route.js": {
       "maxDuration": 30
     }
-  },
-  "crons": [
-    {
-      "path": "/api/cron/flow-digest",
-      "schedule": "0 14 * * 1"
-    }
-  ]
+  }
 }
