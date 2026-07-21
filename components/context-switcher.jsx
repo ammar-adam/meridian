@@ -8,6 +8,7 @@ import {
   getActiveStrategy,
   setActiveFundId,
   setActiveStrategyId,
+  ensureActiveFund,
 } from '@/lib/fund-profile'
 
 export function FundSwitcher({ onChange }) {
@@ -16,6 +17,7 @@ export function FundSwitcher({ onChange }) {
 
   useEffect(() => {
     function load() {
+      ensureActiveFund()
       setFunds(getAllFunds())
       const active = getFundProfile()
       setActiveId(active?.id || '')
