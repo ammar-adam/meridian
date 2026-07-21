@@ -72,15 +72,15 @@ export default function ThesisPage() {
         {!summary || summary.totalMemos === 0 ? (
           <EmptyState
             title="No signals yet for this strategy"
-            description="Thesis learns from how your team reviews briefs under the active fund strategy. Switch strategy above or generate briefs scoped to this mandate."
-            primaryHref="/brief"
-            primaryLabel="Generate a brief"
-            secondaryHref="/library"
-            secondaryLabel="Open library"
+            description="Log pursue or pass on memos under this fund strategy. Meridian uses those signals to sharpen the thesis band on the next brief."
+            primaryHref="/discover"
+            primaryLabel="Discover companies"
+            secondaryHref="/brief"
+            secondaryLabel="Brief a URL"
             steps={[
-              { label: 'Brief a company', desc: 'Paste any company URL' },
+              { label: 'Discover or Brief', desc: 'Source companies against your mandate' },
               { label: 'Pursue or pass', desc: 'Close the loop on every memo' },
-              { label: 'Watch it learn', desc: 'Thesis band improves from your signals' },
+              { label: 'Watch it learn', desc: 'Pursue rate and preferences show up here' },
             ]}
           />
         ) : (

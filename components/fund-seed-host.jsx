@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { seedFundProfilesIfEmpty } from '@/lib/fund-seeds'
 
+/** Seeds Sagard + Panache on first visit before workspace reads fund context. */
 export default function FundSeedHost() {
-  useEffect(() => {
+  useLayoutEffect(() => {
     seedFundProfilesIfEmpty()
   }, [])
   return null

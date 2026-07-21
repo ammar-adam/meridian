@@ -5,13 +5,12 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { populateTemplate } from '@/lib/populate-template'
 import { saveMemo, updateMemoMeta } from '@/lib/memo-library'
 import { logEdit, logOutcome, getEditsForMemo, removeOutcome, getOutcomeForMemo } from '@/lib/edit-tracker'
-import { getFundProfile, getTrackingId, getActiveStrategy } from '@/lib/fund-profile'
+import { getFundProfile, getTrackingId, getActiveStrategy, hasFundProfile } from '@/lib/fund-profile'
 import { memoTemplatePath, resolveMemoTemplateId } from '@/lib/memo-template'
 import OutreachDrawer from '@/components/outreach-drawer'
 import { readMemoMetaFromSession } from '@/lib/memo-context'
 import { getMemoById } from '@/lib/memo-library'
 import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-export'
-import { openDemoMemo } from '@/lib/demo-memo'
 import { incrementBriefCount } from '@/lib/onboarding'
 import { getTeamContext } from '@/lib/team-workspace'
 import { DEMO_MEMO_ID } from '@/lib/demo-memo'
@@ -583,13 +582,11 @@ function MemoPageContent() {
         <div className="m-empty max-w-md text-center">
           <p className="m-kicker mb-2">No brief loaded</p>
           <p className="text-[14px]" style={{ color: 'var(--m-muted)' }}>
-            Paste a company URL on Brief — or open the NationGraph demo to see the quality bar instantly.
+            Choose your fund, then paste a company URL on Brief — or run Discover against your thesis.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link href="/brief" className="m-btn-primary">Generate a brief</Link>
-            <button type="button" onClick={() => openDemoMemo(router)} className="m-btn-secondary">
-              Open demo brief
-            </button>
+            <Link href="/fund" className="m-btn-secondary">Choose fund</Link>
           </div>
         </div>
       </div>
@@ -662,7 +659,7 @@ function MemoPageContent() {
   const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief && !finishError
   const warnCollapsed = sortedWarnings.length > 3 && !qualityWarningsExpanded
   const hasConfidenceIssues = confidenceWarnings.length > 0 || (qualityGate?.confidenceSummary?.length > 0)
-  const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
+  const isGuestFund = (memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund') && !hasFundProfile()
   const topOffset = (finishingBrief || finishError || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
   return (

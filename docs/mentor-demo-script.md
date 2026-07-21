@@ -14,13 +14,13 @@
 ## Before you hit record
 
 1. Prefer **localhost** (`npm run dev`) if Clerk still reports `clerkMode: development` on prod — CSS hides the badge after latest deploy, but localhost is safer. Or set Vercel `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` to **pk_live_ / sk_live_**.
-2. Open Discover. Select **Panache** in the fund switcher.
-3. Click **Mentor demo thesis** → **Run search**. Wait for results (can take 1–2 min first time). Pre-run once so the second open is cached.
+2. Open Discover. Select **Panache** in the fund switcher (first-visit seed defaults to Panache).
+3. Paste the thesis below → **Run search**. Wait for results (can take 1–2 min first time). Pre-run once so the second open is cached.
 4. Confirm top rows show **Incubator** badges with **Founders:** lines and Velocity/DMZ/CDL provenance. **No** violet EverTrace research banner when incubator rows dominate.
 5. Open the foil tab: https://getfundingfromavc.vercel.app — GiveFund row must show **fabricated · no entity**.
 6. Do **not** demo EverTrace, share links, Team, or “we beat PitchBook coverage.”
 
-**Exact thesis text (if button missing — hard refresh / wait for deploy):**
+**Exact thesis text:**
 
 > Canadian pre-seed and seed startups from Waterloo and Toronto accelerators (Velocity, DMZ, CDL) — AI, fintech, healthtech, and deep tech
 
@@ -70,7 +70,7 @@ If no registry row appears, skip this beat — do not invent it.
 
 > Same company, now a forwardable one-pager against the fund mandate. Discover finds; Brief ships.
 
-**If live Brief flakes:** Discover → **Fallback brief** (SCADABLE — IoT / cloud one-liner, Ali Rahbar). Or Brief `https://scadable.com` / `https://eventist.ca` live.
+**If live Brief flakes:** Brief `https://scadable.com` / `https://eventist.ca` live. Do not use product fallback buttons — they were removed from Discover.
 
 ---
 
@@ -93,14 +93,15 @@ Foil site lives at **https://getfundingfromavc.vercel.app** (repo: `c:\Users\aaa
 
 ## Dry-run checklist
 
-Verified 2026-07-20 (~3:45pm ET) against prod:
+Verified 2026-07-21 against prod:
 
-- [x] Mentor demo thesis returns incubator rows in the first screen (12/12 incubator, CA 12)
-- [x] Golden rows present with Founders + domain (SCADABLE #3, Photon-IV #6, Eventist #9, Simantic #7)
+- [x] Canadian thesis (typed) returns incubator rows in the first screen (12/12 incubator on 2026-07-21 prod check)
+- [x] Golden rows present with Founders + domain (SCADABLE, Photon-IV, Simantic, Eventist)
 - [x] Foil URL loads; GiveFund = fabricated — https://getfundingfromavc.vercel.app
-- [x] Clerk development badge not visible (CSS hide); `clerkMode` still `development` in `/api/health`
+- [x] Clerk development badge not visible (CSS hide); `clerkMode` still `development` in `/api/health` — set pk_live_ before claiming production auth
 - [x] No EverTrace banner on this result set (`thinCanadian: false`)
-- [x] Fallback brief opens SCADABLE with IoT/cloud copy (not supply-chain)
+- [x] Live Brief `scadable.com` under Panache returns thesis band (~66s Instant)
+- [x] Share create → Pursue outcome persists on `/api/share/[id]`
 - [ ] Human: one spoken dry-run of [`docs/mentor-demo-script.md`](docs/mentor-demo-script.md) without apology pauses
 
-**Recording tip:** Discover cold run ~3 min — pre-run once (or hit Refresh) so tape opens on cached results. StartupHub showed `off` in health sidebar during dry-run; incubators still filled the list.
+**Recording tip:** Discover cold run ~3 min — pre-run once (or hit Refresh) so tape opens on cached results. Sidebar Status shows “Core systems · ok” when Claude/Research/DB are healthy (PitchBook off is no longer advertised).

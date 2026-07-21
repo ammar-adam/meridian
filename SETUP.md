@@ -133,7 +133,7 @@ Creator shares `/share/[id]` → GP clicks Pursue / Pass / Need more info → ou
 3. Add env vars from section 2
 4. Deploy
 
-**Clerk (production):** On Vercel, set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` to a `pk_live_…` key (not `pk_test_…`) so the app does not show the Clerk development badge. `/api/health` reports `clerkMode`: `production`, `development`, or `none`.
+**Clerk (production):** On Vercel, set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` to `pk_live_…` / `sk_live_…` (not `pk_test_…`). `/api/health` should report `clerkMode: "production"`. Until then, CSS in `app/globals.css` hides the Clerk development badge as a fallback; the sidebar Status panel also warns when keys are still development.
 
 Production: **https://meridian-eight-sandy.vercel.app**
 

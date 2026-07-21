@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
-import BriefStarters from '@/components/brief-starters'
 import { downloadLibraryCsv, copyLibraryRowForCrm } from '@/lib/crm-export'
 import { createShareLink } from '@/lib/memo-export'
 import { getMemoLibrary, getRelatedMemos, updateMemoMeta } from '@/lib/memo-library'
@@ -175,11 +174,16 @@ export default function LibraryPage() {
         {filtered.length === 0 ? (
           <EmptyState
             title="No briefs yet"
-            description="Generate from any company URL or run a batch list."
+            description="Paste a company URL on Brief, or run Discover against your fund thesis and brief the best fits."
             primaryHref="/brief"
             primaryLabel="Generate a brief"
-            secondaryHref="/lists"
-            secondaryLabel="Batch list"
+            secondaryHref="/discover"
+            secondaryLabel="Discover companies"
+            steps={[
+              { label: 'Confirm your fund', desc: 'Thesis and portfolio drive every memo' },
+              { label: 'Brief or Discover', desc: 'Known URL, or thesis-ranked companies' },
+              { label: 'Pursue or pass', desc: 'Outcomes land here and feed Learn' },
+            ]}
           />
         ) : (
           <WorkspaceSection title="Briefs" description="Click a row to open. Select rows to bulk-share with GP.">
@@ -288,8 +292,6 @@ export default function LibraryPage() {
             </div>
           </WorkspaceSection>
         )}
-
-        {library.length === 0 && <BriefStarters />}
       </WorkspacePage>
     </WorkspaceShell>
     </div>

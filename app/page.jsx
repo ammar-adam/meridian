@@ -4,7 +4,6 @@ import Footer from '@/components/footer'
 import HeroInput from '@/components/hero-input'
 import WorkspacePreview from '@/components/workspace-preview'
 import LandingBackground from '@/components/landing-background'
-import LandingDemoCta from '@/components/landing-demo-cta'
 
 export default function LandingPage() {
   return (
@@ -29,7 +28,7 @@ export default function LandingPage() {
                 </div>
                 <p className="mt-4 text-[13px] text-zinc-500">
                   <Link href="/fund/setup" className="text-zinc-400 transition hover:text-white">
-                    Personalize with your fund URL →
+                    Choose or set up your fund →
                   </Link>
                 </p>
               </div>
@@ -51,13 +50,11 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="mb-16 grid gap-8 sm:grid-cols-3">
-            <Step num="01" title="Paste URL" desc="Any company website. No setup required — generic fund context works on day one." />
-            <Step num="02" title="Review & signal" desc="Inline edits, pursue or pass. Every signal trains the thesis band on your next brief." />
-            <Step num="03" title="Personalize fund" desc="Drop your fund URL when ready. Portfolio overlap and mandate fit kick in automatically." />
+          <div className="grid gap-8 sm:grid-cols-3">
+            <Step num="01" title="Choose your fund" desc="Pick a seeded profile or drop your fund URL. Mandate and portfolio drive every thesis band." />
+            <Step num="02" title="Paste any company" desc="Your URL, your deal. No preset companies — Brief any site you care about." />
+            <Step num="03" title="Review & signal" desc="Inline edits, pursue or pass. Every signal trains the thesis band on your next brief." />
           </div>
-
-          <LandingDemoCta />
         </div>
       </section>
 
@@ -65,32 +62,32 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 max-w-lg">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
-              Brief first. Everything else follows.
+              Fund first. Then the company.
             </h2>
             <p className="mt-3 text-[16px] leading-relaxed text-zinc-500">
-              One URL in, structured memo out. Review, pursue or pass, and your next brief gets sharper.
+              Select your mandate, paste a company URL or run Discover, then pursue or pass.
             </p>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-2">
-            <Link href="/brief" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
+            <Link href="/fund" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
               <span className="m-bento-icon">◇</span>
-              <h3 className="m-bento-title">Brief</h3>
-              <p className="m-bento-desc">Company URL in → fund-native one-pager out. Auto mode picks Instant or Quick based on site coverage (~30–75s).</p>
-              <span className="m-bento-link">Generate a brief →</span>
+              <h3 className="m-bento-title">Fund</h3>
+              <p className="m-bento-desc">Choose Sagard, Panache, or add your own. Thesis and portfolio shape every memo.</p>
+              <span className="m-bento-link">Choose a fund →</span>
             </Link>
 
-            <Link href="/library" className="group m-bento lg:col-span-5">
+            <Link href="/brief" className="group m-bento lg:col-span-5">
               <span className="m-bento-icon">◎</span>
-              <h3 className="m-bento-title">Review</h3>
-              <p className="m-bento-desc">Pursue/pass every brief. Signals compound into smarter thesis bands.</p>
-              <span className="m-bento-link">Open library →</span>
+              <h3 className="m-bento-title">Brief</h3>
+              <p className="m-bento-desc">Paste any company URL → fund-native one-pager (~30–75s).</p>
+              <span className="m-bento-link">Generate a brief →</span>
             </Link>
 
             <Link href="/discover" className="group m-bento lg:col-span-5">
               <span className="m-bento-icon">◈</span>
               <h3 className="m-bento-title">Discover</h3>
-              <p className="m-bento-desc">Thesis search when you need new names — not where you start.</p>
+              <p className="m-bento-desc">Thesis search for new names against your mandate — community-sourced when Canada applies.</p>
               <span className="m-bento-link">Search →</span>
             </Link>
           </div>
