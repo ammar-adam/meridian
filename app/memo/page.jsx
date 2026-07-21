@@ -5,7 +5,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import { populateTemplate } from '@/lib/populate-template'
 import { saveMemo, updateMemoMeta } from '@/lib/memo-library'
 import { logEdit, logOutcome, getEditsForMemo, removeOutcome, getOutcomeForMemo } from '@/lib/edit-tracker'
-import { getFundProfile, getTrackingId, getActiveStrategy } from '@/lib/fund-profile'
+import { getFundProfile, getTrackingId, getActiveStrategy, hasFundProfile } from '@/lib/fund-profile'
 import { memoTemplatePath, resolveMemoTemplateId } from '@/lib/memo-template'
 import OutreachDrawer from '@/components/outreach-drawer'
 import { readMemoMetaFromSession } from '@/lib/memo-context'
@@ -662,7 +662,7 @@ function MemoPageContent() {
   const showWarnBanner = warnings.length > 0 && !bannerDismissed && !showErrorBanner && !finishingBrief && !finishError
   const warnCollapsed = sortedWarnings.length > 3 && !qualityWarningsExpanded
   const hasConfidenceIssues = confidenceWarnings.length > 0 || (qualityGate?.confidenceSummary?.length > 0)
-  const isGuestFund = memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund'
+  const isGuestFund = (memoData?.FUND_NAME === 'Your Fund' || fundName === 'Your Fund') && !hasFundProfile()
   const topOffset = (finishingBrief || finishError || showErrorBanner || showWarnBanner) ? '5.5rem' : '3rem'
 
   return (

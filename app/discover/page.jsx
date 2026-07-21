@@ -23,13 +23,8 @@ import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } fr
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
 import { logDiscoverDemote } from '@/lib/edit-tracker'
 import { applyBehavioralRank } from '@/lib/behavioral-rank'
-import { openWedgeDemoMemo } from '@/lib/demo-memo'
 
 const EXAMPLE_THESIS = 'AI infrastructure for financial services, Series A, North America'
-
-/** Mentor-demo thesis — reliably surfaces Velocity / DMZ / CDL enriched seeds */
-export const MENTOR_DEMO_THESIS =
-  'Canadian pre-seed and seed startups from Waterloo and Toronto accelerators (Velocity, DMZ, CDL) — AI, fintech, healthtech, and deep tech'
 
 function DiscoverContent() {
   const [thesis, setThesis] = useState('')
@@ -302,10 +297,6 @@ function DiscoverContent() {
     >
       {!companies && !loading && (
         <WorkspacePage width="narrow">
-          <div className="mb-6 rounded-lg border border-zinc-200 bg-white px-4 py-3 text-[13px] text-zinc-600">
-            <strong className="font-medium text-zinc-900">Not the starting point.</strong>
-            {' '}Use Brief for known companies. Discover is for thesis-driven sourcing when you need new names.
-          </div>
           {getActiveStrategy(fundProfile)?.thesis && (
             <WorkspaceSection
               title={`Strategy mandate · ${getActiveStrategy(fundProfile)?.name}`}
@@ -341,22 +332,6 @@ function DiscoverContent() {
                 <div className="flex flex-wrap gap-2">
                   <button type="button" onClick={() => setThesis(EXAMPLE_THESIS)} className="m-btn-ghost m-btn-sm">
                     Use example
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setThesis(MENTOR_DEMO_THESIS)}
-                    className="m-btn-ghost m-btn-sm"
-                    title="Canada accelerator wedge — Velocity, DMZ, CDL"
-                  >
-                    Mentor demo thesis
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => openWedgeDemoMemo(router, 'scadable')}
-                    className="m-btn-ghost m-btn-sm"
-                    title="Zero-API fallback brief if live Brief flakes"
-                  >
-                    Fallback brief
                   </button>
                 </div>
                 <button type="submit" disabled={loading || !thesis.trim()} className="m-btn-primary">

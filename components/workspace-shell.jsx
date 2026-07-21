@@ -14,16 +14,16 @@ const NAV_GROUPS = [
   {
     label: 'Core',
     items: [
-      { href: '/brief', label: 'Brief', desc: 'URL → memo', primary: true },
-      { href: '/lists', label: 'Lists', desc: 'Batch briefs' },
+      { href: '/discover', label: 'Discover', desc: 'Thesis → companies', primary: true },
+      { href: '/brief', label: 'Brief', desc: 'URL → memo' },
       { href: '/library', label: 'Library', desc: 'Saved briefs', badgeKey: 'pendingReview' },
+      { href: '/thesis', label: 'Learn', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
     ],
   },
   {
     label: 'More',
     items: [
-      { href: '/thesis', label: 'Learn', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
-      { href: '/discover', label: 'Discover', desc: 'Thesis search (advanced)' },
+      { href: '/lists', label: 'Lists', desc: 'Batch briefs' },
       { href: '/team', label: 'Team', desc: 'Shared links (beta)' },
     ],
   },
@@ -108,25 +108,48 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
             {health && (
               <div className="mt-3 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2.5">
                 <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
-                  APIs
+                  Status
                 </div>
-                {[
-                  { key: 'anthropic', label: 'Claude' },
-                  { key: 'perplexity', label: 'Research' },
-                  { key: 'startuphub', label: 'StartupHub' },
-                  { key: 'pitchbook', label: 'PitchBook' },
-                  { key: 'database', label: 'Database' },
-                  { key: 'clerk', label: 'Auth' },
-                  { key: 'serverPdf', label: 'Server PDF', feature: true },
-                  { key: 'shareLinks', label: 'Share links', feature: true },
-                ].map(({ key, label, feature }) => (
-                  <div key={key} className="flex justify-between py-0.5 text-[11px]">
-                    <span className="text-zinc-500">{label}</span>
-                    <span className={(feature ? health.features?.[key] : health[key]) ? 'text-emerald-400' : 'text-zinc-600'}>
-                      {(feature ? health.features?.[key] : health[key]) ? 'on' : 'off'}
-                    </span>
-                  </div>
-                ))}
+                {(() => {
+                  const required = [
+                    { on: health.anthropic, label: 'Claude' },
+                    { on: health.perplexity, label: 'Research' },
+                    { on: health.database, label: 'Database' },
+                  ]
+                  const failing = required.filter(s => !s.on)
+                  const optionalOn = [
+                    health.startuphub && 'StartupHub',
+                    health.features?.shareLinks && 'Share links',
+                    health.features?.serverPdf && 'Server PDF',
+                    health.clerk && health.clerkMode === 'production' && 'Auth',
+                  ].filter(Boolean)
+
+                  if (failing.length === 0) {
+                    return (
+                      <>
+                        <div className="flex justify-between py-0.5 text-[11px]">
+                          <span className="text-zinc-500">Core systems</span>
+                          <span className="text-emerald-400">ok</span>
+                        </div>
+                        {optionalOn.length > 0 && (
+                          <div className="mt-1 text-[10px] leading-relaxed text-zinc-600">
+                            {optionalOn.join(' · ')}
+                          </div>
+                        )}
+                        {health.clerk && health.clerkMode === 'development' && (
+                          <div className="mt-1 text-[10px] text-amber-400/90">Auth keys are development — set pk_live_ on Vercel</div>
+                        )}
+                      </>
+                    )
+                  }
+
+                  return failing.map(s => (
+                    <div key={s.label} className="flex justify-between py-0.5 text-[11px]">
+                      <span className="text-zinc-500">{s.label}</span>
+                      <span className="text-amber-400">off</span>
+                    </div>
+                  ))
+                })()}
               </div>
             )}
           </div>
