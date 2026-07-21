@@ -23,6 +23,7 @@ import PipelineContactsPanel, { getPipelineContacts, importPipelineContacts } fr
 import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-state'
 import { logDiscoverDemote } from '@/lib/edit-tracker'
 import { applyBehavioralRank } from '@/lib/behavioral-rank'
+import { upsertWatch } from '@/lib/mandate-watch'
 
 const EXAMPLE_THESIS = 'Canadian pre-seed AI and fintech from Waterloo and Toronto accelerators'
 
@@ -373,6 +374,26 @@ function DiscoverContent() {
                       className="m-btn-ghost m-btn-sm"
                     >
                       Use fund mandate
+                    </button>
+                  )}
+                  {getActiveStrategy(fundProfile)?.thesis && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const strategy = getActiveStrategy(fundProfile)
+                        if (!fundProfile || !strategy?.thesis) return
+                        upsertWatch({
+                          fundId: fundProfile.id,
+                          fundName: fundProfile.fundName,
+                          strategyId: strategy.id,
+                          strategyName: strategy.name,
+                          thesis: thesis.trim() || strategy.thesis,
+                        })
+                        router.push('/flow')
+                      }}
+                      className="m-btn-secondary m-btn-sm"
+                    >
+                      Watch → Deal Flow
                     </button>
                   )}
                 </div>

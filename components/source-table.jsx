@@ -82,6 +82,24 @@ function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
   )
 }
 
+function FlowBadge({ company }) {
+  if (company?.isNew || company?.flowBadge === 'new') {
+    return (
+      <span className="ml-1.5 inline-flex rounded border border-emerald-400 bg-emerald-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-emerald-800">
+        New
+      </span>
+    )
+  }
+  if (company?.isFresh || company?.flowBadge === 'fresh') {
+    return (
+      <span className="ml-1.5 inline-flex rounded border border-sky-300 bg-sky-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-800">
+        Fresh
+      </span>
+    )
+  }
+  return null
+}
+
 function confirmBatchBrief(companies) {
   const fund = getFundProfile()
   const needing = filterCompaniesNeedingBrief(companies, { fundId: fund?.id })
@@ -214,15 +232,18 @@ export default function SourceTable({
                 )}
                 <td className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{i + 1}</td>
                 <td>
-                  <button
-                    type="button"
-                    onClick={() => onGenerateMemo(c)}
-                    disabled={!c.url && !c.domain}
-                    className="text-left font-medium hover:underline disabled:opacity-50"
-                    title={c.domain || c.url || 'No website'}
-                  >
-                    {c.name}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => onGenerateMemo(c)}
+                      disabled={!c.url && !c.domain}
+                      className="text-left font-medium hover:underline disabled:opacity-50"
+                      title={c.domain || c.url || 'No website'}
+                    >
+                      {c.name}
+                    </button>
+                    <FlowBadge company={c} />
+                  </div>
                   {(c.domain || c.url) && (
                     <div className="mt-0.5 font-mono text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
                       {(c.domain || c.url).replace(/^https?:\/\//, '').split('/')[0]}

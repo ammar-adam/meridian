@@ -14,7 +14,8 @@ const NAV_GROUPS = [
   {
     label: 'Core',
     items: [
-      { href: '/discover', label: 'Discover', desc: 'Thesis → companies', primary: true },
+      { href: '/flow', label: 'Deal Flow', desc: 'What’s new for your mandate', primary: true },
+      { href: '/discover', label: 'Discover', desc: 'One-off thesis search' },
       { href: '/brief', label: 'Brief', desc: 'URL → memo' },
       { href: '/library', label: 'Library', desc: 'Saved briefs', badgeKey: 'pendingReview' },
       { href: '/thesis', label: 'Learn', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
