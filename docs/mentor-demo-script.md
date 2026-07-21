@@ -14,13 +14,13 @@
 ## Before you hit record
 
 1. Prefer **localhost** (`npm run dev`) if Clerk still reports `clerkMode: development` on prod — CSS hides the badge after latest deploy, but localhost is safer. Or set Vercel `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` to **pk_live_ / sk_live_**.
-2. Open Discover. Select **Panache** in the fund switcher.
-3. Click **Mentor demo thesis** → **Run search**. Wait for results (can take 1–2 min first time). Pre-run once so the second open is cached.
+2. Open Discover. Select **Panache** in the fund switcher (first-visit seed defaults to Panache).
+3. Paste the thesis below → **Run search**. Wait for results (can take 1–2 min first time). Pre-run once so the second open is cached.
 4. Confirm top rows show **Incubator** badges with **Founders:** lines and Velocity/DMZ/CDL provenance. **No** violet EverTrace research banner when incubator rows dominate.
 5. Open the foil tab: https://getfundingfromavc.vercel.app — GiveFund row must show **fabricated · no entity**.
 6. Do **not** demo EverTrace, share links, Team, or “we beat PitchBook coverage.”
 
-**Exact thesis text (if button missing — hard refresh / wait for deploy):**
+**Exact thesis text:**
 
 > Canadian pre-seed and seed startups from Waterloo and Toronto accelerators (Velocity, DMZ, CDL) — AI, fintech, healthtech, and deep tech
 
@@ -70,7 +70,7 @@ If no registry row appears, skip this beat — do not invent it.
 
 > Same company, now a forwardable one-pager against the fund mandate. Discover finds; Brief ships.
 
-**If live Brief flakes:** Discover → **Fallback brief** (SCADABLE — IoT / cloud one-liner, Ali Rahbar). Or Brief `https://scadable.com` / `https://eventist.ca` live.
+**If live Brief flakes:** Brief `https://scadable.com` / `https://eventist.ca` live. Do not use product fallback buttons — they were removed from Discover.
 
 ---
 
