@@ -2,8 +2,10 @@ import { describe, it, expect } from 'vitest'
 import { buildCoverageProof, annotateCoverage, coverageSummary } from '../../lib/coverage-proof.js'
 import { buildReachability, annotateReachability, reachabilitySummary } from '../../lib/reachability.js'
 import { buildFlowDigest } from '../../lib/flow-digest.js'
-import { buildIncubatorFastDiscover } from '../../lib/discover-fast.js'
+import { buildIncubatorFastDiscover, buildIncubatorFlowDiscover } from '../../lib/discover-fast.js'
 import { buildPilotCaseStudy } from '../../lib/pilot-case.js'
+import { buildLedgerEntry, annotateLedger, ledgerSummary } from '../../lib/freshness-ledger.js'
+import { companyToCrmRow, companyToCrmText } from '../../lib/crm-export.js'
 
 describe('coverage proof', () => {
   it('marks incubator rows community-first with first-seen cohort date', () => {
@@ -65,6 +67,79 @@ describe('incubator flow discover wedge', () => {
     expect(payload.companies.length).toBeGreaterThanOrEqual(12)
     expect(payload.meta.reachability.rate).toBeGreaterThanOrEqual(0.7)
     expect(payload.meta.coverage.communityFirst).toBeGreaterThan(5)
+  })
+})
+
+describe('freshness ledger', () => {
+  it('marks StartupHub-tested names as verified_miss with first-seen + stage', () => {
+    const e = buildLedgerEntry({
+      name: 'SCADABLE',
+      source: 'incubator',
+      cohortDate: '2026-05-15',
+      provenance: 'Velocity May 2026 (2026-05-15)',
+      sourceMeta: { program: 'velocity' },
+    })
+    expect(e.verification.status).toBe('verified_miss')
+    expect(e.verification.checkable).toBe(true)
+    expect(e.firstSeen).toBe('2026-05-15')
+    expect(e.stageSignal).toBe('pre-seed')
+    expect(e.ageDays).toBeGreaterThan(0)
+  })
+
+  it('marks untested community rows as community_sourced (no false index claim)', () => {
+    const e = buildLedgerEntry({
+      name: 'Some DMZ Co',
+      source: 'incubator',
+      cohortDate: '2026-03-01',
+      provenance: 'DMZ Incubator Spring 2026 (2026-03-01)',
+      sourceMeta: { program: 'dmz' },
+    })
+    expect(e.verification.status).toBe('community_sourced')
+    expect(e.stageSignal).toContain('seed')
+  })
+
+  it('summarizes a ledger', () => {
+    const list = annotateLedger([
+      { name: 'SCADABLE', source: 'incubator', cohortDate: '2026-05-15', provenance: 'Velocity May 2026', sourceMeta: { program: 'velocity' } },
+      { name: 'Some DMZ Co', source: 'incubator', cohortDate: '2026-03-01', provenance: 'DMZ', sourceMeta: { program: 'dmz' } },
+    ])
+    const s = ledgerSummary(list)
+    expect(s.verifiedMiss).toBe(1)
+    expect(s.communitySourced).toBe(1)
+    expect(s.withFirstSeen).toBe(2)
+    expect(s.withStage).toBe(2)
+  })
+})
+
+describe('CRM export row', () => {
+  it('builds a CRM record with wedge signals', () => {
+    const [c] = annotateLedger(annotateReachability(annotateCoverage([{
+      name: 'Simantic',
+      domain: 'simantic.dev',
+      personName: 'Seungmin Hong, Ahnaf Shahriar',
+      source: 'incubator',
+      cohortDate: '2026-05-15',
+      provenance: 'Velocity May 2026',
+      sourceMeta: { program: 'velocity' },
+    }])))
+    const row = companyToCrmRow(c)
+    expect(row.company).toBe('Simantic')
+    expect(row.domain).toBe('simantic.dev')
+    expect(row.first_seen).toBe('2026-05-15')
+    expect(companyToCrmText(c)).toContain('Simantic')
+  })
+})
+
+describe('flow discover full feed', () => {
+  it('reports honest reachability ≥70% without hard-filtering founders', () => {
+    const payload = buildIncubatorFlowDiscover(
+      'Canadian AI pre-seed from Velocity DMZ CDL',
+      { id: 'panache_ventures', fundName: 'Panache Ventures', mandate: { geographies: ['Canada'] } },
+    )
+    expect(payload.companies.length).toBeGreaterThanOrEqual(12)
+    expect(payload.meta.reachability.rate).toBeGreaterThanOrEqual(0.7)
+    expect(payload.meta.ledger.withFirstSeen).toBeGreaterThan(0)
+    expect(payload.companies[0].ledger).toBeTruthy()
   })
 })
 

@@ -9,6 +9,8 @@ export default function ReachabilityActions({ reach, compact = false }) {
   const linkedin = reach.primaryLinkedIn
   const email = reach.primaryEmail
 
+  const website = reach.website
+
   if (compact) {
     return (
       <div className="mt-1 flex flex-wrap gap-1.5 text-[10px]">
@@ -31,6 +33,17 @@ export default function ReachabilityActions({ reach, compact = false }) {
             onClick={(e) => e.stopPropagation()}
           >
             {email}
+          </a>
+        )}
+        {!linkedin && !email && website && (
+          <a
+            href={website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-zinc-700 hover:underline"
+            onClick={(e) => e.stopPropagation()}
+          >
+            Website
           </a>
         )}
       </div>

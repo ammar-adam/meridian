@@ -58,9 +58,13 @@ export default function PilotPage() {
 
         <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label="Cohort companies" value={m.cohortCompanies} />
-          <Stat label="Flow-ready (enriched)" value={m.flowReady} />
+          <Stat label="Flow-ready" value={m.flowReady} />
           <Stat label="Community-first" value={`${m.communityFirst} (${Math.round(m.communityShare * 100)}%)`} />
-          <Stat label="Founder reachable" value={`${m.reachable} (${Math.round(m.reachRate * 100)}%)`} />
+          <Stat label="Reachable" value={`${m.reachable} (${Math.round(m.reachRate * 100)}%)`} />
+          <Stat label="With first-seen date" value={m.withFirstSeen} />
+          <Stat label="Verified not-in-index" value={m.verifiedMiss} />
+          <Stat label="Founder handle" value={`${Math.round((m.founderRate || 0) * 100)}%`} />
+          <Stat label="Median freshness" value={m.medianAgeDays != null ? `${m.medianAgeDays}d` : '—'} />
         </div>
 
         <WorkspaceSection title="Measured loop" description={study.thesisBandNote}>
@@ -88,7 +92,7 @@ export default function PilotPage() {
                   <th>Company</th>
                   <th>Founders</th>
                   <th>First seen</th>
-                  <th>Coverage</th>
+                  <th>Coverage (checkable)</th>
                   <th>Reach</th>
                 </tr>
               </thead>
@@ -114,6 +118,11 @@ export default function PilotPage() {
               </tbody>
             </table>
           </div>
+          <p className="mt-2 text-[11px] text-zinc-500">
+            &ldquo;First seen&rdquo; is the community cohort announcement date (cited in each row&rsquo;s provenance).
+            &ldquo;Verified not-in-index&rdquo; means we ran a StartupHub name search and it returned no match — you can repeat it.
+            We do not assert index absence for rows we haven&rsquo;t tested.
+          </p>
         </WorkspaceSection>
 
         <div className="mt-8 flex flex-wrap gap-3">
