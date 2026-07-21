@@ -76,5 +76,6 @@ describe('discover-merge', () => {
     )
     expect(out[0].name).toBe('SCADABLE')
     expect(out[0].fitScore).toBeGreaterThanOrEqual(80)
+    expect(out.find(c => c.name === 'Thin Cohort')).toBeUndefined()
   })
 })

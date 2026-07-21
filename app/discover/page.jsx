@@ -24,7 +24,7 @@ import { filterDemoted, demoteCompany, getDemotedSet } from '@/lib/discover-stat
 import { logDiscoverDemote } from '@/lib/edit-tracker'
 import { applyBehavioralRank } from '@/lib/behavioral-rank'
 
-const EXAMPLE_THESIS = 'AI infrastructure for financial services, Series A, North America'
+const EXAMPLE_THESIS = 'Canadian pre-seed AI and fintech from Waterloo and Toronto accelerators'
 
 function DiscoverContent() {
   const [thesis, setThesis] = useState('')
@@ -328,7 +328,18 @@ function DiscoverContent() {
                 disabled={loading}
                 className="m-textarea"
               />
-              <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
+                <div className="flex flex-wrap gap-2">
+                  {getActiveStrategy(fundProfile)?.thesis && (
+                    <button
+                      type="button"
+                      onClick={() => setThesis(getActiveStrategy(fundProfile).thesis)}
+                      className="m-btn-ghost m-btn-sm"
+                    >
+                      Use fund mandate
+                    </button>
+                  )}
+                </div>
                 <button type="submit" disabled={loading || !thesis.trim()} className="m-btn-primary">
                   Run search
                 </button>
