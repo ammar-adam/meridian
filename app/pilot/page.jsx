@@ -8,6 +8,7 @@ import PageLoader from '@/components/page-loader'
 
 export default function PilotPage() {
   const [study, setStudy] = useState(null)
+  const [benchmark, setBenchmark] = useState(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -15,6 +16,10 @@ export default function PilotPage() {
       .then(r => r.json())
       .then(setStudy)
       .catch(err => setError(err.message || 'Failed to load pilot'))
+    fetch('/api/benchmark')
+      .then(r => r.json())
+      .then(d => { if (d?.enabled) setBenchmark(d) })
+      .catch(() => {})
   }, [])
 
   if (!study && !error) {
@@ -124,6 +129,28 @@ export default function PilotPage() {
             We do not assert index absence for rows we haven&rsquo;t tested.
           </p>
         </WorkspaceSection>
+
+        {benchmark?.stats && (
+          <WorkspaceSection
+            title="Live truth ledger"
+            description="Server-side observation record — accrues from launch, never backdated"
+          >
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <Stat label="Entities on ledger" value={benchmark.stats.entities} />
+              <Stat
+                label="Ledger since"
+                value={benchmark.stats.ledgerSince ? String(benchmark.stats.ledgerSince).slice(0, 10) : '—'}
+              />
+              <Stat label="Index-checked" value={benchmark.stats.entitiesChecked} />
+              <Stat label="Verified misses (dated)" value={benchmark.stats.verifiedMisses} />
+            </div>
+            <p className="mt-2 text-[11px] text-zinc-500">
+              &ldquo;On Meridian since&rdquo; is when our server first recorded the company — separate from the
+              cohort announcement date. Index checks are stored name searches with dates
+              ({(benchmark.stats.indexes || []).join(', ') || 'StartupHub'}); we only claim absence where a dated check exists.
+            </p>
+          </WorkspaceSection>
+        )}
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/flow" className="m-btn-primary">Open Deal Flow</Link>
