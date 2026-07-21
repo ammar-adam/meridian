@@ -17,7 +17,7 @@ Velocity / DMZ / CDL / grants → coverage proof → founder reachability → Br
 - Deal Flow feed + mandate watches + New/Fresh badges
 - Coverage proof on every row (`lib/coverage-proof.js`)
 - Founder reachability ≥70% on Flow-ready rows (`lib/reachability.js`)
-- Digest card + `/api/digest` + Monday cron `/api/cron/flow-digest`
+- Digest card + `/api/digest` + Monday cron route `/api/cron/flow-digest` (external scheduler / Pro)
 - Pilot proof page `/pilot` with measurable wedge stats
 - Flow is Core nav primary; workflow Fund → Flow → Brief → Library → Thesis
 
