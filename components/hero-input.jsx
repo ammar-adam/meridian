@@ -50,10 +50,10 @@ export default function HeroInput({ variant = 'default' }) {
     if (intake.kind === 'thesis') {
       setPendingThesis(text, true)
       if (!hasFundProfile()) {
-        router.push('/fund/setup?next=' + encodeURIComponent('/discover?run=1'))
+        router.push('/fund/setup?next=' + encodeURIComponent('/flow'))
         return
       }
-      router.push('/discover?run=1')
+      router.push('/flow')
       return
     }
 
@@ -89,10 +89,10 @@ export default function HeroInput({ variant = 'default' }) {
     if (payload.kind === 'thesis') {
       setPendingThesis(payload.thesis, true)
       if (!hasFundProfile()) {
-        router.push('/fund/setup?next=' + encodeURIComponent('/discover?run=1'))
+        router.push('/fund/setup?next=' + encodeURIComponent('/flow'))
         return
       }
-      router.push('/discover?run=1')
+      router.push('/flow')
     }
   }
 

@@ -634,10 +634,13 @@ html {
 }
 
 /* Hide Clerk "Development mode" floating badge when using pk_test keys.
-   Required until Vercel NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY / CLERK_SECRET_KEY
-   are pk_live_ / sk_live_ (health.clerkMode === "production"). Harmless once live. */
+   REQUIRED for demos until Vercel uses pk_live_ / sk_live_
+   (health.clerkMode === "production" and health.clerkDemoRisk === false).
+   Then delete this block. Multiple selectors — Clerk changes DOM often. */
 body > div:has(a[href*="dashboard.clerk.com"]),
-body > div:has(a[href*="clerk.com/apps"]) {
+body > div:has(a[href*="clerk.com/apps"]),
+body > div:has(a[href*="clerk.com"]),
+div[data-clerk-component] a[href*="clerk.com"] {
   display: none !important;
 }
 

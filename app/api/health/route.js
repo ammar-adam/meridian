@@ -70,6 +70,7 @@ export async function GET(req) {
   const anthropicPing = anthropicKeyPresent && !quick ? await pingAnthropic() : null
   const anthropicSonnetPing = anthropicKeyPresent && !quick ? await pingAnthropicSonnet() : null
   const clerkPk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || ''
+  const clerkMode = clerkPk.startsWith('pk_live_') ? 'production' : clerkPk ? 'development' : 'none'
 
   return Response.json({
     ok: true,
@@ -84,11 +85,15 @@ export async function GET(req) {
     pitchbookConfigured: isPitchbookConfigured(),
     database: db,
     clerk,
-    clerkMode: clerkPk.startsWith('pk_live_') ? 'production' : clerkPk ? 'development' : 'none',
+    clerkMode,
+    clerkDemoRisk: clerkMode === 'development',
+    slackDigest: Boolean(process.env.SLACK_WEBHOOK_URL?.trim()),
     features: {
       serverPdf: pdfEnabled,
       shareLinks: isShareEnabled(),
       cloudSync: db && clerk,
+      flowDigest: true,
+      coverageProof: true,
     },
   })
 }

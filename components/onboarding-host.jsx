@@ -24,8 +24,8 @@ export default function OnboardingHost() {
     markWelcomeDone()
     setOpen(false)
     // No active fund yet → fund setup; otherwise Brief with empty URL
-    if (!getFundProfile()) router.push('/fund/setup?next=/brief')
-    else router.push('/brief')
+    if (!getFundProfile()) router.push('/fund/setup?next=/flow')
+    else router.push('/flow')
   }
 
   return (

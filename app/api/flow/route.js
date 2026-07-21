@@ -1,5 +1,5 @@
 import { enforceRateLimit } from '@/lib/api-guard'
-import { buildIncubatorFastDiscover, wantsIncubatorFastPath } from '@/lib/discover-fast'
+import { buildIncubatorFlowDiscover } from '@/lib/discover-fast'
 
 export const maxDuration = 30
 
@@ -22,10 +22,7 @@ export async function POST(req) {
     return Response.json({ error: 'Mandate thesis required' }, { status: 400 })
   }
 
-  // Prefer community fast path; fall back to same builder for any thesis so Flow always works.
-  const payload = wantsIncubatorFastPath(text, fundContext)
-    ? buildIncubatorFastDiscover(text, fundContext)
-    : buildIncubatorFastDiscover(text, fundContext)
+  const payload = buildIncubatorFlowDiscover(text, fundContext)
 
   return Response.json({
     companies: payload.companies,

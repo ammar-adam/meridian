@@ -26,6 +26,9 @@ import {
   getLastVisit,
   flowSummary,
 } from '@/lib/mandate-watch'
+import { coverageSummary } from '@/lib/coverage-proof'
+import { reachabilitySummary } from '@/lib/reachability'
+import FlowDigestCard from '@/components/flow-digest-card'
 
 function formatVisit(iso) {
   if (!iso) return null
@@ -176,8 +179,11 @@ function FlowContent() {
   }
 
   const summary = useMemo(() => flowSummary(companies || []), [companies])
+  const coverage = useMemo(() => coverageSummary(companies || []), [companies])
+  const reach = useMemo(() => reachabilitySummary(companies || []), [companies])
   const newRows = useMemo(() => (companies || []).filter(c => c.isNew), [companies])
   const feedRows = companies || []
+  const thesisText = watch?.thesis || getActiveStrategy(fund)?.thesis || ''
 
   if (!hasFundProfile()) {
     return (
@@ -203,8 +209,9 @@ function FlowContent() {
         [
           fund?.fundName,
           summary.total ? `${summary.total} companies` : null,
+          coverage.communityFirst ? `${coverage.communityFirst} pre-index` : null,
+          reach.reachable ? `${reach.reachable} reachable` : null,
           summary.newCount ? `${summary.newCount} new` : null,
-          summary.freshCount ? `${summary.freshCount} fresh cohorts` : null,
           lastVisit ? `seen ${formatVisit(lastVisit)}` : 'first check',
         ].filter(Boolean).join(' · ')
       }
@@ -230,20 +237,35 @@ function FlowContent() {
     >
       <WorkspacePage width="wide">
         <div className="m-flow-hero mb-6">
-          <p className="m-kicker mb-1">Why teams subscribe</p>
+          <p className="m-kicker mb-1">Data wedge</p>
           <h2 className="text-[20px] font-semibold tracking-tight text-zinc-900">
-            Net-new Canadian companies against your thesis — before Harmonic indexes them.
+            Canadian community companies — founders, domains, coverage proof — before public indexes.
           </h2>
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-zinc-600">
-            Flow is the product: continuous community deal flow with founders, domains, and provenance.
-            Briefs are how you forward a company. Watch your mandate once — come back for what&apos;s new.
+            Velocity, DMZ, CDL cohorts with first-seen dates and reachability. Harmonic indexes what&apos;s already public;
+            Meridian surfaces what still lives inside communities. Watch once — digest what&apos;s new.
           </p>
+          {feedRows.length > 0 && (
+            <p className="mt-3 font-mono text-[12px] text-emerald-800">
+              {coverage.communityFirst}/{coverage.total} community-first ·{' '}
+              {Math.round((reach.rate || 0) * 100)}% founder-reachable ·{' '}
+              {coverage.withCohort} with cohort dates
+            </p>
+          )}
           {!watch && (
             <button type="button" onClick={handleWatch} className="m-btn-primary mt-4">
               Watch {fund?.fundName || 'mandate'}
             </button>
           )}
         </div>
+
+        {feedRows.length > 0 && (
+          <FlowDigestCard
+            fundName={fund?.fundName || 'Fund'}
+            thesis={thesisText}
+            companies={feedRows}
+          />
+        )}
 
         {error && <p className="m-alert-error mb-4">{error}</p>}
 

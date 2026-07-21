@@ -1,31 +1,34 @@
-# Why Meridian is a paid product
+# Meridian as a paid product — Deal Flow is the habit
 
-## Honest starting point
+## What funds pay for
 
-AI memos alone are not worth a subscription — anyone with Claude can fake that demo.
-Funds pay for **deal flow they cannot get elsewhere**, delivered on a habit loop.
+Not memos. **Continuous Canadian community deal flow** against their mandate:
+Velocity / DMZ / CDL / grants → coverage proof → founder reachability → Brief → pursue.
 
-## What we ship as the paid object
+## Product loop
 
-**Deal Flow (`/flow`)** — watch your fund mandate against community sources (Velocity, DMZ, CDL, grants). Come back for **net-new** and **fresh cohort** companies. Brief is the forward action, not the product.
+1. Choose fund + watch mandate (`/flow`)
+2. See net-new / fresh cohort companies with **Pre-index** coverage + LinkedIn/email reach
+3. Copy or Slack the **Monday digest**
+4. Brief what matters → Share → Pursue → Thesis compounds
 
-| Habit | Product surface |
-|-------|-----------------|
-| Watch mandate once | `lib/mandate-watch.js` + Flow CTA |
-| Open weekly for what’s new | `/flow` New / Fresh badges |
-| Brief a company | Brief → memo thesis band |
-| Decide | Pursue/pass → Learn |
+## Shipped
 
-## Pricing shape (post-beta)
+- Deal Flow feed + mandate watches + New/Fresh badges
+- Coverage proof on every row (`lib/coverage-proof.js`)
+- Founder reachability ≥70% on Flow-ready rows (`lib/reachability.js`)
+- Digest card + `/api/digest` + Monday cron `/api/cron/flow-digest`
+- Pilot proof page `/pilot` with measurable wedge stats
+- Flow is Core nav primary; workflow Fund → Flow → Brief → Library → Thesis
 
-Aligns with `prd.md` tiers — sell **continuous Canadian / community deal flow**, briefs included:
+## Ops to turn on
 
-- Seat: Deal Flow watch + Discover + Briefs
-- Team: shared watches + GP share
-- Firm: more seats + priority cohort refresh
+1. Vercel: `pk_live_` / `sk_live_` Clerk keys → confirm `clerkMode: production` → remove CSS hide
+2. `SLACK_WEBHOOK_URL` + `CRON_SECRET` for Monday Slack digests
+3. Optional `DIGEST_WATCHES` JSON for which mandates the cron watches
 
-## What still makes revenue real
+## Next (post-demo)
 
-1. **Living data** — weekly cohort refresh so “New” is not theoretical
-2. **Email digest** — push the weekly delta (next sprint)
-3. **Billing** — Stripe when a fund says yes after using Flow for 2 weeks
+- Persist watches server-side (Neon) so digests aren’t only default Panache/Sagard
+- Verified founder emails (not pattern guesses) via enrichment pass
+- Live StartupHub miss badge refreshed nightly for new cohort names
