@@ -14,16 +14,16 @@ const NAV_GROUPS = [
   {
     label: 'Core',
     items: [
-      { href: '/flow', label: 'Deal Flow', desc: 'What’s new for your mandate', primary: true },
-      { href: '/discover', label: 'Discover', desc: 'One-off thesis search' },
+      { href: '/discover', label: 'Discover', desc: 'Thesis → ranked companies', primary: true },
       { href: '/brief', label: 'Brief', desc: 'URL → memo' },
       { href: '/library', label: 'Library', desc: 'Saved briefs', badgeKey: 'pendingReview' },
-      { href: '/thesis', label: 'Learn', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
+      { href: '/thesis', label: 'Thesis', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
     ],
   },
   {
     label: 'More',
     items: [
+      { href: '/flow', label: 'Deal Flow', desc: 'What’s new for your mandate' },
       { href: '/lists', label: 'Lists', desc: 'Batch briefs' },
       { href: '/team', label: 'Team', desc: 'Shared links (beta)' },
     ],

@@ -5,11 +5,10 @@ import { usePathname } from 'next/navigation'
 
 const STEPS = [
   { id: 'fund', label: 'Fund', href: '/fund', paths: ['/fund', '/fund/setup'] },
-  { id: 'flow', label: 'Flow', href: '/flow', paths: ['/flow'] },
   { id: 'discover', label: 'Discover', href: '/discover', paths: ['/discover'] },
   { id: 'brief', label: 'Brief', href: '/brief', paths: ['/brief'] },
   { id: 'review', label: 'Library', href: '/library', paths: ['/library', '/memo'] },
-  { id: 'learn', label: 'Learn', href: '/thesis', paths: ['/thesis'] },
+  { id: 'thesis', label: 'Thesis', href: '/thesis', paths: ['/thesis'] },
 ]
 
 function stepIndex(pathname) {
