@@ -10,11 +10,14 @@
 ## Before you hit record
 
 1. Select your fund in the switcher (Panache if telling the Canada story).
-2. Open Discover → paste a Canadian pre-seed thesis (or **Use fund mandate**) → **Run search** once and wait (~1–3 min cold). Refresh so the second open is cached.
-3. Confirm the first screen is **Incubator · high** rows with **Founders:** and domains. Scroll only those rows on tape.
-4. Start Brief on one domain company (e.g. scadable.com) so it is mid-flight or finished before the close.
-5. Optional foil tab: https://getfundingfromavc.vercel.app (GiveFund = fabricated).
-6. Do **not** open Team, show the Status panel, or claim EverTrace / PitchBook / national registry coverage.
+2. Open Discover → paste a Canadian pre-seed thesis (or **Use fund mandate**) → **Run search**.
+   - First paint is **instant** (community incubators). Keep rolling while “refining…” finishes in the background.
+3. Confirm the first screen is **Incubator** rows with **Founders:** and domains.
+4. Click Brief on one domain company — memo opens after scrape (~2s) and Instant generate (~5–15s). Talk over “Drafting the thesis band.”
+5. Optional foil tab: https://getfundingfromavc.vercel.app
+6. Do **not** open Team or claim EverTrace / PitchBook / national registry coverage.
+
+**No pre-cache required** — Discover fast-path and Instant Brief are the magic.
 
 ---
 
@@ -48,7 +51,7 @@ Stop.
 
 ## Hard don’ts
 
-- Scroll past thin / domain-null incubator stubs (they’re filtered on Canadian theses — still don’t invent stats)
+- Dead silence on Brief — Instant paints fast; talk over thesis-band drafting if still finishing
+- Scroll past thin / domain-null incubator stubs
 - “We replace PitchBook / Harmonic”
 - EverTrace live, national Corporations Canada, WHOIS rush
-- Dead silence for a 60s Brief — talk over scrape/thesis-band progress or cut
