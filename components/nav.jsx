@@ -6,7 +6,7 @@ import AuthBar from '@/components/auth-bar'
 
 export default function Nav({ variant = 'default' }) {
   const pathname = usePathname()
-  const inWorkspace = ['/discover', '/brief', '/lists', '/library', '/thesis', '/fund'].some(
+  const inWorkspace = ['/discover', '/flow', '/brief', '/lists', '/library', '/thesis', '/fund'].some(
     p => pathname === p || pathname.startsWith(p + '/')
   )
   const isLanding = variant === 'landing'
@@ -37,8 +37,8 @@ export default function Nav({ variant = 'default' }) {
                 </Link>
               </>
             )}
-            <Link href="/discover" className={isLanding ? 'm-btn-glow' : 'm-btn-primary'}>
-              Open Discover
+            <Link href="/flow" className={isLanding ? 'm-btn-glow' : 'm-btn-primary'}>
+              Open Deal Flow
             </Link>
           </div>
         )}

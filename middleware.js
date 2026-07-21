@@ -24,6 +24,7 @@ const isPublicRoute = createRouteMatcher([
   '/library(.*)',
   '/lists(.*)',
   '/discover(.*)',
+  '/flow(.*)',
   '/thesis(.*)',
   '/share(.*)',
   '/sign-in(.*)',
@@ -38,6 +39,8 @@ const isPublicRoute = createRouteMatcher([
   '/api/share(.*)',
   '/api/brief(.*)',
   '/api/batch(.*)',
+  '/api/source(.*)',
+  '/api/flow(.*)',
   '/api/founder-email(.*)',
   '/api/cron(.*)',
 ])

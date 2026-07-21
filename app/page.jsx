@@ -22,11 +22,11 @@ export default function LandingPage() {
                   Find early Canadian companies Harmonic still can&apos;t see — then brief them against your thesis.
                 </p>
                 <p className="m-landing-lead">
-                  Velocity, DMZ, CDL, grants, and registry signals structured with founders and provenance. The memo is how you forward it.
+                  Continuous deal flow from Velocity, DMZ, CDL and grants — watch your mandate, get net-new companies between visits, brief what matters.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-3">
-                  <Link href="/discover" className="m-btn-glow">
-                    Open Discover
+                  <Link href="/flow" className="m-btn-glow">
+                    Open Deal Flow
                   </Link>
                   <Link href="/fund" className="m-btn-ghost-landing">
                     Choose your fund
@@ -48,17 +48,17 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
-              Data first. Memo second.
+              A subscription to early deal flow — not another AI memo toy.
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed text-zinc-500">
-              Early deal flow lives on cohort pages and grant lists — not in US-centric startup APIs. Meridian structures it for your mandate.
+              Funds pay when Meridian keeps finding companies they can&apos;t get from Harmonic. Watch once. Come back for what&apos;s new.
             </p>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-3">
-            <Step num="01" title="Choose your fund" desc="Pick a profile or drop your fund URL. Mandate and portfolio drive ranking and the thesis band." />
-            <Step num="02" title="Discover or paste" desc="Thesis-ranked community companies with founders and provenance — or Brief any URL you already have." />
-            <Step num="03" title="Forward the brief" desc="One-pager with a fund-native thesis band. Pursue or pass — Meridian learns what you bet on." />
+            <Step num="01" title="Watch your mandate" desc="Meridian monitors community sources against your thesis — Velocity, DMZ, CDL, grants." />
+            <Step num="02" title="See what’s new" desc="Net-new companies with founders and domains between visits. Fresh cohort badges when data lands." />
+            <Step num="03" title="Brief & decide" desc="One-pager with a fund-native thesis band. Pursue or pass — signals compound." />
           </div>
         </div>
       </section>
@@ -75,11 +75,11 @@ export default function LandingPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-2">
-            <Link href="/discover" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
+            <Link href="/flow" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
               <span className="m-bento-icon">◈</span>
-              <h3 className="m-bento-title">Discover</h3>
-              <p className="m-bento-desc">Thesis search over incubators, grants, and registry signals — Canada-first when your mandate is.</p>
-              <span className="m-bento-link">Run Discover →</span>
+              <h3 className="m-bento-title">Deal Flow</h3>
+              <p className="m-bento-desc">What’s new against your mandate from community sources — the reason to open Meridian every week.</p>
+              <span className="m-bento-link">Open Flow →</span>
             </Link>
 
             <Link href="/brief" className="group m-bento lg:col-span-5">

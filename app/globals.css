@@ -682,3 +682,7 @@ body > div:has(a[href*="clerk.com/apps"]) {
   50% { opacity: 0.45; transform: scale(0.85); }
 }
 
+.m-flow-hero {
+  @apply rounded-xl border border-zinc-200 bg-gradient-to-br from-white to-emerald-50/40 px-6 py-5;
+}
+
