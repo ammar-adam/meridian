@@ -640,3 +640,45 @@ body > div:has(a[href*="dashboard.clerk.com"]),
 body > div:has(a[href*="clerk.com/apps"]) {
   display: none !important;
 }
+
+/* ── Magic demo motion ─────────────────────────────────────────────────── */
+.m-magic-refine {
+  @apply flex items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50/80 px-4 py-2.5 text-[12px] text-emerald-900;
+  animation: m-fade-in 0.35s ease-out;
+}
+.m-magic-refine-dot {
+  @apply h-2 w-2 shrink-0 rounded-full bg-emerald-500;
+  animation: m-pulse-dot 1.2s ease-in-out infinite;
+}
+.m-magic-table {
+  animation: m-rise-in 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.m-magic-table tbody tr {
+  animation: m-row-in 0.4s ease-out both;
+}
+.m-magic-table tbody tr:nth-child(1) { animation-delay: 0.02s; }
+.m-magic-table tbody tr:nth-child(2) { animation-delay: 0.05s; }
+.m-magic-table tbody tr:nth-child(3) { animation-delay: 0.08s; }
+.m-magic-table tbody tr:nth-child(4) { animation-delay: 0.11s; }
+.m-magic-table tbody tr:nth-child(5) { animation-delay: 0.14s; }
+.m-magic-table tbody tr:nth-child(6) { animation-delay: 0.17s; }
+.m-magic-table tbody tr:nth-child(7) { animation-delay: 0.2s; }
+.m-magic-table tbody tr:nth-child(8) { animation-delay: 0.23s; }
+
+@keyframes m-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes m-rise-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes m-row-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes m-pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}
+

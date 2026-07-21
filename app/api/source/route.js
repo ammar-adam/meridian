@@ -15,6 +15,7 @@ import {
 import { isCanadianMandate, normalizeGeographies } from '@/lib/geography-utils'
 import { evertraceSignalToDiscoverSeed } from '@/lib/evertrace'
 import { runSourcingAdapters } from '@/lib/sourcing/run-adapters'
+import { buildIncubatorFastDiscover, wantsIncubatorFastPath } from '@/lib/discover-fast'
 
 export const maxDuration = 300
 
@@ -30,7 +31,7 @@ export async function POST(req) {
   const limited = await enforceRateLimit(req, 'source')
   if (limited) return limited
 
-  const { thesis, fundContext, forceRegenerate } = await req.json()
+  const { thesis, fundContext, forceRegenerate, fastPath } = await req.json()
 
   if (!thesis?.trim()) {
     return Response.json({ error: 'Thesis is required' }, { status: 400 })
@@ -38,6 +39,13 @@ export async function POST(req) {
 
   if (!fundContext?.fundName) {
     return Response.json({ error: 'Configure your fund profile before sourcing' }, { status: 400 })
+  }
+
+  // Magical first paint: curated incubator seeds only — no API keys, &lt;100ms.
+  if (fastPath && wantsIncubatorFastPath(thesis, fundContext)) {
+    const payload = buildIncubatorFastDiscover(thesis, fundContext)
+    console.log('[source] fast-path', thesis.slice(0, 40), `→ ${payload.companies.length} incubators`)
+    return Response.json({ ...payload, cached: false })
   }
 
   if (!process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY === 'your_key_here') {

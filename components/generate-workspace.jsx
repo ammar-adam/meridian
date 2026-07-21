@@ -11,9 +11,7 @@ import {
   runMemoPipeline,
   fetchScrapePreview,
   prefetchResearch,
-  resolveResearchResult,
   resolveEffectiveResearchMode,
-  needsPerplexity,
   urlsMatchForPrefetch,
 } from '@/lib/memo-pipeline'
 import { buildInstantResearch } from '@/lib/instant-research'
@@ -174,15 +172,15 @@ export default function GenerateWorkspace() {
 
     const targetUrl = validated.url
     const mode = deep ? 'deep' : researchMode
-    const scrapedForCheck = scrapedCache || previewScraped
-    const perplexityRequired = needsPerplexity(mode, scrapedForCheck)
+    // Auto/Quick paint Instant first — Perplexity only required for Deep.
+    const perplexityRequired = mode === 'deep'
 
     if (apiHealth && !apiHealth.anthropic) {
       setError('API keys not configured — add ANTHROPIC_API_KEY to .env.local')
       return
     }
     if (apiHealth && perplexityRequired && !apiHealth.perplexity) {
-      setError('PERPLEXITY_API_KEY required for Quick/Deep research — or use Instant mode')
+      setError('PERPLEXITY_API_KEY required for Deep research — or use Auto/Instant')
       return
     }
 
@@ -219,21 +217,11 @@ export default function GenerateWorkspace() {
       }))
 
       const effectiveMode = resolveEffectiveResearchMode(mode, scraped)
-      const prefetched = urlsMatchForPrefetch(targetUrl, prefetchRef.current.url)
-        && prefetchRef.current.mode === effectiveMode
-        ? prefetchRef.current.research
-        : null
 
+      // Magic path: paint Instant memo immediately after scrape (~2s).
+      // Skip waiting for Perplexity before navigation — Instant research is sync.
       if (effectiveMode !== 'deep') {
-        const researchResult = await resolveResearchResult(targetUrl, {
-          researchMode: mode,
-          scraped,
-          prefetchedResearch: prefetched,
-          signal: abortRef.current.signal,
-          forceRegenerate,
-        })
-        setStepStatus({ scrape: 'done', research: 'done', generate: 'active' })
-
+        const instantResearch = buildInstantResearch(scraped)
         const draft = buildDraftMemoFromScrape(scraped, fundContext)
         const memoId = buildProvisionalMemoId(scraped, targetUrl)
         sessionStorage.setItem('memoData', JSON.stringify(draft))
@@ -242,13 +230,13 @@ export default function GenerateWorkspace() {
         sessionStorage.setItem('memoSource', 'generating')
         sessionStorage.setItem(MEMO_PENDING_BRIEF_KEY, JSON.stringify({
           url: targetUrl,
-          research: researchResult.research,
-          researchPasses: researchResult.passes,
+          research: instantResearch,
+          researchPasses: [],
           scraped,
           fundContext,
           sourceContext,
           forceRegenerate,
-          researchMode: mode,
+          researchMode: 'instant',
           memoId,
         }))
         sessionStorage.setItem(MEMO_GENERATING_KEY, '1')
@@ -257,6 +245,11 @@ export default function GenerateWorkspace() {
         setStepStatus({})
         return
       }
+
+      const prefetched = urlsMatchForPrefetch(targetUrl, prefetchRef.current.url)
+        && prefetchRef.current.mode === effectiveMode
+        ? prefetchRef.current.research
+        : null
 
       const { memoData, qualityGate, memoId } = await runMemoPipeline({
         url: targetUrl,

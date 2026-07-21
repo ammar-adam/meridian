@@ -40,15 +40,39 @@ function DiscoverContent() {
   const [batchProgress, setBatchProgress] = useState(null)
   const [pipelineVersion, setPipelineVersion] = useState(0)
   const [demoteVersion, setDemoteVersion] = useState(0)
+  const [refining, setRefining] = useState(false)
   const abortRef = useRef(null)
   const batchResumedRef = useRef(false)
+  const refineAbortRef = useRef(null)
   const router = useRouter()
   const searchParams = useSearchParams()
 
+  const applyDiscoverPayload = useCallback((thesisText, data) => {
+    const profile = getFundProfile()
+    const strategy = profile ? getActiveStrategy(profile) : null
+    const trackingId = profile && strategy ? getTrackingId(profile, strategy) : 'guest'
+    const ranked = applyBehavioralRank(data.companies || [], {
+      trackingId,
+      thesis: thesisText.trim(),
+    })
+    setCompanies(ranked)
+    setMeta({ ...data.meta, cached: data.cached })
+    if (!data.meta?.partial) {
+      saveSourceResults(thesisText.trim(), ranked, { ...data.meta, cached: data.cached }, profile?.id, strategy?.id)
+    }
+    return ranked
+  }, [])
+
   const runSearch = useCallback(async (thesisText, { forceRegenerate = false } = {}) => {
     const fundContext = resolveApiFundContext()
+    if (!fundContext?.fundName || fundContext.isGuest) {
+      setError('Choose a fund first — switcher above or Fund settings.')
+      return
+    }
 
+    refineAbortRef.current?.abort()
     setLoading(true)
+    setRefining(false)
     setError('')
     if (!forceRegenerate) {
       setCompanies(null)
@@ -57,7 +81,30 @@ function DiscoverContent() {
       setSectorFilter('all')
     }
 
+    let paintedFast = false
     try {
+      // Instant community paint (&lt;1s) — then silent full refine in background.
+      const fastRes = await fetch('/api/source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thesis: thesisText.trim(),
+          fundContext,
+          fastPath: true,
+        }),
+      })
+      if (fastRes.ok) {
+        const fastData = await fastRes.json()
+        if (fastData.companies?.length) {
+          applyDiscoverPayload(thesisText, fastData)
+          paintedFast = true
+          setLoading(false)
+          setRefining(true)
+        }
+      }
+
+      const ac = new AbortController()
+      refineAbortRef.current = ac
       const res = await fetch('/api/source', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -66,28 +113,24 @@ function DiscoverContent() {
           fundContext,
           forceRegenerate,
         }),
+        signal: ac.signal,
       })
       if (!res.ok) {
         const err = await res.json()
-        throw new Error(err.error || 'Search failed')
+        if (!paintedFast) throw new Error(err.error || 'Search failed')
+        setError(err.error || 'Refine failed — showing community results')
+        return
       }
       const data = await res.json()
-      const profile = getFundProfile()
-      const strategy = profile ? getActiveStrategy(profile) : null
-      const trackingId = profile && strategy ? getTrackingId(profile, strategy) : 'guest'
-      const ranked = applyBehavioralRank(data.companies || [], {
-        trackingId,
-        thesis: thesisText.trim(),
-      })
-      setCompanies(ranked)
-      setMeta({ ...data.meta, cached: data.cached })
-      saveSourceResults(thesisText.trim(), ranked, { ...data.meta, cached: data.cached }, profile?.id, strategy?.id)
+      applyDiscoverPayload(thesisText, data)
     } catch (err) {
-      setError(err.message || 'Something went wrong')
+      if (err.name === 'AbortError') return
+      if (!paintedFast) setError(err.message || 'Something went wrong')
     } finally {
       setLoading(false)
+      setRefining(false)
     }
-  }, [])
+  }, [applyDiscoverPayload])
 
   function loadSavedForContext() {
     const profile = getFundProfile()
@@ -120,14 +163,6 @@ function DiscoverContent() {
     window.addEventListener('meridian-context-change', onCtx)
     return () => window.removeEventListener('meridian-context-change', onCtx)
   }, [runSearch, searchParams])
-
-  useEffect(() => {
-    const profile = getFundProfile()
-    const strategy = getActiveStrategy(profile)
-    if (strategy?.thesis) {
-      setThesis(prev => prev || strategy.thesis.slice(0, 500))
-    }
-  }, [])
 
   useEffect(() => {
     fetchActiveBatchJob().then(job => {
@@ -267,9 +302,10 @@ function DiscoverContent() {
   const subtitle = meta
     ? [
       `${filtered.length} results`,
-      meta.startuphubConfigured ? `hub ${meta.startuphubCount}` : 'hub off',
+      refining ? 'refining…' : meta.partial ? 'instant · community' : null,
+      meta.startuphubConfigured ? `hub ${meta.startuphubCount}` : null,
       meta.researchPasses?.length ? `${meta.researchPasses.length} web passes` : null,
-      meta.canadianMandate ? `CA ${meta.canadianResultCount ?? 0}` : null,
+      meta.canadianMandate ? `CA ${meta.canadianResultCount ?? meta.incubatorResultCount ?? 0}` : null,
       meta.thin ? 'thin' : null,
       meta.cached ? 'cached' : null,
     ].filter(Boolean).join(' · ')
@@ -357,16 +393,22 @@ function DiscoverContent() {
         </WorkspacePage>
       )}
 
-      {loading && (
+      {loading && !companies && (
         <div className="m-loader">
           <div className="m-loader-bar"><div /></div>
-          <p className="text-[13px] font-medium">Running discover pipeline</p>
-          <p className="mt-1 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>parse → databases → multi-pass web research → rank</p>
+          <p className="text-[13px] font-medium">Surfacing community companies</p>
+          <p className="mt-1 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>incubators → grants → rank</p>
         </div>
       )}
 
       {companies && (
         <WorkspacePage width="wide">
+          {refining && (
+            <div className="m-magic-refine mb-4">
+              <span className="m-magic-refine-dot" />
+              Ranking against web research in the background — table stays live.
+            </div>
+          )}
           <BatchProgressPanel progress={batchProgress} running={batchRunning} onCancel={() => { abortRef.current?.abort(); setBatchRunning(false) }} />
           <FilterBar
             filters={[
@@ -389,7 +431,7 @@ function DiscoverContent() {
               {meta.startuphubRawCount > meta.startuphubCount ? ` (${meta.startuphubRawCount - meta.startuphubCount} filtered by geography)` : ''}.
             </div>
           )}
-          <div className="m-card overflow-hidden">
+          <div className="m-card overflow-hidden m-magic-table">
             <SourceTable
               companies={filtered}
               onGenerateMemo={generateMemo}
