@@ -42,11 +42,29 @@
     "app/api/cron/batch-tick/route.js": {
       "maxDuration": 300
     },
+    "app/api/cron/flow-digest/route.js": {
+      "maxDuration": 60
+    },
+    "app/api/digest/route.js": {
+      "maxDuration": 30
+    },
+    "app/api/flow/route.js": {
+      "maxDuration": 30
+    },
+    "app/api/pilot/route.js": {
+      "maxDuration": 15
+    },
     "app/api/team/route.js": {
       "maxDuration": 15
     },
     "app/api/workspace/route.js": {
       "maxDuration": 30
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/flow-digest",
+      "schedule": "0 14 * * 1"
+    }
+  ]
 }

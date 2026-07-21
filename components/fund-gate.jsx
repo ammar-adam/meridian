@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { hasFundProfile } from '@/lib/fund-profile'
 
-const ALWAYS_OPEN = ['/', '/brief', '/memo', '/library', '/lists', '/discover', '/flow', '/thesis', '/fund', '/fund/setup', '/team']
+const ALWAYS_OPEN = ['/', '/brief', '/memo', '/library', '/lists', '/discover', '/flow', '/pilot', '/thesis', '/fund', '/fund/setup', '/team']
 
 function isAlwaysOpen(pathname) {
   if (ALWAYS_OPEN.includes(pathname)) return true

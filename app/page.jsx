@@ -22,11 +22,15 @@ export default function LandingPage() {
                   Find early Canadian companies Harmonic still can&apos;t see — then brief them against your thesis.
                 </p>
                 <p className="m-landing-lead">
-                  Continuous deal flow from Velocity, DMZ, CDL and grants — watch your mandate, get net-new companies between visits, brief what matters.
+                  Continuous deal flow from Velocity, DMZ, CDL and grants — coverage proof on every row,
+                  founder reachability, Monday digests. Watch your mandate. Brief what matters.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-3">
                   <Link href="/flow" className="m-btn-glow">
                     Open Deal Flow
+                  </Link>
+                  <Link href="/pilot" className="m-btn-ghost-landing">
+                    See pilot proof
                   </Link>
                   <Link href="/fund" className="m-btn-ghost-landing">
                     Choose your fund

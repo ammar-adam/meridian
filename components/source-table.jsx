@@ -5,6 +5,8 @@ import { getFundProfile } from '@/lib/fund-profile'
 import { filterCompaniesNeedingBrief } from '@/lib/memo-library'
 import { estimateBatchCost } from '@/lib/cost-estimate'
 import { isPowerBatchEnabled, setPowerBatchEnabled } from '@/lib/discover-state'
+import CoverageProof from '@/components/coverage-proof'
+import ReachabilityActions from '@/components/reachability-actions'
 
 function FitBadge({ score }) {
   const cls = score >= 80 ? 'm-badge-high' : score >= 60 ? 'm-badge-mid' : 'm-badge-low'
@@ -256,6 +258,8 @@ export default function SourceTable({
                     source={c.source}
                     personName={c.personName}
                   />
+                  <CoverageProof coverage={c.coverage} />
+                  <ReachabilityActions reach={c.reach} compact />
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
                 <td>
@@ -266,7 +270,10 @@ export default function SourceTable({
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.geography || '—'}</td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.sector || '—'}</td>
                 <td>
-                  <SourceBadge source={c.source} unverified={c.unverified} sourceConfidence={c.sourceConfidence} />
+                  <div className="flex flex-col gap-1">
+                    <SourceBadge source={c.source} unverified={c.unverified} sourceConfidence={c.sourceConfidence} />
+                    <CoverageProof coverage={c.coverage} compact />
+                  </div>
                 </td>
                 <td>
                   <div className="flex gap-1">
