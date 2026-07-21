@@ -135,7 +135,14 @@ Creator shares `/share/[id]` → GP clicks Pursue / Pass / Need more info → ou
 
 **Clerk (production):** On Vercel, set `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY` to `pk_live_…` / `sk_live_…` (not `pk_test_…`). Confirm `/api/health` reports `clerkMode: "production"` and `clerkDemoRisk: false`, then remove the CSS hide block in `app/globals.css`. Until live keys are set, that CSS hide remains required. Sidebar Status only surfaces failing *required* services (Claude / Research / Database); optional APIs like PitchBook are not advertised when off.
 
-**Monday digest:** Set `SLACK_WEBHOOK_URL` + `CRON_SECRET`. `vercel.json` schedules `GET /api/cron/flow-digest` Mondays 14:00 UTC (Pro cron). From the product, Flow → “Send to Slack” / Copy digest works without cron.
+**Monday digest:** Set `SLACK_WEBHOOK_URL` + `CRON_SECRET`. From the product, Flow → “Send to Slack” / Copy digest works without cron. For a weekly job, schedule:
+
+```
+GET https://meridian-eight-sandy.vercel.app/api/cron/flow-digest
+Authorization: Bearer <CRON_SECRET>
+```
+
+(Mondays preferred. Vercel Hobby cannot reliably ship `crons` in `vercel.json` — use an external scheduler.)
 
 Production: **https://meridian-eight-sandy.vercel.app**
 
