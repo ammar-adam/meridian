@@ -123,6 +123,54 @@ visible in pipeline health.
 
 ---
 
+## Phase 2b — Data layer depth (the pre-announcement tier)
+
+Watchers make the data *fresh*; this phase makes it *deep and early*. Cohort
+announcements are semi-public — an associate can read the Velocity blog. The data
+that triggers a renewal is the tier **before** any announcement exists. Three depth
+workstreams, each with a hard target:
+
+**1. The pre-announcement signal layer (Tier 0).**
+The earliest legally-clean signals a company emits, none of which any US-centric tool
+computes for Canada:
+
+| Signal | Source | Why it's early |
+|---|---|---|
+| New incorporation | Corporations Canada / Ontario Business Registry deltas | Exists weeks-to-months before a website |
+| New domain registration | `.ca` + relevant gTLD registration deltas | The first public artifact most startups create |
+| **Incorporation × domain × ecosystem-name match** | Cross-reference of the two above against ecosystem-adjacent founder/company names | The compound signal — *this specific person just incorporated and bought a domain* — is pre-announcement by definition |
+| Grant/IRAP award | Open-data CSV deltas | Awarded before press exists |
+| Community signal | Hack the North winners, WVG/Techyon-adjacent builders, Velocity pre-cohort — sourced through the founder's own network, entered as `entry_method='manual'` with named provenance | The relationship moat, structured. Manual is acceptable *here only* because access is the moat; everywhere else manual entry is a pipeline failure |
+
+Tier 0 rows render with their own class — "Pre-announcement · signal-based" — and are
+the headline of the product: companies that exist nowhere else *at all*, not just
+"not yet in Harmonic."
+
+**2. Entity resolution hardened into a real system.**
+`lib/sourcing/entity-resolver.js` graduates from ~100-row de-dupe to the core engine:
+probabilistic person↔company linking across all sources, brand-collision and
+foundation-name filters as tested code, per-fact confidence scoring that feeds the
+render-tier rules, and a merge-history so a resolved entity's receipt shows every
+source that contributed. Resolution accuracy gets its own nightly audit sample.
+
+**3. Enrichment waterfall to full depth on every rendered row.**
+A row isn't "flow-ready" until it has: confirmed founders, stage signal, one-liner,
+verified contact channel or warm path, and index-check status. The waterfall:
+company page → cohort page → enrichment API (verified email) → attestation request
+(Phase 3). Rows that stall in the waterfall stay in the internal queue — they never
+render partially-enriched.
+
+**Depth targets (90 days from Phase 2 start):**
+- 66 → **500+ verified entities**, ≥30% carrying at least one Tier 0 signal
+- ≥95% of rendered rows fully enriched per the definition above
+- Median days-before-index **> 30** on Tier 0 rows (measured by Phase 2 index checks)
+
+**Gate 2b:** at least one company surfaced by Tier 0 signals is *personally verified
+as real and pre-announcement* (the test from `docs/data-sourcing-wedge-vision.md`),
+and depth targets are on a visible trajectory in pipeline health.
+
+---
+
 ## Phase 3 — Founder attestation (data that maintains itself)
 
 The structural fix for the measured 33% error rate — and the getfundingfromvc flywheel,
@@ -210,8 +258,11 @@ another device, everything is there. Dossier passes citation lint at 100%.
 The anti-slop contract. None of these until every gate above is green:
 
 - No new memo "features" (templates, tones, export formats)
-- No US expansion, no second geography, no "national scale" before Waterloo/Ontario
-  density is proven (Phase 1 discipline from `docs/data-sourcing-wedge-vision.md` stands)
+- No US expansion until every gate above is green **in Canada**. The US is explicitly
+  the expansion thesis, not the wedge: the playbook (fragmented university/accelerator
+  ecosystems + state incorporation deltas + domain deltas, invisible to index-first
+  tools) replicates to any US region, and Canadian proof-of-earliness is the sales
+  asset that opens it. Sequence, not scope creep.
 - No attendee scraping, no LinkedIn automation, no gray-area data (existing risk rules stand)
 - No team/IC suite, no comments, no pipelines-CRM — CRM copy stays a copy button
 - No AI-generated facts, ever: models compose and reason over ledger facts; they never
@@ -225,6 +276,9 @@ The anti-slop contract. None of these until every gate above is green:
    product never exists in a "smaller but still fake" state.
 2. **Phase 2** — watchers, starting with cohort diff + nightly index checks (the two that
    feed the benchmark).
+   **Phase 2b** — data depth: Tier 0 pre-announcement signals, hardened entity
+   resolution, enrichment waterfall. Runs continuously from here on; depth targets
+   are tracked in pipeline health, not a one-time push.
 3. **Phase 3** — attestation + verified reachability.
 4. **Phase 4** — Radar consolidation + Dossier redesign (design work can start in
    parallel with Phase 2; it ships only on ledger data).
