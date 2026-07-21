@@ -93,14 +93,15 @@ Foil site lives at **https://getfundingfromavc.vercel.app** (repo: `c:\Users\aaa
 
 ## Dry-run checklist
 
-Verified 2026-07-20 (~3:45pm ET) against prod:
+Verified 2026-07-21 against prod:
 
-- [x] Mentor demo thesis returns incubator rows in the first screen (12/12 incubator, CA 12)
-- [x] Golden rows present with Founders + domain (SCADABLE #3, Photon-IV #6, Eventist #9, Simantic #7)
+- [x] Canadian thesis (typed) returns incubator rows in the first screen (12/12 incubator on 2026-07-21 prod check)
+- [x] Golden rows present with Founders + domain (SCADABLE, Photon-IV, Simantic, Eventist)
 - [x] Foil URL loads; GiveFund = fabricated — https://getfundingfromavc.vercel.app
-- [x] Clerk development badge not visible (CSS hide); `clerkMode` still `development` in `/api/health`
+- [x] Clerk development badge not visible (CSS hide); `clerkMode` still `development` in `/api/health` — set pk_live_ before claiming production auth
 - [x] No EverTrace banner on this result set (`thinCanadian: false`)
-- [x] Fallback brief opens SCADABLE with IoT/cloud copy (not supply-chain)
+- [x] Live Brief `scadable.com` under Panache returns thesis band (~66s Instant)
+- [x] Share create → Pursue outcome persists on `/api/share/[id]`
 - [ ] Human: one spoken dry-run of [`docs/mentor-demo-script.md`](docs/mentor-demo-script.md) without apology pauses
 
-**Recording tip:** Discover cold run ~3 min — pre-run once (or hit Refresh) so tape opens on cached results. StartupHub showed `off` in health sidebar during dry-run; incubators still filled the list.
+**Recording tip:** Discover cold run ~3 min — pre-run once (or hit Refresh) so tape opens on cached results. Sidebar Status shows “Core systems · ok” when Claude/Research/DB are healthy (PitchBook off is no longer advertised).
