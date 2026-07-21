@@ -32,9 +32,9 @@ export default function OnboardingHost() {
     <div className="m-overlay z-[100]">
       <div className="m-modal max-w-md">
         <p className="m-kicker mb-2">Welcome to Meridian</p>
-        <h2 className="text-[18px] font-semibold tracking-tight">Your first brief in about a minute</h2>
+        <h2 className="text-[18px] font-semibold tracking-tight">Your mandate, watched</h2>
         <p className="mt-2 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
-          Pick your fund, paste any company URL, get a one-page memo with a fund-native thesis band — the section GPs actually forward.
+          Choose your fund, open Deal Flow, and Meridian surfaces Canadian community companies with coverage proof and founder reach — before public indexes.
         </p>
 
         <ol className="mt-5 space-y-3 text-[13px]">
@@ -44,17 +44,17 @@ export default function OnboardingHost() {
           </li>
           <li className="flex gap-3">
             <span className="font-mono text-[11px] text-zinc-400">02</span>
-            <span>Paste any company URL — or Discover against your thesis</span>
+            <span>Watch Deal Flow — Velocity, DMZ, CDL with pre-index proof</span>
           </li>
           <li className="flex gap-3">
             <span className="font-mono text-[11px] text-zinc-400">03</span>
-            <span>Review the memo, edit inline, pursue or pass</span>
+            <span>Brief, pursue or pass — signals compound on Thesis</span>
           </li>
         </ol>
 
         <div className="mt-6 flex flex-col gap-2">
           <button type="button" onClick={handleStart} className="m-btn-primary w-full">
-            Choose fund &amp; brief a company
+            Open Deal Flow
           </button>
           <button
             type="button"
