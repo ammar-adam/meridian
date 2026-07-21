@@ -6,8 +6,6 @@ import { hasFundProfile } from '@/lib/fund-profile'
 import { setPendingThesis } from '@/lib/source-session'
 import { importPipelineContacts } from '@/lib/pipeline-contacts'
 import { parseIntakeText } from '@/lib/intake-parser'
-import { openDemoMemo } from '@/lib/demo-memo'
-import { markDemoSeen } from '@/lib/onboarding'
 import IntakeDropzone from '@/components/intake-dropzone'
 
 export default function HeroInput({ variant = 'default' }) {
@@ -113,21 +111,12 @@ export default function HeroInput({ variant = 'default' }) {
         </button>
       </form>
       {isLanding && (
-        <>
-          <IntakeDropzone
-            compact
-            onIntake={handleIntake}
-            hint="Drop company URL, contacts, or fund website"
-            className="border-white/15 bg-white/5 hover:border-white/25 [&_p]:text-zinc-300"
-          />
-          <button
-            type="button"
-            onClick={() => { markDemoSeen(); openDemoMemo(router) }}
-            className="text-[12px] text-zinc-400 transition hover:text-white"
-          >
-            Or see the NationGraph demo →
-          </button>
-        </>
+        <IntakeDropzone
+          compact
+          onIntake={handleIntake}
+          hint="Drop company URL, contacts, or fund website"
+          className="border-white/15 bg-white/5 hover:border-white/25 [&_p]:text-zinc-300"
+        />
       )}
     </div>
   )

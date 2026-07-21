@@ -27,7 +27,7 @@ export function FundSwitcher({ onChange }) {
 
   function handleChange(e) {
     const id = e.target.value
-    if (id === '__add__') return
+    if (!id || id === '__add__') return
     setActiveFundId(id)
     setActiveId(id)
     onChange?.()
@@ -40,12 +40,13 @@ export function FundSwitcher({ onChange }) {
     <div className="flex flex-wrap items-center gap-2">
       {funds.length > 0 ? (
         <select value={activeId} onChange={handleChange} className="m-select m-context-select" aria-label="Active fund">
+          {!activeId && <option value="">Select fund…</option>}
           {funds.map(f => (
             <option key={f.id} value={f.id}>{f.fundName}</option>
           ))}
         </select>
       ) : (
-        <span className="text-[12px] text-zinc-500">Guest context</span>
+        <span className="text-[12px] text-zinc-500">No fund yet</span>
       )}
       <Link href="/fund/setup" className="m-btn-ghost m-btn-sm text-zinc-600">
         + Add fund
@@ -98,7 +99,7 @@ export function ActiveContextLabel() {
     function load() {
       const f = getFundProfile()
       const s = getActiveStrategy(f)
-      if (!f) { setLabel(''); return }
+      if (!f) { setLabel('Select fund…'); return }
       setLabel(s && s.name !== 'Primary' ? `${f.fundName} · ${s.name}` : f.fundName)
     }
     load()

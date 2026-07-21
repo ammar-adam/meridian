@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
-import BriefStarters from '@/components/brief-starters'
 import { downloadLibraryCsv, copyLibraryRowForCrm } from '@/lib/crm-export'
 import { createShareLink } from '@/lib/memo-export'
 import { getMemoLibrary, getRelatedMemos, updateMemoMeta } from '@/lib/memo-library'
@@ -293,8 +292,6 @@ export default function LibraryPage() {
             </div>
           </WorkspaceSection>
         )}
-
-        {library.length === 0 && <BriefStarters />}
       </WorkspacePage>
     </WorkspaceShell>
     </div>

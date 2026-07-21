@@ -23,7 +23,6 @@ import { formatBriefAge } from '@/lib/cost-estimate'
 import { RESEARCH_MODES } from '@/lib/research-mode'
 import BriefPreview from '@/components/brief-preview'
 import IntakeDropzone from '@/components/intake-dropzone'
-import BriefStarters from '@/components/brief-starters'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import { learningAppliedMessage } from '@/lib/learning-preview'
 import { normalizeUrl, extractDomain } from '@/lib/url-utils'
@@ -466,8 +465,6 @@ export default function GenerateWorkspace() {
             </div>
           )}
         </WorkspaceSection>
-
-        <BriefStarters onPickUrl={setUrl} compact />
 
         <p className="mt-6 text-center text-[13px]" style={{ color: 'var(--m-muted)' }}>
           Need sourcing?{' '}

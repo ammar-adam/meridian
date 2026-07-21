@@ -328,12 +328,7 @@ function DiscoverContent() {
                 disabled={loading}
                 className="m-textarea"
               />
-              <div className="mt-4 flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-2">
-                  <button type="button" onClick={() => setThesis(EXAMPLE_THESIS)} className="m-btn-ghost m-btn-sm">
-                    Use example
-                  </button>
-                </div>
+              <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
                 <button type="submit" disabled={loading || !thesis.trim()} className="m-btn-primary">
                   Run search
                 </button>

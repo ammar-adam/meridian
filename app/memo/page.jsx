@@ -11,7 +11,6 @@ import OutreachDrawer from '@/components/outreach-drawer'
 import { readMemoMetaFromSession } from '@/lib/memo-context'
 import { getMemoById } from '@/lib/memo-library'
 import { copyMemoShare, createShareLink, downloadMemoPdf } from '@/lib/memo-export'
-import { openDemoMemo } from '@/lib/demo-memo'
 import { incrementBriefCount } from '@/lib/onboarding'
 import { getTeamContext } from '@/lib/team-workspace'
 import { DEMO_MEMO_ID } from '@/lib/demo-memo'
@@ -583,13 +582,11 @@ function MemoPageContent() {
         <div className="m-empty max-w-md text-center">
           <p className="m-kicker mb-2">No brief loaded</p>
           <p className="text-[14px]" style={{ color: 'var(--m-muted)' }}>
-            Paste a company URL on Brief — or open the NationGraph demo to see the quality bar instantly.
+            Choose your fund, then paste a company URL on Brief — or run Discover against your thesis.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link href="/brief" className="m-btn-primary">Generate a brief</Link>
-            <button type="button" onClick={() => openDemoMemo(router)} className="m-btn-secondary">
-              Open demo brief
-            </button>
+            <Link href="/fund" className="m-btn-secondary">Choose fund</Link>
           </div>
         </div>
       </div>
