@@ -15,6 +15,7 @@ const NAV_GROUPS = [
     label: 'Core',
     items: [
       { href: '/flow', label: 'Deal Flow', desc: 'Community companies before indexes', primary: true },
+      { href: '/discover', label: 'Discover', desc: 'Thesis → ranked companies' },
       { href: '/brief', label: 'Brief', desc: 'URL → memo' },
       { href: '/library', label: 'Library', desc: 'Saved briefs', badgeKey: 'pendingReview' },
       { href: '/thesis', label: 'Thesis', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
@@ -23,7 +24,6 @@ const NAV_GROUPS = [
   {
     label: 'More',
     items: [
-      { href: '/discover', label: 'Discover', desc: 'One-off thesis search' },
       { href: '/pilot', label: 'Pilot proof', desc: 'Data wedge case study' },
       { href: '/lists', label: 'Lists', desc: 'Batch briefs' },
       { href: '/team', label: 'Team', desc: 'Shared links (beta)' },
