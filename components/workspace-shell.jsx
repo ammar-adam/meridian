@@ -136,9 +136,6 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                             {optionalOn.join(' · ')}
                           </div>
                         )}
-                        {health.clerk && health.clerkMode === 'development' && (
-                          <div className="mt-1 text-[10px] text-amber-400/90">Auth keys are development — set pk_live_ on Vercel</div>
-                        )}
                       </>
                     )
                   }

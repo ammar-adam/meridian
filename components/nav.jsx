@@ -37,8 +37,8 @@ export default function Nav({ variant = 'default' }) {
                 </Link>
               </>
             )}
-            <Link href="/brief" className={isLanding ? 'm-btn-glow' : 'm-btn-primary'}>
-              Generate brief
+            <Link href="/discover" className={isLanding ? 'm-btn-glow' : 'm-btn-primary'}>
+              Open Discover
             </Link>
           </div>
         )}

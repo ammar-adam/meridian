@@ -322,7 +322,7 @@ export default function GenerateWorkspace() {
         <div className="m-overlay">
           <div className="m-modal">
             <div className="mb-4 flex items-center justify-between">
-              <span className="text-[13px] font-medium">Generating brief</span>
+              <span className="text-[13px] font-medium">Building fund-native brief</span>
               <span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{formatElapsed(elapsed)}</span>
             </div>
             <div className="mb-4 h-0.5 overflow-hidden rounded-full" style={{ background: 'var(--m-border)' }}>
@@ -338,6 +338,11 @@ export default function GenerateWorkspace() {
                 </li>
               ))}
             </ul>
+            {stepStatus.generate === 'active' && (
+              <p className="mb-3 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-[11px] text-zinc-600">
+                Drafting the thesis band against your fund mandate — the section GPs forward.
+              </p>
+            )}
             {learningNote && stepStatus.generate === 'active' && (
               <p className="mb-3 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] text-emerald-800">
                 {learningNote}
