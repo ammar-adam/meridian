@@ -206,8 +206,12 @@ writes to `outcomes` and **visibly re-ranks Radar per fund** with a stated reaso
 running on real server-side signal. Library and Thesis become tabs of Radar reading the
 same tables.
 
-**The Dossier** — what Brief/Memo becomes. Scrap the current template design entirely.
-Design spec:
+**The Dossier** — what Brief/Memo becomes. To be explicit: **the memo is not being
+demoted — it is the flagship artifact of the product.** It is the origin of the company
+(Evan's unprompted reaction to the NationGraph memo is the founding event, per `prd.md`),
+it is where the data layer becomes visible value, and the thesis band is the one output
+no index-first competitor can produce. What gets scrapped is the current *template
+design*, never the artifact. Design spec:
 
 - **Typography-first, print-grade**: single serif/sans pairing, 210mm-disciplined grid,
   generous whitespace — reads like a private bank note, not a SaaS export.
@@ -222,6 +226,13 @@ Design spec:
   history as evidence.
 - Sections appear only when they have verified content. A short honest dossier
   outranks a long padded one, always.
+- **Outreach drafting is part of the Dossier, not a separate feature.** From any
+  dossier: one click drafts the outreach email in the fund's voice, built from the
+  thesis-fit section (`lib/outreach-prompt.js` / `app/api/outreach` already exist and
+  are kept). The distinction that governs everything: **drafting is composition —
+  always allowed; addresses are facts — only verified channels or warm paths ever
+  render.** A guessed address presented as fact is banned; a drafted email the GP
+  sends through their own channel is the product working.
 
 **Gate 4:** a stranger uses Radar → Dossier → share → outcome on one device, opens
 another device, everything is there. Dossier passes citation lint at 100%.
@@ -267,6 +278,44 @@ The anti-slop contract. None of these until every gate above is green:
 - No team/IC suite, no comments, no pipelines-CRM — CRM copy stays a copy button
 - No AI-generated facts, ever: models compose and reason over ledger facts; they never
   originate a fact. If the ledger doesn't know it, the dossier doesn't say it.
+
+---
+
+## The Demo Cut — SF, 48 hours
+
+The full rebuild is not a 24-hour job, and pretending otherwise produces exactly the
+half-fake state this plan exists to kill. The Demo Cut is the slice that makes the SF
+demo *represent* the vision honestly — anchored to the two customer notes we actually
+have:
+
+- **Evan (Sagard, `prd.md`):** demo on a real deal he's actively looking at — a live
+  URL, not a rehearsed script. The thesis band must read accurate to the fund's mandate.
+  → The demo's centerpiece is a **live Dossier on a company the audience names**, with
+  the thesis band leading.
+- **Inshaal (Panache, vision docs):** every tool she evaluated is US-centric and
+  index-first; the gap is pre-announcement, community-sourced flow.
+  → The demo's differentiator is **Flow rows with receipts** — source, first-seen,
+  index-test status — the thing Harmonic cannot show.
+
+**Ships in the cut (by tomorrow):**
+
+1. **Dossier visual overhaul** — the redesigned memo (typography-first, receipt front
+   matter, thesis band leading, no filler sections) on the existing data. This is the
+   single highest-impact item for a room in SF.
+2. **Draft outreach from the Dossier** — the existing outreach pipeline surfaced as a
+   first-class action: memo → drafted email in the fund's voice. Memos become
+   actionable in the demo, not archival.
+3. **Tear-down items that are pure subtraction:** Lists and Team out of nav; guessed
+   emails out of every UI; reachability shown as real channels (LinkedIn / site) +
+   "Draft outreach" instead of a gamed percentage; known-wrong rows purged.
+4. **Receipts drawer on Flow rows** — the existing coverage/ledger data presented as a
+   per-company receipt (source, cohort citation, first-seen, index-test result with
+   date), honestly labeled.
+5. **Clerk live keys** (human step, Vercel) + remove the CSS hide.
+
+**Explicitly NOT in the cut** (post-SF, in plan order): Postgres ledger, watchers,
+Tier 0 signals, founder attestation, Radar consolidation, benchmark page, rename.
+Nothing in the demo may claim these exist.
 
 ---
 
