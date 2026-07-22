@@ -1,5 +1,5 @@
 import { isCronAuthorized } from '@/lib/health-payload'
-import { runStartupHubBulk } from '@/lib/server/startuphub-bulk'
+import { runStartupHubBulk, STARTUPHUB_BULK_QUERIES } from '@/lib/server/startuphub-bulk'
 import { runDomainRegistryAdapter } from '@/lib/sourcing/domain-registry-adapter'
 import { runFormDAdapter } from '@/lib/sourcing/form-d-adapter'
 import { recordSighting } from '@/lib/server/company-records'
@@ -40,7 +40,11 @@ export async function GET(req) {
 
   const url = new URL(req.url)
   const phase = url.searchParams.get('phase') || 'all'
-  const offset = Number(url.searchParams.get('offset') || '0')
+  let offset = Number(url.searchParams.get('offset') || '0')
+  if (url.searchParams.get('autoOffset') === '1' && !url.searchParams.has('offset')) {
+    const day = Math.floor(Date.now() / 86_400_000)
+    offset = (day * 12) % STARTUPHUB_BULK_QUERIES.length
+  }
   const queryBatch = Math.min(Number(url.searchParams.get('queries') || '25'), 40)
   const registryLimit = Math.min(Number(url.searchParams.get('registryLimit') || '400'), 800)
   const formdLimit = Math.min(Number(url.searchParams.get('formdLimit') || '150'), 300)

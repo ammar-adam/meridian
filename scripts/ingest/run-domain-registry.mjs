@@ -44,8 +44,8 @@ try {
   const result = await runDomainRegistryAdapter({
     keywords,
     province: '',
-    limit: 120,
-    concurrency: 20,
+    limit: 400,
+    concurrency: 25,
   })
   entities = result.entities || []
   stats = result.stats
