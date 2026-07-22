@@ -39,19 +39,19 @@ export default function OnboardingHost() {
     <div className="m-overlay z-[100]">
       <div className="m-modal max-w-md">
         <p className="m-kicker mb-2">Welcome to Meridian</p>
-        <h2 className="text-[18px] font-semibold tracking-tight">Your mandate, watched</h2>
+        <h2 className="text-[18px] font-semibold tracking-tight">Startups, found early — with proof</h2>
         <p className="mt-2 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
-          Choose your fund, open Deal Flow, and Meridian surfaces Canadian community companies with coverage proof and founder reach — before public indexes.
+          Tell us what you invest in and Meridian surfaces early Canadian companies with founder contacts and a dated receipt for each one — before the big databases.
         </p>
 
         <ol className="mt-5 space-y-3 text-[13px]">
           <li className="flex gap-3">
             <span className="font-mono text-[11px] text-zinc-400">01</span>
-            <span>Choose your fund (or add one from a fund URL)</span>
+            <span>Tell us what you invest in — set up your fund from its website, or as an individual (angel or family office)</span>
           </li>
           <li className="flex gap-3">
             <span className="font-mono text-[11px] text-zinc-400">02</span>
-            <span>Watch Deal Flow — Velocity, DMZ, CDL with pre-index proof</span>
+            <span>Watch Deal Flow — Velocity, DMZ, CDL, found before the big databases</span>
           </li>
           <li className="flex gap-3">
             <span className="font-mono text-[11px] text-zinc-400">03</span>
