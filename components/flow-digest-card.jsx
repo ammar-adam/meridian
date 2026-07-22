@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from 'react'
 import { buildFlowDigest, digestMailto } from '@/lib/flow-digest'
+import { computeFlowFeedStats, flowFeedStatsLine } from '@/lib/flow-feed-stats'
 
 /**
  * Monday digest card — copy, email, optional Slack post.
  */
-export default function FlowDigestCard({ fundName, thesis, companies }) {
+export default function FlowDigestCard({ fundName, thesis, companies, feedStats: feedStatsProp }) {
   const [copied, setCopied] = useState(false)
   const [slackState, setSlackState] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -15,6 +16,11 @@ export default function FlowDigestCard({ fundName, thesis, companies }) {
     () => buildFlowDigest({ fundName, thesis, companies: companies || [] }),
     [fundName, thesis, companies],
   )
+  const computedStats = useMemo(
+    () => computeFlowFeedStats(companies || []),
+    [companies],
+  )
+  const feedStats = feedStatsProp || computedStats
 
   async function copyDigest() {
     try {
@@ -59,7 +65,7 @@ export default function FlowDigestCard({ fundName, thesis, companies }) {
         {digest.stats.newCount || digest.stats.freshCount} companies worth a look for {fundName}
       </h3>
       <p className="mt-1 text-[13px] text-zinc-600">
-        {digest.stats.communitySourced || digest.stats.communityFirst} community-sourced · {digest.stats.reachable} direct-reach · copy or Slack your team
+        {flowFeedStatsLine(feedStats)} · copy or Slack your team
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" onClick={copyDigest} className="m-btn-primary m-btn-sm">

@@ -4,6 +4,7 @@ import { isShareEnabled } from '@/lib/share-store'
 import { isStartupHubConfigured, verifyStartupHub } from '@/lib/startuphub'
 import { isPitchbookConfigured } from '@/lib/pitchbook'
 import { isServerPdfEnabled } from '@/lib/pdf-config'
+import { isEnrichmentEnabled } from '@/lib/server/enrichment'
 import { isCronAuthorized, shapePublicHealth } from '@/lib/health-payload'
 import { callAnthropic } from '@/lib/anthropic'
 import { MODELS } from '@/lib/api-models'
@@ -96,6 +97,8 @@ export async function GET(req) {
     founderClaims: db,
     companyRecords: db,
     opportunisticIngest: db,
+    watchWebhooks: db,
+    hunterEnrichment: isEnrichmentEnabled(),
   }
 
   if (!authorized) {

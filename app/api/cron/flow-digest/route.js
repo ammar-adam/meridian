@@ -1,8 +1,12 @@
-import { buildIncubatorFlowDiscover } from '@/lib/discover-fast'
+import { buildFlowFeed } from '@/lib/server/flow-feed'
 import { buildFlowDigest } from '@/lib/flow-digest'
 import { SAGARD_AI_FUND, PANACHE_VENTURES } from '@/lib/fund-seeds'
+import { annotateCoverage } from '@/lib/coverage-proof'
+import { annotateReachability } from '@/lib/reachability'
+import { annotateLedger } from '@/lib/freshness-ledger'
+import { cohortAgeDays } from '@/lib/mandate-watch'
 
-export const maxDuration = 60
+export const maxDuration = 120
 
 async function postSlack(text) {
   const url = process.env.SLACK_WEBHOOK_URL?.trim()
@@ -66,21 +70,34 @@ export async function GET(req) {
       thesis: watch.thesis,
       mandate: watch.mandate || { geographies: ['Canada'], stages: ['pre-seed', 'seed'] },
     }
-    const payload = buildIncubatorFlowDiscover(watch.thesis, fundContext)
-    const companies = (payload.companies || []).map(c => ({
-      ...c,
-      isNew: Boolean(c.isFresh || c.coverage?.status === 'community_first'),
-      isFresh: Boolean(c.isFresh),
-    }))
+
+    const feed = await buildFlowFeed({
+      thesis: watch.thesis,
+      fundContext,
+      dispatchWebhooks: true,
+    })
+
+    const annotated = (feed.companies || []).map((c) => {
+      const age = cohortAgeDays(c)
+      const isFresh = age != null && age <= 120
+      return {
+        ...annotateReachability(annotateLedger(annotateCoverage([c])))[0],
+        isFresh,
+        isNew: Boolean(isFresh || c.coverage?.status === 'community_first'),
+      }
+    })
+
     const digest = buildFlowDigest({
       fundName: watch.fundName,
       thesis: watch.thesis,
-      companies,
+      companies: annotated,
     })
     const slack = await postSlack(digest.text)
     results.push({
       fundName: watch.fundName,
       stats: digest.stats,
+      feedStats: feed.meta?.feedStats,
+      webhooks: feed.meta?.webhooks,
       slack,
       subject: digest.subject,
     })

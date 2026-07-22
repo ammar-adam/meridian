@@ -2,6 +2,10 @@ import { enforceRateLimit } from '@/lib/api-guard'
 import { buildIncubatorFlowDiscover } from '@/lib/discover-fast'
 import { buildFlowDigest } from '@/lib/flow-digest'
 import { cohortAgeDays } from '@/lib/mandate-watch'
+import { annotateCoverage } from '@/lib/coverage-proof'
+import { annotateReachability } from '@/lib/reachability'
+import { annotateLedger } from '@/lib/freshness-ledger'
+import { computeFlowFeedStats } from '@/lib/flow-feed-stats'
 
 export const maxDuration = 30
 
@@ -21,7 +25,8 @@ async function postSlack(text) {
 }
 
 function annotateForDigest(companies) {
-  return (companies || []).map((c) => {
+  const enriched = annotateReachability(annotateLedger(annotateCoverage(companies || [])))
+  return enriched.map((c) => {
     const age = cohortAgeDays(c)
     const isFresh = age != null && age <= 120
     const community = c.coverage?.status === 'community_first' || c.notInHarmonicLikely
@@ -66,6 +71,7 @@ export async function POST(req) {
   }
 
   const annotated = annotateForDigest(companies)
+  const feedStats = computeFlowFeedStats(annotated)
   const digest = buildFlowDigest({ fundName, thesis, companies: annotated })
 
   let slack = { sent: false, reason: 'not requested' }
@@ -75,6 +81,7 @@ export async function POST(req) {
 
   return Response.json({
     digest,
+    feedStats,
     meta: {
       ...meta,
       companyCount: annotated.length,

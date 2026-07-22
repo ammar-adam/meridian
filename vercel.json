@@ -57,8 +57,17 @@
     "app/api/pilot/route.js": {
       "maxDuration": 300
     },
-    "app/api/cron/bulk-fill/route.js": {
+    "app/api/cron/watch-events/route.js": {
       "maxDuration": 300
+    },
+    "app/api/proof-packet/route.js": {
+      "maxDuration": 15
+    },
+    "app/api/webhooks/route.js": {
+      "maxDuration": 15
+    },
+    "app/api/enrich/route.js": {
+      "maxDuration": 30
     },
     "app/api/cron/ingest/route.js": {
       "maxDuration": 60
@@ -86,6 +95,14 @@
     {
       "path": "/api/cron/bulk-fill?phase=scrape&scrapeLimit=20",
       "schedule": "0 7 * * *"
+    },
+    {
+      "path": "/api/cron/scout-sweep",
+      "schedule": "0 9,15 * * *"
+    },
+    {
+      "path": "/api/cron/watch-events",
+      "schedule": "0 10,16 * * *"
     }
   ]
 }
