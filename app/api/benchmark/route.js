@@ -2,8 +2,9 @@ import { isLedgerEnabled, benchmarkStats, listLedgerEntities, getLatestIndexChec
 import { indexCheckIfStale } from '@/lib/server/index-check-batch'
 import { countCompanies } from '@/lib/server/company-records'
 import { isSourceRegistryEnabled, listActiveSources } from '@/lib/server/source-registry'
+import { bulkFillIfBelowTarget } from '@/lib/server/bulk-fill-opportunistic'
 
-export const maxDuration = 45
+export const maxDuration = 300
 export const dynamic = 'force-dynamic'
 
 /**
@@ -17,10 +18,16 @@ export async function GET() {
   }
 
   let indexCheck = null
+  let bulkFill = null
   try {
     indexCheck = await indexCheckIfStale({ limit: 5 })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
+  }
+  try {
+    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 20, scrapeLimit: 8 })
+  } catch (e) {
+    bulkFill = { ran: false, error: e.message }
   }
 
   const stats = await benchmarkStats()
@@ -70,6 +77,7 @@ export async function GET() {
     })),
     attestations: attestations || { total: 0, confirmed: 0, pending: 0 },
     indexCheck,
+    bulkFill,
     honesty: {
       firstObservedAt: 'Timestamp of when Meridian first recorded the company server-side. Accrues from ledger launch; never backdated.',
       indexChecks: 'Falsifiable name searches against public indexes, stored with dates. Harmonic checks planned; StartupHub live via scheduled sweep + opportunistic batches.',

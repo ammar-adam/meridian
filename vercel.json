@@ -48,11 +48,14 @@
     "app/api/digest/route.js": {
       "maxDuration": 30
     },
+    "app/api/benchmark/route.js": {
+      "maxDuration": 300
+    },
     "app/api/flow/route.js": {
       "maxDuration": 30
     },
     "app/api/pilot/route.js": {
-      "maxDuration": 60
+      "maxDuration": 300
     },
     "app/api/cron/bulk-fill/route.js": {
       "maxDuration": 300
