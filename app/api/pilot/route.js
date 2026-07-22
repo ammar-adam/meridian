@@ -5,6 +5,7 @@ import {
   isLedgerEnabled,
   countLedgerEntities,
   recordObservations,
+  ledgerIdentity,
 } from '@/lib/server/truth-ledger'
 
 export const maxDuration = 30
@@ -34,5 +35,6 @@ async function ensureCorpusObserved() {
 
 export async function GET() {
   const ledgerSync = await ensureCorpusObserved()
-  return Response.json({ ...buildPilotCaseStudy(), ledgerSync })
+  const identity = await ledgerIdentity()
+  return Response.json({ ...buildPilotCaseStudy(), ledgerSync: { ...ledgerSync, identity } })
 }
