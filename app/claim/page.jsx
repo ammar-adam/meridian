@@ -2,6 +2,14 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { CLAIM_STAGES } from '@/lib/claim-validation'
+
+const STAGE_LABELS = {
+  'pre-seed': 'Pre-seed',
+  seed: 'Seed',
+  'series-a': 'Series A',
+  later: 'Later',
+}
 
 /**
  * Founder claim — get seen by Canadian funds before you announce.
@@ -12,6 +20,10 @@ export default function ClaimPage() {
   const [founderName, setFounderName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
+  const [stage, setStage] = useState('')
+  const [raiseAmount, setRaiseAmount] = useState('')
+  const [deckUrl, setDeckUrl] = useState('')
+  const [sectors, setSectors] = useState('')
   const [status, setStatus] = useState('idle')
   const [error, setError] = useState('')
 
@@ -23,7 +35,10 @@ export default function ClaimPage() {
       const res = await fetch('/api/claim', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ companyName, founderName, email, message }),
+        body: JSON.stringify({
+          companyName, founderName, email, message,
+          stage, raiseAmount, deckUrl, sectors,
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
@@ -86,6 +101,52 @@ export default function ClaimPage() {
               className="m-input w-full text-[14px]"
               placeholder="you@yourcompany.com"
               required
+            />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="m-kicker mb-1 block">Stage <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+              <select
+                value={stage}
+                onChange={e => setStage(e.target.value)}
+                className="m-input w-full text-[14px]"
+              >
+                <option value="">Select…</option>
+                {CLAIM_STAGES.map(s => (
+                  <option key={s} value={s}>{STAGE_LABELS[s]}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="m-kicker mb-1 block">Raising <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+              <input
+                value={raiseAmount}
+                onChange={e => setRaiseAmount(e.target.value)}
+                className="m-input w-full text-[14px]"
+                placeholder="e.g. $750k pre-seed, open now"
+                maxLength={80}
+              />
+            </div>
+          </div>
+          <div>
+            <label className="m-kicker mb-1 block">Deck link <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+            <input
+              type="url"
+              value={deckUrl}
+              onChange={e => setDeckUrl(e.target.value)}
+              className="m-input w-full text-[14px]"
+              placeholder="https://docsend.com/view/…"
+              maxLength={400}
+            />
+          </div>
+          <div>
+            <label className="m-kicker mb-1 block">Sectors <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+            <input
+              value={sectors}
+              onChange={e => setSectors(e.target.value)}
+              className="m-input w-full text-[14px]"
+              placeholder="e.g. AI infrastructure, healthcare"
+              maxLength={240}
             />
           </div>
           <div>
