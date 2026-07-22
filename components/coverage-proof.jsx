@@ -10,12 +10,15 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
   const community = coverage?.status === 'community_first'
   const alsoPublic = coverage?.status === 'also_public'
   const verifiedMiss = ledger?.verification?.status === 'verified_miss'
+  const signalBased = ledger?.verification?.status === 'signal_based'
 
-  const chip = community || verifiedMiss
-    ? 'border-emerald-400 bg-emerald-50 text-emerald-900'
-    : alsoPublic
-      ? 'border-zinc-300 bg-zinc-50 text-zinc-600'
-      : 'border-amber-300 bg-amber-50 text-amber-900'
+  const chip = signalBased
+    ? 'border-violet-400 bg-violet-50 text-violet-900'
+    : community || verifiedMiss
+      ? 'border-emerald-400 bg-emerald-50 text-emerald-900'
+      : alsoPublic
+        ? 'border-zinc-300 bg-zinc-50 text-zinc-600'
+        : 'border-amber-300 bg-amber-50 text-amber-900'
 
   if (compact) {
     return (
@@ -23,7 +26,7 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
         className={`inline-flex rounded border px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide ${chip}`}
         title={ledger?.verification?.detail || coverage?.detail || coverage?.label}
       >
-        {verifiedMiss ? 'Not in index' : community ? 'Pre-index' : alsoPublic ? 'Public' : 'Community'}
+        {signalBased ? 'Signal' : verifiedMiss ? 'Not in index' : community ? 'Pre-index' : alsoPublic ? 'Public' : 'Community'}
       </span>
     )
   }

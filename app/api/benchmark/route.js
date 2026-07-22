@@ -1,4 +1,4 @@
-import { isLedgerEnabled, benchmarkStats, listLedgerEntities, getLatestIndexChecks, listSourceWatches } from '@/lib/server/truth-ledger'
+import { isLedgerEnabled, benchmarkStats, listLedgerEntities, getLatestIndexChecks, listSourceWatches, attestationCounts } from '@/lib/server/truth-ledger'
 
 export const maxDuration = 30
 export const dynamic = 'force-dynamic'
@@ -20,6 +20,7 @@ export async function GET() {
   const entities = await listLedgerEntities(100)
   const checks = await getLatestIndexChecks(entities.map(e => e.id))
   const sourceWatches = await listSourceWatches()
+  const attestations = await attestationCounts()
 
   const rows = entities.map(e => ({
     name: e.name,
@@ -46,9 +47,12 @@ export async function GET() {
       lastChangedAt: w.last_changed_at,
       checkCount: w.check_count,
     })),
+    attestations: attestations || { total: 0, confirmed: 0, pending: 0 },
     honesty: {
       firstObservedAt: 'Timestamp of when Meridian first recorded the company server-side. Accrues from ledger launch; never backdated.',
       indexChecks: 'Falsifiable name searches against public indexes, stored with dates. Harmonic checks planned; StartupHub live.',
+      preAnnouncementSignals: 'Companies detected via new-incorporation + live-domain cross-reference — before any announcement, cohort, or index.',
+      attestations: 'Founder claims are stored pending and marked confirmed only after manual verification.',
       claim: 'We only claim absence where a dated check exists. Everything else is community-sourced, unverified against indexes.',
     },
     at: new Date().toISOString(),

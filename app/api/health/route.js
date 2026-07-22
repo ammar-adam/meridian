@@ -94,6 +94,8 @@ export async function GET(req) {
       cloudSync: db && clerk,
       flowDigest: true,
       coverageProof: true,
+      tier0Signals: db,
+      founderClaims: db,
     },
   })
 }

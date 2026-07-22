@@ -98,6 +98,17 @@ describe('freshness ledger', () => {
     expect(e.ageDays).toBeGreaterThan(0)
   })
 
+  it('marks domain-registry rows as pre-announcement signal', () => {
+    const e = buildLedgerEntry({
+      name: 'SHFT ROBOTICS INC',
+      source: 'domain_registry',
+      provenance: 'Incorporated 2026-06-21 · ON · live domain shftrobotics.com',
+    })
+    expect(e.verification.status).toBe('signal_based')
+    expect(e.verification.label).toBe('Pre-announcement signal')
+    expect(e.verification.checkable).toBe(true)
+  })
+
   it('marks untested community rows as community_sourced (no false index claim)', () => {
     const e = buildLedgerEntry({
       name: 'Some DMZ Co',

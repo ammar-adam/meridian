@@ -143,6 +143,11 @@ export default function PilotPage() {
               />
               <Stat label="Index-checked" value={benchmark.stats.entitiesChecked} />
               <Stat label="Verified misses (dated)" value={benchmark.stats.verifiedMisses} />
+              <Stat label="Pre-announcement signals" value={benchmark.stats.preAnnouncementSignals ?? 0} />
+              <Stat
+                label="Founder claims"
+                value={`${benchmark.attestations?.confirmed ?? 0} confirmed · ${benchmark.attestations?.pending ?? 0} pending`}
+              />
             </div>
             <p className="mt-2 text-[11px] text-zinc-500">
               &ldquo;On Meridian since&rdquo; is when our server first recorded the company — separate from the
@@ -171,6 +176,7 @@ export default function PilotPage() {
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/flow" className="m-btn-primary">Open Deal Flow</Link>
           <Link href="/fund" className="m-btn-secondary">Choose fund &amp; watch</Link>
+          <Link href="/claim" className="m-btn-secondary">Founder? Claim your profile</Link>
         </div>
       </WorkspacePage>
     </WorkspaceShell>

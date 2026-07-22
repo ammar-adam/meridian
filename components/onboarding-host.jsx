@@ -1,13 +1,19 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { needsWelcome, markWelcomeDone } from '@/lib/onboarding'
 import { getFundProfile } from '@/lib/fund-profile'
+
+// Externally-shared surfaces: founders and memo recipients are not investors
+// setting up a workspace — never show them the investor welcome modal.
+const EXTERNAL_PATHS = ['/claim', '/share']
 
 export default function OnboardingHost() {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+  const isExternal = EXTERNAL_PATHS.some(p => pathname === p || pathname?.startsWith(p + '/'))
 
   useEffect(() => {
     if (needsWelcome()) setOpen(true)
@@ -18,7 +24,7 @@ export default function OnboardingHost() {
     return () => window.removeEventListener('meridian-onboarding-change', onChange)
   }, [])
 
-  if (!open) return null
+  if (!open || isExternal) return null
 
   function handleStart() {
     markWelcomeDone()
