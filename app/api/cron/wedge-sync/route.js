@@ -1,11 +1,10 @@
-import crypto from 'node:crypto'
 import { runIncubatorAdapter } from '@/lib/sourcing/incubator-adapter'
 import { runGrantAdapter } from '@/lib/sourcing/grant-adapter'
 import { runEventHostAdapter } from '@/lib/sourcing/event-host-adapter'
+import { checkAllSources } from '@/lib/server/source-watch'
 import {
   isLedgerEnabled,
   recordObservations,
-  upsertSourceCheck,
   countLedgerEntities,
 } from '@/lib/server/truth-ledger'
 
@@ -24,39 +23,6 @@ export const maxDuration = 60
  *
  * Auth: Authorization: Bearer CRON_SECRET
  */
-
-const WATCHED_SOURCES = [
-  { label: 'Velocity — news / cohort announcements', url: 'https://www.velocityincubator.com/news' },
-  { label: 'DMZ — startup directory', url: 'https://dmz.torontomu.ca/startup-directory' },
-  { label: 'DMZ — posts', url: 'https://dmz.torontomu.ca/blog' },
-]
-
-function visibleTextHash(html) {
-  const text = String(html || '')
-    .replace(/<script[\s\S]*?<\/script>/gi, '')
-    .replace(/<style[\s\S]*?<\/style>/gi, '')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .toLowerCase()
-    .trim()
-  return crypto.createHash('sha256').update(text).digest('hex')
-}
-
-async function checkSource({ url, label }) {
-  try {
-    const res = await fetch(url, {
-      headers: { 'User-Agent': 'MeridianSourceWatch/1.0 (+cohort freshness check)' },
-      signal: AbortSignal.timeout(20_000),
-      redirect: 'follow',
-    })
-    if (!res.ok) return { url, label, ok: false, status: res.status }
-    const hash = visibleTextHash(await res.text())
-    const { changed } = await upsertSourceCheck({ url, label, hash })
-    return { url, label, ok: true, changed }
-  } catch (e) {
-    return { url, label, ok: false, error: e.message }
-  }
-}
 
 async function postSlack(text) {
   const url = process.env.SLACK_WEBHOOK_URL?.trim()
@@ -105,10 +71,7 @@ export async function GET(req) {
   const after = await countLedgerEntities()
 
   // 2. Source watchers
-  const watches = []
-  for (const source of WATCHED_SOURCES) {
-    watches.push(await checkSource(source))
-  }
+  const watches = await checkAllSources()
   const changedSources = watches.filter(w => w.changed)
   let slack = null
   if (changedSources.length) {
