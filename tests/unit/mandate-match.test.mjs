@@ -95,6 +95,33 @@ describe('matchMandate', () => {
     expect(result.meta.droppedGeo).toBe(2)
   })
 
+  it('drops US-only rows from Canada-only mandates', () => {
+    const mixed = [
+      WATERLOO_AI,
+      { name: 'OneSignal', domain: 'onesignal.com', geography: 'US', stage: 'series-b', sector: 'devtools' },
+    ]
+    const result = matchMandate(mixed, {
+      thesis: 'Canadian pre-seed AI',
+      fundContext: { mandate: { geographies: ['Canada'] } },
+    })
+    expect(result.companies.some(c => c.name === 'OneSignal')).toBe(false)
+    expect(result.meta.droppedGeo).toBeGreaterThan(0)
+  })
+
+  it('caps weak matches when thesis has no strong hits', () => {
+    const many = Array.from({ length: 20 }, (_, i) => ({
+      name: `Co${i}`,
+      domain: `co${i}.com`,
+      geography: 'Canada',
+      stage: 'pre-seed',
+      sector: 'misc',
+    }))
+    const result = matchMandate(many, { thesis: 'quantum fintech LATAM payments' })
+    expect(result.meta.strongMatches).toBe(0)
+    expect(result.meta.outsideCoverage).toBe(true)
+    expect(result.companies.length).toBeLessThanOrEqual(5)
+  })
+
   it('does not hardcode canadianMandate true for every thesis', () => {
     const result = matchMandate(corpus, { thesis: 'US Series B fintech' })
     expect(result.meta.canadianMandate).toBe(false)

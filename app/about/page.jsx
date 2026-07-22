@@ -19,8 +19,8 @@ export default function AboutPage() {
         <p>
           Meridian finds promising startups in the places they show up first — university
           incubators, accelerator cohorts, grant lists, new incorporations — and puts them
-          in front of early-stage investors weeks before those companies appear in the big
-          commercial databases.
+          in front of early-stage investors while the mainstream databases are still catching up —
+          with dated receipts, not marketing claims.
         </p>
         <p>
           The difference is receipts. Every company row carries its provenance: where we

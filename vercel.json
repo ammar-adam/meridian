@@ -52,7 +52,13 @@
       "maxDuration": 30
     },
     "app/api/pilot/route.js": {
-      "maxDuration": 15
+      "maxDuration": 60
+    },
+    "app/api/cron/bulk-fill/route.js": {
+      "maxDuration": 300
+    },
+    "app/api/cron/ingest/route.js": {
+      "maxDuration": 60
     },
     "app/api/team/route.js": {
       "maxDuration": 15
