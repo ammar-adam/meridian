@@ -44,9 +44,10 @@ jobs:
       - name: Benchmark parity check
         run: |
           URL="${MERIDIAN_PROD_URL:-https://meridian-eight-sandy.vercel.app}"
-          curl -sfS -m 120 "$URL/api/benchmark" | python3 - <<'PY'
-          import json,sys
-          d=json.load(sys.stdin)
+          curl -sfS -m 120 "$URL/api/benchmark" -o benchmark.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open("benchmark.json"))
           s=d.get("stats") or {}
           fp=d.get("feedParity") or {}
           fs=fp.get("feedStats") or {}
@@ -59,9 +60,10 @@ jobs:
       - name: Pilot opportunistic pass
         run: |
           URL="${MERIDIAN_PROD_URL:-https://meridian-eight-sandy.vercel.app}"
-          curl -sfS -m 280 "$URL/api/pilot" | python3 - <<'PY'
-          import json,sys
-          d=json.load(sys.stdin)
+          curl -sfS -m 280 "$URL/api/pilot" -o pilot.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open("pilot.json"))
           bf=d.get("bulkFill") or {}
           print("pilot bulkFill:", bf.get("ran"), bf.get("delta"), bf.get("after"))
           PY
