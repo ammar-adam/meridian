@@ -8,6 +8,7 @@ import {
 } from '@/lib/server/truth-ledger'
 
 export const maxDuration = 30
+export const dynamic = 'force-dynamic'
 
 /** Backfill the full corpus onto the truth ledger once, without cron ops. */
 async function ensureCorpusObserved() {
