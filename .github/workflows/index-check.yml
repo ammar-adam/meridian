@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: Run index-check sweep
-        run: node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=50
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=80
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           STARTUPHUB_API_KEY: ${{ secrets.STARTUPHUB_API_KEY }}

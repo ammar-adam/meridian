@@ -21,7 +21,7 @@ export async function GET(req) {
   let indexCheck = null
 
   try {
-    indexCheck = await indexCheckIfStale({ limit: force ? 12 : 8 })
+    indexCheck = await indexCheckIfStale({ limit: force ? 15 : 10, force })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }

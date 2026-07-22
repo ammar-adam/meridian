@@ -90,8 +90,8 @@ describe('matchMandate', () => {
     expect(result.meta.coverageBanner).toBeTruthy()
     expect(result.meta.coverageBanner.title).toMatch(/outside/i)
     expect(result.meta.canadianMandate).toBe(false)
-    // Canadian rows dropped by hard geo filter
-    expect(result.companies.length).toBe(0)
+    expect(result.meta.usedGeoFallback).toBe(true)
+    expect(result.companies.length).toBeGreaterThan(0)
     expect(result.meta.droppedGeo).toBe(2)
   })
 
