@@ -7,6 +7,7 @@ import {
   recordObservations,
 } from '@/lib/server/truth-ledger'
 import { checkSourcesIfStale } from '@/lib/server/source-watch'
+import { ensureCompanyRecords } from '@/lib/server/records-backfill'
 
 export const maxDuration = 30
 export const dynamic = 'force-dynamic'
@@ -35,6 +36,12 @@ async function ensureCorpusObserved() {
 
 export async function GET() {
   const ledgerSync = await ensureCorpusObserved()
+  let recordsSync = null
+  try {
+    recordsSync = await ensureCompanyRecords()
+  } catch (e) {
+    recordsSync = { error: e.message }
+  }
   // Run source watchers at most daily, without cron ops.
   let sourceWatch = null
   try {
@@ -42,5 +49,5 @@ export async function GET() {
   } catch (e) {
     sourceWatch = { ran: false, error: e.message }
   }
-  return Response.json({ ...buildPilotCaseStudy(), ledgerSync, sourceWatch })
+  return Response.json({ ...buildPilotCaseStudy(), ledgerSync, recordsSync, sourceWatch })
 }
