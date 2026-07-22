@@ -6,6 +6,8 @@
 name: Bulk corpus
 
 on:
+  push:
+    branches: [main]
   schedule:
     # Nightly corpus top-up (UTC)
     - cron: '0 3 * * *'

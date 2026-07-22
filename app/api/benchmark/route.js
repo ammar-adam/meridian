@@ -25,7 +25,7 @@ export async function GET() {
     indexCheck = { ran: false, error: e.message }
   }
   try {
-    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 20, scrapeLimit: 8 })
+    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 30, scrapeLimit: 10 })
   } catch (e) {
     bulkFill = { ran: false, error: e.message }
   }
