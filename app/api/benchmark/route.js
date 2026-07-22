@@ -1,4 +1,4 @@
-import { isLedgerEnabled, benchmarkStats, listLedgerEntities, getLatestIndexChecks, listSourceWatches, ledgerIdentity } from '@/lib/server/truth-ledger'
+import { isLedgerEnabled, benchmarkStats, listLedgerEntities, getLatestIndexChecks, listSourceWatches } from '@/lib/server/truth-ledger'
 
 export const maxDuration = 30
 export const dynamic = 'force-dynamic'
@@ -51,7 +51,6 @@ export async function GET() {
       indexChecks: 'Falsifiable name searches against public indexes, stored with dates. Harmonic checks planned; StartupHub live.',
       claim: 'We only claim absence where a dated check exists. Everything else is community-sourced, unverified against indexes.',
     },
-    identity: await ledgerIdentity(),
     at: new Date().toISOString(),
   })
 }

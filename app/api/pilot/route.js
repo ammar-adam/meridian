@@ -5,7 +5,6 @@ import {
   isLedgerEnabled,
   countLedgerEntities,
   recordObservations,
-  ledgerIdentity,
 } from '@/lib/server/truth-ledger'
 import { checkSourcesIfStale } from '@/lib/server/source-watch'
 
@@ -36,7 +35,6 @@ async function ensureCorpusObserved() {
 
 export async function GET() {
   const ledgerSync = await ensureCorpusObserved()
-  const identity = await ledgerIdentity()
   // Run source watchers at most daily, without cron ops.
   let sourceWatch = null
   try {
@@ -44,5 +42,5 @@ export async function GET() {
   } catch (e) {
     sourceWatch = { ran: false, error: e.message }
   }
-  return Response.json({ ...buildPilotCaseStudy(), ledgerSync: { ...ledgerSync, identity }, sourceWatch })
+  return Response.json({ ...buildPilotCaseStudy(), ledgerSync, sourceWatch })
 }
