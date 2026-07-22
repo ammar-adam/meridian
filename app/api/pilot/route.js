@@ -11,8 +11,9 @@ import { checkSourcesIfStale } from '@/lib/server/source-watch'
 import { ensureCompanyRecords } from '@/lib/server/records-backfill'
 import { ingestIfStale } from '@/lib/server/ingest-batch'
 import { indexCheckIfStale } from '@/lib/server/index-check-batch'
+import { bulkFillIfBelowTarget } from '@/lib/server/bulk-fill-opportunistic'
 
-export const maxDuration = 60
+export const maxDuration = 300
 export const dynamic = 'force-dynamic'
 
 /** Backfill the full corpus onto the truth ledger once, without cron ops. */
@@ -68,6 +69,13 @@ export async function GET() {
     ingest = { ran: false, error: e.message }
   }
 
+  let bulkFill = null
+  try {
+    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 25, scrapeLimit: 10 })
+  } catch (e) {
+    bulkFill = { ran: false, error: e.message }
+  }
+
   const study = buildPilotCaseStudy()
   if (isLedgerEnabled()) {
     try {
@@ -91,5 +99,6 @@ export async function GET() {
     sourceWatch,
     ingest,
     indexCheck,
+    bulkFill,
   })
 }
