@@ -8,9 +8,14 @@ export default function Footer() {
           <div className="m-logo text-[12px]">M</div>
           <span className="text-[13px] text-zinc-500">Meridian</span>
         </div>
-        <div className="flex gap-8 text-[13px] font-medium text-zinc-500">
+        <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] font-medium text-zinc-500">
           <Link href="/discover" className="transition hover:text-zinc-900">Workspace</Link>
           <Link href="/fund/setup" className="transition hover:text-zinc-900">Fund setup</Link>
+          <Link href="/about" className="transition hover:text-zinc-900">About</Link>
+          <Link href="/pricing" className="transition hover:text-zinc-900">Pricing</Link>
+          <Link href="/privacy" className="transition hover:text-zinc-900">Privacy</Link>
+          <Link href="/terms" className="transition hover:text-zinc-900">Terms</Link>
+          <Link href="/claim" className="transition hover:text-zinc-900">For founders</Link>
         </div>
       </div>
     </footer>

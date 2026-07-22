@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import FundQuickSetup from '@/components/fund-quick-setup'
+import AllocatorSetup from '@/components/allocator-setup'
 import { hasFundProfile } from '@/lib/fund-profile'
 import { normalizeUrl } from '@/lib/url-utils'
 import PageLoader from '@/components/page-loader'
@@ -14,6 +15,7 @@ function FundSetupContent() {
   const [returning, setReturning] = useState(false)
   const [seedUrl, setSeedUrl] = useState('')
   const [seedName, setSeedName] = useState('')
+  const [mode, setMode] = useState('fund')
   const nextPath = searchParams.get('next') || '/brief'
 
   useEffect(() => {
@@ -45,18 +47,42 @@ function FundSetupContent() {
       <main className="mx-auto w-full max-w-lg px-6 py-16 lg:py-24">
         <p className="font-mono text-[12px] font-medium text-violet-600">Personalize</p>
         <h1 className="mt-3 text-[28px] font-bold tracking-tight text-zinc-900">
-          {returning ? 'Sharpen your thesis band' : 'One URL. We do the rest.'}
+          {returning ? 'Sharpen what we watch for you' : 'Tell us what you invest in'}
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed text-zinc-500">
-          Drop your fund website — we pull mandate, portfolio, and stage focus automatically.
+          {mode === 'fund'
+            ? 'Drop your fund website — we pull what you invest in, your portfolio, and stage focus automatically.'
+            : 'No fund website needed — a few words about your interests is enough to start.'}
         </p>
-        <div className="m-card m-card-pad mt-10">
-          <FundQuickSetup
-            initialUrl={seedUrl}
-            initialName={seedName}
-            autoRun={!!seedUrl}
-            onSaved={() => router.push(nextPath)}
-          />
+
+        <div className="mt-8 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setMode('fund')}
+            className={mode === 'fund' ? 'm-btn-primary m-btn-sm' : 'm-btn-secondary m-btn-sm'}
+          >
+            I invest through a fund
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('personal')}
+            className={mode === 'personal' ? 'm-btn-primary m-btn-sm' : 'm-btn-secondary m-btn-sm'}
+          >
+            I invest as myself
+          </button>
+        </div>
+
+        <div className="m-card m-card-pad mt-6">
+          {mode === 'fund' ? (
+            <FundQuickSetup
+              initialUrl={seedUrl}
+              initialName={seedName}
+              autoRun={!!seedUrl}
+              onSaved={() => router.push(nextPath)}
+            />
+          ) : (
+            <AllocatorSetup onSaved={() => router.push(nextPath)} />
+          )}
         </div>
         <p className="mt-6 text-center text-[13px] text-zinc-500">
           <button type="button" onClick={() => router.push('/brief')} className="underline-offset-2 hover:underline">
