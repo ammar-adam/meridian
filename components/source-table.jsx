@@ -8,6 +8,7 @@ import { isPowerBatchEnabled, setPowerBatchEnabled } from '@/lib/discover-state'
 import CoverageProof from '@/components/coverage-proof'
 import ReachabilityActions from '@/components/reachability-actions'
 import { copyCompanyForCrm } from '@/lib/crm-export'
+import { canAutogenBrief, isFlowReady } from '@/lib/flow-quality'
 
 function FitBadge({ score, reasons }) {
   const cls = score >= 80 ? 'm-badge-high' : score >= 60 ? 'm-badge-mid' : 'm-badge-low'
@@ -88,6 +89,21 @@ function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
   )
 }
 
+function SerialFounderBadge({ company }) {
+  if (!company?.serialFounder) return null
+  const prior = company.priorCompanies?.length
+    ? ` — also at ${company.priorCompanies.slice(0, 2).join(', ')}`
+    : ''
+  return (
+    <span
+      className="ml-1.5 inline-flex rounded border border-violet-300 bg-violet-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-900"
+      title={`Serial founder${prior}`}
+    >
+      Serial
+    </span>
+  )
+}
+
 function FlowBadge({ company }) {
   if (company?.isNew || company?.flowBadge === 'new') {
     return (
@@ -158,8 +174,13 @@ export default function SourceTable({
   const selectedCompanies = companies.filter(c => selected.has(c.name))
 
   function handleBatch(companiesToBrief) {
-    if (!confirmBatchBrief(companiesToBrief)) return
-    onBatchBrief?.(companiesToBrief)
+    const briefable = companiesToBrief.filter(canAutogenBrief)
+    if (!briefable.length) {
+      window.alert('Selected rows need a live domain before batch brief — add a website first.')
+      return
+    }
+    if (!confirmBatchBrief(briefable)) return
+    onBatchBrief?.(briefable)
   }
 
   if (!companies.length) {
@@ -230,7 +251,10 @@ export default function SourceTable({
             </tr>
           </thead>
           <tbody>
-            {companies.map((c, i) => (
+            {companies.map((c, i) => {
+              const briefable = canAutogenBrief(c)
+              const flowReady = isFlowReady(c)
+              return (
               <tr key={`${c.name}-${i}`} className="group">
                 {powerBatch && (
                   <td>
@@ -243,13 +267,14 @@ export default function SourceTable({
                     <button
                       type="button"
                       onClick={() => onGenerateMemo(c)}
-                      disabled={!c.url && !c.domain}
+                      disabled={!flowReady}
                       className="text-left font-medium hover:underline disabled:opacity-50"
-                      title={c.domain || c.url || 'No website'}
+                      title={briefable ? (c.domain || c.url || 'Brief') : flowReady ? 'Add a domain to brief this company' : 'No domain or founder'}
                     >
                       {c.name}
                     </button>
                     <FlowBadge company={c} />
+                    <SerialFounderBadge company={c} />
                   </div>
                   {(c.domain || c.url) && (
                     <div className="mt-0.5 font-mono text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
@@ -264,7 +289,7 @@ export default function SourceTable({
                     personName={c.personName}
                   />
                   <CoverageProof coverage={c.coverage} ledger={c.ledger} stage={c.stage} />
-                  <ReachabilityActions reach={c.reach} compact />
+                  <ReachabilityActions reach={c.reach} company={c} compact />
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
                 <td>
@@ -289,10 +314,11 @@ export default function SourceTable({
                   <div className="flex gap-1">
                     <button
                       onClick={() => onGenerateMemo(c)}
-                      disabled={!c.url && !c.domain}
+                      disabled={!flowReady}
                       className="m-btn-primary m-btn-sm"
+                      title={briefable ? 'Generate brief' : flowReady ? 'Add domain on Brief page' : 'Needs domain or founder'}
                     >
-                      Brief
+                      {briefable ? 'Brief' : flowReady ? 'Add domain' : '—'}
                     </button>
                     <button
                       type="button"
@@ -319,7 +345,7 @@ export default function SourceTable({
                   </div>
                 </td>
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </div>

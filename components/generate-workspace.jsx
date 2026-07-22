@@ -72,6 +72,8 @@ export default function GenerateWorkspace() {
   const [apiHealth, setApiHealth] = useState(null)
   const [previewScraped, setPreviewScraped] = useState(null)
   const [scrapedCache, setScrapedCache] = useState(null)
+  const [needsDomainHint, setNeedsDomainHint] = useState(null)
+  const [cachedResearch, setCachedResearch] = useState(null)
   const router = useRouter()
   const abortRef = useRef(null)
   const timerRef = useRef(null)
@@ -85,7 +87,18 @@ export default function GenerateWorkspace() {
 
   useEffect(() => {
     const q = searchParams.get('url')
+    const name = searchParams.get('name')
+    const needsDomain = searchParams.get('needsDomain') === '1'
     if (q) setUrl(q)
+    if (needsDomain && name) {
+      setNeedsDomainHint({
+        name,
+        founder: searchParams.get('founder') || '',
+      })
+      setPendingAutogen(false)
+      return
+    }
+    setNeedsDomainHint(null)
     if (q && searchParams.get('autogen') === '1') setPendingAutogen(true)
   }, [searchParams])
 
@@ -94,7 +107,21 @@ export default function GenerateWorkspace() {
     setExistingBrief(url.trim() ? findExistingBrief(url, fundId) : null)
     setPreviewScraped(null)
     setScrapedCache(null)
+    setCachedResearch(null)
     prefetchRef.current = { url: '', mode: '', research: null }
+
+    if (!url.trim()) return undefined
+    const domain = extractDomain(url)
+    if (!domain) return undefined
+
+    const ctrl = new AbortController()
+    fetch(`/api/research-cache?domain=${encodeURIComponent(domain)}`, { signal: ctrl.signal })
+      .then(r => r.json())
+      .then(data => {
+        if (data?.cached && data.sections?.length) setCachedResearch(data)
+      })
+      .catch(() => {})
+    return () => ctrl.abort()
   }, [url])
 
   useEffect(() => { setLibrary(getMemoLibrary()) }, [])
@@ -290,6 +317,12 @@ export default function GenerateWorkspace() {
 
   useEffect(() => {
     if (!pendingAutogen || !url.trim() || loading) return
+    const validated = validateBriefUrl(url)
+    if (!validated.ok) {
+      setPendingAutogen(false)
+      setError('Add a company website (e.g. company.com) before generating a brief.')
+      return
+    }
     const fundId = resolveApiFundContext().id || 'guest'
     const existing = findExistingBrief(url, fundId)
     if (existing) {
@@ -366,6 +399,26 @@ export default function GenerateWorkspace() {
           title="Company URL"
           description="Drop a URL, contact export, or company list — we handle the rest."
         >
+          {needsDomainHint && (
+            <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-[13px] text-amber-950">
+              <p className="font-medium">Add a website for {needsDomainHint.name}</p>
+              <p className="mt-1 text-amber-900">
+                {needsDomainHint.founder
+                  ? `We have founder ${needsDomainHint.founder} from community sources, but need a live domain to scrape and brief.`
+                  : 'This company needs a live domain before Meridian can build a brief.'}
+              </p>
+            </div>
+          )}
+          {cachedResearch?.sections?.length > 0 && !loading && (
+            <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-[13px] text-emerald-900">
+              <p className="font-medium">Cached research on file</p>
+              <p className="mt-1">
+                {cachedResearch.sections.length} section{cachedResearch.sections.length === 1 ? '' : 's'} from a prior brief
+                {' '}({cachedResearch.sections.map(s => s.section).slice(0, 4).join(', ')})
+                — we&apos;ll warm-start instead of restarting from zero.
+              </p>
+            </div>
+          )}
           <IntakeDropzone
             compact
             className="mb-4"

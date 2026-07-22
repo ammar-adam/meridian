@@ -11,12 +11,15 @@ import {
 } from '@/lib/server/truth-ledger'
 import { isRecordsEnabled, listCompanies } from '@/lib/server/company-records'
 import { matchMandate } from '@/lib/server/mandate-match'
+import { filterFlowFeed } from '@/lib/flow-quality'
+import { flagSerialFounders, getSerialFounderFlags } from '@/lib/server/founder-graph'
 
 export const maxDuration = 30
 
 /** Convert durable company records into flow-shaped rows. */
 function recordsToFlowCompanies(rows = []) {
   return rows.map((c) => ({
+    companyId: c.id,
     name: c.name,
     domain: c.domain || null,
     description: c.one_liner || '',
@@ -56,6 +59,47 @@ function mergeByKey(primary, extra) {
     })
   }
   return [...map.values()]
+}
+
+function splitFounderNames(personName) {
+  if (!personName) return []
+  return String(personName)
+    .split(/,| & | and /i)
+    .map(s => s.trim())
+    .filter(Boolean)
+}
+
+/** Serial-founder flags from in-feed founder names + DB links when available. */
+async function annotateSerialFounders(companies = []) {
+  if (!companies.length) return companies
+
+  const links = []
+  for (const c of companies) {
+    const companyId = c.companyId || c.domain || c.name
+    for (const name of splitFounderNames(c.personName)) {
+      links.push({ personId: name.toLowerCase(), companyId, companyName: c.name })
+    }
+  }
+  const inferred = flagSerialFounders(links)
+
+  const dbIds = [...new Set(companies.map(c => c.companyId).filter(Boolean))]
+  let dbFlags = {}
+  if (dbIds.length) {
+    try {
+      dbFlags = await getSerialFounderFlags(dbIds)
+    } catch { /* optional */ }
+  }
+
+  return companies.map((c) => {
+    const key = c.companyId || c.domain || c.name
+    const flag = dbFlags[c.companyId] || inferred[key]
+    if (!flag?.serial) return c
+    return {
+      ...c,
+      serialFounder: true,
+      priorCompanies: flag.priorCompanies?.slice(0, 4) || [],
+    }
+  })
 }
 
 /** Merge server-side truth-ledger facts into rows. */
@@ -148,14 +192,17 @@ export async function POST(req) {
   }
 
   const { companies: withLedger, truthLedger } = await withTruthLedger(companies)
+  const withSerial = await annotateSerialFounders(withLedger)
+  const { companies: feedCompanies, hiddenCount } = filterFlowFeed(withSerial)
 
   return Response.json({
-    companies: withLedger,
+    companies: feedCompanies,
     meta: {
       ...payload.meta,
-      ledger: ledgerSummary(withLedger),
+      ledger: ledgerSummary(feedCompanies),
       truthLedger,
       recordsMerged,
+      thinRowsHidden: hiddenCount,
       flow: true,
       thesis: text,
       generatedAt: new Date().toISOString(),
