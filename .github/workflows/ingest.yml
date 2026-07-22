@@ -102,7 +102,7 @@ jobs:
       - name: Index check sweep (Slice C — optional)
         run: |
           if [ -f scripts/ingest/index-check-sweep.mjs ]; then
-            node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs
+            node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=40
           else
             echo "index-check-sweep.mjs not present yet — skipping"
           fi

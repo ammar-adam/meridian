@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import PageLoader from '@/components/page-loader'
+import { flowFeedStatsLine } from '@/lib/flow-feed-stats'
 
 export default function PilotPage() {
   const [study, setStudy] = useState(null)
@@ -41,6 +42,8 @@ export default function PilotPage() {
   }
 
   const m = study.metrics
+  const feedStats = benchmark?.feedParity?.feedStats
+  const bulkFill = study.bulkFill
 
   return (
     <WorkspaceShell
@@ -60,6 +63,23 @@ export default function PilotPage() {
             {study.thesis}
           </p>
         </div>
+
+        {(feedStats || bulkFill?.ran) && (
+          <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50/80 px-4 py-3">
+            <p className="text-[13px] font-semibold text-emerald-950">Live feed parity</p>
+            {feedStats && (
+              <p className="mt-1 text-[13px] text-emerald-900">
+                {flowFeedStatsLine(feedStats)}
+                {benchmark?.feedParity?.mandate ? ` · mandate: ${benchmark.feedParity.mandate}` : ''}
+              </p>
+            )}
+            {bulkFill?.ran && (
+              <p className="mt-1 font-mono text-[12px] text-emerald-800">
+                Corpus pump: +{bulkFill.delta ?? 0} records → {bulkFill.after ?? '—'} (target {bulkFill.target ?? 1500})
+              </p>
+            )}
+          </div>
+        )}
 
         <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label="Cohort companies" value={m.cohortCompanies} />
@@ -151,6 +171,12 @@ export default function PilotPage() {
                 value={`${benchmark.attestations?.confirmed ?? 0} confirmed · ${benchmark.attestations?.pending ?? 0} pending`}
               />
             </div>
+            {feedStats && (
+              <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
+                <p className="text-[12px] font-medium text-zinc-800">Flow feed stats (same builder as Deal Flow digest)</p>
+                <p className="mt-1 font-mono text-[12px] text-zinc-600">{flowFeedStatsLine(feedStats)}</p>
+              </div>
+            )}
             <p className="mt-2 text-[11px] text-zinc-500">
               &ldquo;On Meridian since&rdquo; is when our server first recorded the company — separate from the
               cohort announcement date. Index checks are stored name searches with dates

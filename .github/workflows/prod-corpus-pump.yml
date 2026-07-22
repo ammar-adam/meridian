@@ -1,0 +1,68 @@
+# Hit production corpus growth endpoints — no repository secrets required.
+# Complements Vercel Hobby once-daily crons with 4×/day opportunistic bulk fill.
+
+name: Prod corpus pump
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target company record count'
+        required: false
+        default: '1500'
+
+concurrency:
+  group: prod-corpus-pump
+  cancel-in-progress: false
+
+jobs:
+  pump:
+    name: Corpus + index checks on prod
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Corpus bulk fill (force)
+        run: |
+          set -e
+          URL="${MERIDIAN_PROD_URL:-https://meridian-eight-sandy.vercel.app}"
+          TARGET="${{ github.event.inputs.target || '1500' }}"
+          echo "Pumping $URL/api/corpus?force=1&target=$TARGET"
+          curl -sfS -m 280 "$URL/api/corpus?force=1&target=$TARGET" | tee corpus.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open("corpus.json"))
+          print("companyRecords:", d.get("companyRecords"))
+          print("delta:", d.get("delta"))
+          bf=d.get("bulkFill") or {}
+          print("bulkFill ran:", bf.get("ran"), "reason:", bf.get("reason"), "delta:", bf.get("delta"))
+          ic=d.get("indexCheck") or {}
+          print("indexCheck ran:", ic.get("ran"), "checked:", ic.get("checked"))
+          PY
+
+      - name: Benchmark parity check
+        run: |
+          URL="${MERIDIAN_PROD_URL:-https://meridian-eight-sandy.vercel.app}"
+          curl -sfS -m 120 "$URL/api/benchmark" | python3 - <<'PY'
+          import json,sys
+          d=json.load(sys.stdin)
+          s=d.get("stats") or {}
+          fp=d.get("feedParity") or {}
+          fs=fp.get("feedStats") or {}
+          print("ledger records:", s.get("companyRecords"))
+          print("entitiesChecked:", s.get("entitiesChecked"))
+          print("feedParity mandate:", fp.get("mandate"))
+          print("feed total:", fs.get("total"))
+          PY
+
+      - name: Pilot opportunistic pass
+        run: |
+          URL="${MERIDIAN_PROD_URL:-https://meridian-eight-sandy.vercel.app}"
+          curl -sfS -m 280 "$URL/api/pilot" | python3 - <<'PY'
+          import json,sys
+          d=json.load(sys.stdin)
+          bf=d.get("bulkFill") or {}
+          print("pilot bulkFill:", bf.get("ran"), bf.get("delta"), bf.get("after"))
+          PY
+        continue-on-error: true
