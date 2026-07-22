@@ -112,16 +112,16 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                 </div>
                 {(() => {
                   const required = [
-                    { on: health.anthropic, label: 'Claude' },
-                    { on: health.perplexity, label: 'Research' },
-                    { on: health.database, label: 'Database' },
+                    { on: health.features?.aiGeneration, label: 'Claude' },
+                    { on: health.features?.deepResearch, label: 'Research' },
+                    { on: health.features?.persistence, label: 'Database' },
                   ]
                   const failing = required.filter(s => !s.on)
                   const optionalOn = [
-                    health.startuphub && 'StartupHub',
+                    health.features?.indexChecks && 'StartupHub',
                     health.features?.shareLinks && 'Share links',
                     health.features?.serverPdf && 'Server PDF',
-                    health.clerk && health.clerkMode === 'production' && 'Auth',
+                    health.features?.auth && 'Auth',
                   ].filter(Boolean)
 
                   if (failing.length === 0) {

@@ -33,9 +33,19 @@ export async function runSmokeChecks(baseUrl) {
   }
 
   await check('health', async () => {
-    const res = await fetch(`${base}/api/health`)
+    // Full config detail requires CRON_SECRET; the public payload is ok+features only.
+    const secret = process.env.CRON_SECRET?.trim()
+    const res = await fetch(`${base}/api/health`, secret
+      ? { headers: { Authorization: `Bearer ${secret}` } }
+      : undefined)
     const data = await res.json()
     if (!res.ok || !data.ok) throw new Error('health not ok')
+    if (!secret) {
+      if (!data.features?.aiGeneration || !data.features?.deepResearch) {
+        throw new Error('API keys not configured')
+      }
+      return
+    }
     if (!data.anthropic || !data.perplexity) throw new Error('API keys not configured')
     if (data.anthropicPing && !data.anthropicPing.ok) {
       throw new Error(data.anthropicPing.error || 'anthropic fast ping failed')

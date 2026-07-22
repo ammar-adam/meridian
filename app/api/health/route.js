@@ -4,6 +4,7 @@ import { isShareEnabled } from '@/lib/share-store'
 import { isStartupHubConfigured, verifyStartupHub } from '@/lib/startuphub'
 import { isPitchbookConfigured } from '@/lib/pitchbook'
 import { isServerPdfEnabled } from '@/lib/pdf-config'
+import { isCronAuthorized, shapePublicHealth } from '@/lib/health-payload'
 import { callAnthropic } from '@/lib/anthropic'
 import { MODELS } from '@/lib/api-models'
 
@@ -57,20 +58,51 @@ async function pingAnthropicSonnet() {
   }
 }
 
+/**
+ * Public: { ok, features } only — user-facing capability booleans, no config
+ * detail. Full operator payload (pings, key presence, auth mode, provider
+ * flags) requires Authorization: Bearer <CRON_SECRET>.
+ */
 export async function GET(req) {
   const quick = new URL(req.url).searchParams.get('quick') === '1'
+  const authorized = isCronAuthorized(
+    req.headers.get('authorization') || '',
+    process.env.CRON_SECRET,
+  )
+
   const pdfEnabled = isServerPdfEnabled()
   const db = isDbEnabled()
   const clerk = isClerkEnabled()
   const startuphubConfigured = isStartupHubConfigured()
-  const startuphubStatus = startuphubConfigured ? await verifyStartupHub() : { configured: false, ok: false }
-
   const anthropicKeyPresent = !!process.env.ANTHROPIC_API_KEY
     && process.env.ANTHROPIC_API_KEY !== 'your_key_here'
-  const anthropicPing = anthropicKeyPresent && !quick ? await pingAnthropic() : null
-  const anthropicSonnetPing = anthropicKeyPresent && !quick ? await pingAnthropicSonnet() : null
+  const perplexityKeyPresent = !!process.env.PERPLEXITY_API_KEY
+    && process.env.PERPLEXITY_API_KEY !== 'your_key_here'
   const clerkPk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || ''
   const clerkMode = clerkPk.startsWith('pk_live_') ? 'production' : clerkPk ? 'development' : 'none'
+
+  const features = {
+    aiGeneration: anthropicKeyPresent,
+    deepResearch: perplexityKeyPresent,
+    persistence: db,
+    indexChecks: startuphubConfigured,
+    auth: clerk && clerkMode === 'production',
+    serverPdf: pdfEnabled,
+    shareLinks: isShareEnabled(),
+    cloudSync: db && clerk,
+    flowDigest: true,
+    coverageProof: true,
+    tier0Signals: db,
+    founderClaims: db,
+  }
+
+  if (!authorized) {
+    return Response.json(shapePublicHealth({ ok: true, features }))
+  }
+
+  const startuphubStatus = startuphubConfigured ? await verifyStartupHub() : { configured: false, ok: false }
+  const anthropicPing = anthropicKeyPresent && !quick ? await pingAnthropic() : null
+  const anthropicSonnetPing = anthropicKeyPresent && !quick ? await pingAnthropicSonnet() : null
 
   return Response.json({
     ok: true,
@@ -78,7 +110,7 @@ export async function GET(req) {
     anthropicKeyPresent,
     anthropicPing,
     anthropicSonnetPing,
-    perplexity: !!process.env.PERPLEXITY_API_KEY && process.env.PERPLEXITY_API_KEY !== 'your_key_here',
+    perplexity: perplexityKeyPresent,
     startuphub: startuphubConfigured && startuphubStatus.ok,
     startuphubConfigured,
     pitchbook: isPitchbookConfigured(),
@@ -88,14 +120,6 @@ export async function GET(req) {
     clerkMode,
     clerkDemoRisk: clerkMode === 'development',
     slackDigest: Boolean(process.env.SLACK_WEBHOOK_URL?.trim()),
-    features: {
-      serverPdf: pdfEnabled,
-      shareLinks: isShareEnabled(),
-      cloudSync: db && clerk,
-      flowDigest: true,
-      coverageProof: true,
-      tier0Signals: db,
-      founderClaims: db,
-    },
+    features,
   })
 }

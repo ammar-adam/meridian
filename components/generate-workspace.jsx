@@ -175,11 +175,11 @@ export default function GenerateWorkspace() {
     // Auto/Quick paint Instant first — Perplexity only required for Deep.
     const perplexityRequired = mode === 'deep'
 
-    if (apiHealth && !apiHealth.anthropic) {
+    if (apiHealth && !apiHealth.features?.aiGeneration) {
       setError('API keys not configured — add ANTHROPIC_API_KEY to .env.local')
       return
     }
-    if (apiHealth && perplexityRequired && !apiHealth.perplexity) {
+    if (apiHealth && perplexityRequired && !apiHealth.features?.deepResearch) {
       setError('PERPLEXITY_API_KEY required for Deep research — or use Auto/Instant')
       return
     }
@@ -356,14 +356,9 @@ export default function GenerateWorkspace() {
       )}
 
       <WorkspacePage width="narrow">
-        {apiHealth && !apiHealth.anthropicKeyPresent && (
+        {apiHealth && !apiHealth.features?.aiGeneration && (
           <p className="m-alert-error mb-4">
             Missing ANTHROPIC_API_KEY — brief generation will fail. Configure `.env.local` first.
-          </p>
-        )}
-        {apiHealth?.anthropicKeyPresent && apiHealth.anthropicPing && !apiHealth.anthropicPing.ok && (
-          <p className="m-alert-error mb-4">
-            AI generation unavailable — {apiHealth.anthropicPing.error || 'model or API issue'}. Check server logs.
           </p>
         )}
 
