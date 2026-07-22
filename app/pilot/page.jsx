@@ -149,6 +149,22 @@ export default function PilotPage() {
               cohort announcement date. Index checks are stored name searches with dates
               ({(benchmark.stats.indexes || []).join(', ') || 'StartupHub'}); we only claim absence where a dated check exists.
             </p>
+            {benchmark.sourceWatches?.length > 0 && (
+              <div className="mt-4">
+                <p className="text-[12px] font-medium text-zinc-800">Source freshness (watched automatically)</p>
+                <div className="mt-2 space-y-1">
+                  {benchmark.sourceWatches.map(w => (
+                    <div key={w.url} className="flex flex-wrap items-baseline gap-x-3 text-[12px]">
+                      <span className="text-zinc-700">{w.label}</span>
+                      <span className="font-mono text-[11px] text-zinc-500">
+                        checked {relativeTime(w.lastCheckedAt)}
+                        {w.lastChangedAt ? ` · changed ${relativeTime(w.lastChangedAt)}` : ''}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </WorkspaceSection>
         )}
 
@@ -159,6 +175,16 @@ export default function PilotPage() {
       </WorkspacePage>
     </WorkspaceShell>
   )
+}
+
+function relativeTime(iso) {
+  const t = Date.parse(iso || '')
+  if (Number.isNaN(t)) return '—'
+  const mins = Math.floor((Date.now() - t) / 60000)
+  if (mins < 60) return `${Math.max(mins, 1)}m ago`
+  const hours = Math.floor(mins / 60)
+  if (hours < 48) return `${hours}h ago`
+  return `${Math.floor(hours / 24)}d ago`
 }
 
 function Stat({ label, value }) {
