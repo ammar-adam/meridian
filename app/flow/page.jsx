@@ -16,6 +16,7 @@ import {
 } from '@/lib/fund-profile'
 import { findMemoByDomain } from '@/lib/memo-library'
 import { resolveDiscoverCompanyUrl } from '@/lib/discover-url'
+import { canAutogenBrief } from '@/lib/flow-quality'
 import { buildSourceContext } from '@/lib/source-session'
 import {
   upsertWatch,
@@ -163,22 +164,38 @@ function FlowContent() {
 
   function briefCompany(company) {
     const url = resolveDiscoverCompanyUrl(company)
-    if (!url) return
     const profile = getFundProfile()
     const strategy = getActiveStrategy(profile)
     const thesis = watch?.thesis || strategy?.thesis || ''
-    sessionStorage.setItem('meridian_source_context', JSON.stringify(buildSourceContext(
-      { thesis, meta: { flow: true }, fundId: profile?.id, strategyId: strategy?.id },
-      company,
-    )))
-    const existing = findMemoByDomain(url, profile?.id)
-    if (existing) {
-      sessionStorage.setItem('memoId', existing.id)
-      sessionStorage.setItem('memoSource', 'library')
-      router.push('/memo')
+
+    if (url && canAutogenBrief(company)) {
+      sessionStorage.setItem('meridian_source_context', JSON.stringify(buildSourceContext(
+        { thesis, meta: { flow: true }, fundId: profile?.id, strategyId: strategy?.id },
+        company,
+      )))
+      const existing = findMemoByDomain(url, profile?.id)
+      if (existing) {
+        sessionStorage.setItem('memoId', existing.id)
+        sessionStorage.setItem('memoSource', 'library')
+        router.push('/memo')
+        return
+      }
+      router.push(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
       return
     }
-    router.push(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
+
+    if (company?.personName || company?.name) {
+      sessionStorage.setItem('meridian_source_context', JSON.stringify(buildSourceContext(
+        { thesis, meta: { flow: true }, fundId: profile?.id, strategyId: strategy?.id },
+        company,
+      )))
+      const q = new URLSearchParams({
+        name: company.name,
+        needsDomain: '1',
+      })
+      if (company.personName) q.set('founder', company.personName)
+      router.push(`/brief?${q.toString()}`)
+    }
   }
 
   const summary = useMemo(() => flowSummary(companies || []), [companies])
@@ -256,6 +273,11 @@ function FlowContent() {
               <p className="mt-1 text-[13px] leading-relaxed text-amber-900">{flowMeta.coverageBanner.detail}</p>
               <p className="mt-1 text-[12px] leading-relaxed text-amber-800">{flowMeta.coverageBanner.expanding}</p>
             </div>
+          )}
+          {flowMeta?.thinRowsHidden > 0 && (
+            <p className="mt-2 text-[12px] text-zinc-500">
+              {flowMeta.thinRowsHidden} thin rows hidden (no domain or founder) — expand sources or add domains to brief them.
+            </p>
           )}
           {feedRows.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-emerald-800">
