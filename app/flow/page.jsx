@@ -50,6 +50,7 @@ function FlowContent() {
   const [fund, setFund] = useState(null)
   const [watch, setWatch] = useState(null)
   const [companies, setCompanies] = useState(null)
+  const [flowMeta, setFlowMeta] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [lastVisit, setLastVisit] = useState(null)
@@ -102,6 +103,7 @@ function FlowContent() {
         annotateFlowCompanies(data.companies || [], { fundId: profile.id }),
       )
       setCompanies(annotated)
+      setFlowMeta(data.meta || null)
       setLastVisit(getLastVisit(profile.id))
     } catch (err) {
       setError(err.message || 'Failed to load deal flow')
@@ -242,18 +244,28 @@ function FlowContent() {
         <div className="m-flow-hero mb-6">
           <p className="m-kicker mb-1">Data wedge</p>
           <h2 className="text-[20px] font-semibold tracking-tight text-zinc-900">
-            Canadian community companies — founders, domains, coverage proof with receipts.
+            Companies matched to your mandate — with receipts.
           </h2>
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-zinc-600">
-            Velocity, DMZ, CDL cohorts with first-seen dates and reachability. We only claim index absence
-            where a dated check exists; everything else is labeled community-sourced. Watch once — digest what&apos;s new.
+            Ranked by thesis overlap, stage, and freshness. Fit scores show why a company matched.
+            We only claim index absence where a dated check exists.
           </p>
+          {flowMeta?.coverageBanner && (
+            <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
+              <p className="text-[13px] font-semibold text-amber-950">{flowMeta.coverageBanner.title}</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-amber-900">{flowMeta.coverageBanner.detail}</p>
+              <p className="mt-1 text-[12px] leading-relaxed text-amber-800">{flowMeta.coverageBanner.expanding}</p>
+            </div>
+          )}
           {feedRows.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-emerald-800">
               <span>{(coverage.communitySourced || 0) + (coverage.communityFirst || 0)}/{coverage.total} community-sourced</span>
               <span>{Math.round((reach.rate || 0) * 100)}% direct-reach{reach.searchOnly ? ` · ${reach.searchOnly} LinkedIn search` : ''}</span>
               <span>{ledger.withFirstSeen} with first-seen dates</span>
               {ledger.verifiedMiss > 0 && <span>{ledger.verifiedMiss} verified index misses</span>}
+              {flowMeta?.match?.strongMatches != null && (
+                <span>{flowMeta.match.strongMatches} strong matches</span>
+              )}
               {ledger.medianAgeDays != null && <span>median {ledger.medianAgeDays}d fresh</span>}
             </div>
           )}
