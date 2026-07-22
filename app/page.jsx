@@ -16,14 +16,16 @@ export default function LandingPage() {
           <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-20 pt-8 lg:pb-28">
             <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
               <div className="max-w-xl">
-                <p className="m-landing-eyebrow">Community deal flow · before it&apos;s indexed</p>
+                <p className="m-landing-eyebrow">Early startup discovery · with dated proof</p>
                 <h1 className="m-landing-brand">Meridian</h1>
                 <p className="m-landing-headline mt-4">
-                  Find early Canadian companies Harmonic still can&apos;t see — then brief them against your thesis.
+                  We find promising startups weeks before the databases VCs use — and we can prove the date.
                 </p>
                 <p className="m-landing-lead">
-                  Continuous deal flow from Velocity, DMZ, CDL and grants — coverage proof on every row,
-                  founder reachability, Monday digests. Watch your mandate. Brief what matters.
+                  Meridian watches the places new companies show up first — university incubators,
+                  accelerator cohorts, grant lists — and shows you each one with founder contacts,
+                  where we found it, and the date we found it. Tell us what you invest in; we&apos;ll
+                  brief the ones that matter.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-3">
                   <Link href="/flow" className="m-btn-glow">
@@ -52,17 +54,19 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
-              A subscription to early deal flow — not another AI memo toy.
+              Ahead of Harmonic and the big databases — provably, not promisingly.
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed text-zinc-500">
-              Funds pay when Meridian keeps finding companies they can&apos;t get from Harmonic. Watch once. Come back for what&apos;s new.
+              Every company we surface carries a receipt: the source page, the date our server
+              first recorded it, and — where we&apos;ve run a dated index check — whether tools
+              like Harmonic had it at that time. You can re-run the check yourself.
             </p>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-3">
-            <Step num="01" title="Watch your mandate" desc="Meridian monitors community sources against your thesis — Velocity, DMZ, CDL, grants." />
+            <Step num="01" title="Tell us what you invest in" desc="Your fund's focus — or just your own interests. Meridian watches community sources against it: Velocity, DMZ, CDL, grants." />
             <Step num="02" title="See what’s new" desc="Net-new companies with founders and domains between visits. Fresh cohort badges when data lands." />
-            <Step num="03" title="Brief & decide" desc="One-pager with a fund-native thesis band. Pursue or pass — signals compound." />
+            <Step num="03" title="Brief & decide" desc="One-pager screening brief against your focus. Pursue or pass — your signals compound." />
           </div>
         </div>
       </section>
@@ -82,7 +86,7 @@ export default function LandingPage() {
             <Link href="/flow" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
               <span className="m-bento-icon">◈</span>
               <h3 className="m-bento-title">Deal Flow</h3>
-              <p className="m-bento-desc">What’s new against your mandate from community sources — the reason to open Meridian every week.</p>
+              <p className="m-bento-desc">What’s new against what you invest in, from community sources — the reason to open Meridian every week.</p>
               <span className="m-bento-link">Open Flow →</span>
             </Link>
 
