@@ -8,8 +8,10 @@ import {
 } from '@/lib/server/truth-ledger'
 import { checkSourcesIfStale } from '@/lib/server/source-watch'
 import { ensureCompanyRecords } from '@/lib/server/records-backfill'
+import { ingestIfStale } from '@/lib/server/ingest-batch'
+import { indexCheckIfStale } from '@/lib/server/index-check-batch'
 
-export const maxDuration = 30
+export const maxDuration = 60
 export const dynamic = 'force-dynamic'
 
 /** Backfill the full corpus onto the truth ledger once, without cron ops. */
@@ -49,5 +51,28 @@ export async function GET() {
   } catch (e) {
     sourceWatch = { ran: false, error: e.message }
   }
-  return Response.json({ ...buildPilotCaseStudy(), ledgerSync, recordsSync, sourceWatch })
+
+  // Opportunistic: seed sources + extract 1 stale page; run a few index checks
+  // so the corpus and verifiedMisses grow without GitHub Actions secrets.
+  let ingest = null
+  let indexCheck = null
+  try {
+    indexCheck = await indexCheckIfStale({ limit: 4 })
+  } catch (e) {
+    indexCheck = { ran: false, error: e.message }
+  }
+  try {
+    ingest = await ingestIfStale({ maxAgeHours: 12, limit: 1 })
+  } catch (e) {
+    ingest = { ran: false, error: e.message }
+  }
+
+  return Response.json({
+    ...buildPilotCaseStudy(),
+    ledgerSync,
+    recordsSync,
+    sourceWatch,
+    ingest,
+    indexCheck,
+  })
 }

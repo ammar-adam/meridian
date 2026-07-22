@@ -95,6 +95,7 @@ export async function GET(req) {
     tier0Signals: db,
     founderClaims: db,
     companyRecords: db,
+    opportunisticIngest: db,
   }
 
   if (!authorized) {

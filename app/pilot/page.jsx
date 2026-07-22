@@ -144,6 +144,8 @@ export default function PilotPage() {
               <Stat label="Index-checked" value={benchmark.stats.entitiesChecked} />
               <Stat label="Verified misses (dated)" value={benchmark.stats.verifiedMisses} />
               <Stat label="Pre-announcement signals" value={benchmark.stats.preAnnouncementSignals ?? 0} />
+              <Stat label="Company records" value={benchmark.stats.companyRecords ?? '—'} />
+              <Stat label="Registered sources" value={benchmark.stats.registeredSources ?? '—'} />
               <Stat
                 label="Founder claims"
                 value={`${benchmark.attestations?.confirmed ?? 0} confirmed · ${benchmark.attestations?.pending ?? 0} pending`}
