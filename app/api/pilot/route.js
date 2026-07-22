@@ -12,12 +12,12 @@ export const dynamic = 'force-dynamic'
 
 /** Backfill the full corpus onto the truth ledger once, without cron ops. */
 async function ensureCorpusObserved() {
-  if (!isLedgerEnabled()) return
+  if (!isLedgerEnabled()) return { enabled: false }
   try {
     const entities = [...runIncubatorAdapter(), ...runGrantAdapter()]
     const count = await countLedgerEntities()
-    if (count >= entities.length) return
-    await recordObservations(entities.map(e => ({
+    if (count >= entities.length) return { enabled: true, count, corpus: entities.length, skipped: true }
+    const observed = await recordObservations(entities.map(e => ({
       name: e.companyName,
       domain: e.domain,
       source: e.source,
@@ -25,12 +25,14 @@ async function ensureCorpusObserved() {
       cohortDate: e.sourceMeta?.cohortDate || null,
       sourceMeta: { program: e.sourceMeta?.program || null },
     })).filter(c => c.name))
+    return { enabled: true, count, corpus: entities.length, observed: Object.keys(observed).length }
   } catch (e) {
     console.error('[pilot] corpus backfill:', e.message)
+    return { enabled: true, error: e.message }
   }
 }
 
 export async function GET() {
-  await ensureCorpusObserved()
-  return Response.json(buildPilotCaseStudy())
+  const ledgerSync = await ensureCorpusObserved()
+  return Response.json({ ...buildPilotCaseStudy(), ledgerSync })
 }
