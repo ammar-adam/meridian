@@ -1190,5 +1190,333 @@
     "type": "capital",
     "cadence": "daily",
     "geography": "US"
+  },
+  {
+    "id": "cchub-news",
+    "label": "CcHub — news",
+    "url": "https://cchub.africa/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Africa · Lagos"
+  },
+  {
+    "id": "cchub-portfolio",
+    "label": "CcHub — portfolio",
+    "url": "https://cchub.africa/portfolio/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Africa · Lagos"
+  },
+  {
+    "id": "mest-africa",
+    "label": "MEST Africa — portfolio",
+    "url": "https://meltwater.org/mest-portfolio/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Africa · Accra"
+  },
+  {
+    "id": "nairobi-garage",
+    "label": "Nairobi Garage — startups",
+    "url": "https://nairobigarage.com/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Africa · Nairobi"
+  },
+  {
+    "id": "i-hub-kenya",
+    "label": "iHub Kenya — community",
+    "url": "https://ihub.co.ke/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Africa · Nairobi"
+  },
+  {
+    "id": "flat6labs-cairo",
+    "label": "Flat6Labs Cairo",
+    "url": "https://flat6labs.com/location/cairo/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Africa · Cairo"
+  },
+  {
+    "id": "flat6labs-lagos",
+    "label": "Flat6Labs Lagos",
+    "url": "https://flat6labs.com/location/lagos/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Africa · Lagos"
+  },
+  {
+    "id": "ventureburn",
+    "label": "Ventureburn — Africa startups",
+    "url": "https://ventureburn.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Africa"
+  },
+  {
+    "id": "disrupt-africa",
+    "label": "Disrupt Africa",
+    "url": "https://disrupt-africa.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Africa"
+  },
+  {
+    "id": "techcabal",
+    "label": "TechCabal",
+    "url": "https://techcabal.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Africa · Nigeria"
+  },
+  {
+    "id": "partech-africa",
+    "label": "Partech Africa — portfolio",
+    "url": "https://partechpartners.com/portfolio/",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Africa"
+  },
+  {
+    "id": "500-latam",
+    "label": "500 Global — LatAm",
+    "url": "https://500.co/latam",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM"
+  },
+  {
+    "id": "platanus-ventures",
+    "label": "Platanus Ventures",
+    "url": "https://platan.us/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM · Chile"
+  },
+  {
+    "id": "start-up-chile",
+    "label": "Start-Up Chile",
+    "url": "https://startupchile.org/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM · Chile"
+  },
+  {
+    "id": "wayra-latam",
+    "label": "Wayra LatAm",
+    "url": "https://wayra.com/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM"
+  },
+  {
+    "id": "nx-ventures-mexico",
+    "label": "NX Ventures Mexico",
+    "url": "https://nx.vc/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM · Mexico"
+  },
+  {
+    "id": "domo-invest",
+    "label": "DOMO Invest — Brazil",
+    "url": "https://domoinvest.com.br/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM · Brazil"
+  },
+  {
+    "id": "ace-startups-brazil",
+    "label": "ACE Startups Brazil",
+    "url": "https://acestartups.com.br/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "LATAM · Brazil"
+  },
+  {
+    "id": "ruta-n-medellin",
+    "label": "Ruta N Medellín",
+    "url": "https://rutanmedellin.org/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "LATAM · Colombia"
+  },
+  {
+    "id": "hub-buenos-aires",
+    "label": "Hub Buenos Aires",
+    "url": "https://hubba.com.ar/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "LATAM · Argentina"
+  },
+  {
+    "id": "latam-list",
+    "label": "LatamList",
+    "url": "https://latamlist.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "LATAM"
+  },
+  {
+    "id": "contxto",
+    "label": "Contxto — LatAm startups",
+    "url": "https://contxto.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "LATAM"
+  },
+  {
+    "id": "techstars-austin",
+    "label": "Techstars Austin",
+    "url": "https://www.techstars.com/accelerators/austin",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Austin"
+  },
+  {
+    "id": "techstars-detroit",
+    "label": "Techstars Detroit",
+    "url": "https://www.techstars.com/accelerators/detroit",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Detroit"
+  },
+  {
+    "id": "techstars-tulsa",
+    "label": "Techstars Tulsa",
+    "url": "https://www.techstars.com/accelerators/tulsa",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US secondary · Tulsa"
+  },
+  {
+    "id": "techstars-kansas-city",
+    "label": "Techstars Kansas City",
+    "url": "https://www.techstars.com/accelerators/kansas-city",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US secondary · Kansas City"
+  },
+  {
+    "id": "gener8tor",
+    "label": "gener8tor — portfolio",
+    "url": "https://www.gener8tor.com/portfolio",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US secondary · Midwest"
+  },
+  {
+    "id": "capital-factory",
+    "label": "Capital Factory — Austin",
+    "url": "https://www.capitalfactory.com/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "US · Austin"
+  },
+  {
+    "id": "iron-yard-alumni",
+    "label": "Iron Yard alumni network",
+    "url": "https://www.theironyard.com/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US secondary"
+  },
+  {
+    "id": "seedcamp",
+    "label": "Seedcamp — portfolio",
+    "url": "https://seedcamp.com/portfolio/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Europe · London"
+  },
+  {
+    "id": "entrepreneur-first",
+    "label": "Entrepreneur First",
+    "url": "https://www.joinef.com/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Europe · London"
+  },
+  {
+    "id": "station-f",
+    "label": "Station F — startups",
+    "url": "https://stationf.co/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Europe · Paris"
+  },
+  {
+    "id": "startupbootcamp",
+    "label": "Startupbootcamp",
+    "url": "https://www.startupbootcamp.org/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Europe"
+  },
+  {
+    "id": "andela-engineering",
+    "label": "Andela — blog",
+    "url": "https://andela.com/blog",
+    "type": "launch",
+    "cadence": "weekly",
+    "geography": "Africa"
+  },
+  {
+    "id": "y-combinator-companies",
+    "label": "Y Combinator — companies",
+    "url": "https://www.ycombinator.com/companies",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · SF"
+  },
+  {
+    "id": "techstars-nyc",
+    "label": "Techstars NYC",
+    "url": "https://www.techstars.com/accelerators/new-york-city",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · New York"
+  },
+  {
+    "id": "masschallenge-texas",
+    "label": "MassChallenge Texas",
+    "url": "https://masschallenge.org/programs-texas/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Texas"
+  },
+  {
+    "id": "rise-accelerator",
+    "label": "Rise Accelerator — Cape Town",
+    "url": "https://www.riseaccelerator.co.za/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Africa · Cape Town"
+  },
+  {
+    "id": "injini-africa",
+    "label": "Injini — edtech Africa",
+    "url": "https://injini.africa/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Africa · Cape Town"
+  },
+  {
+    "id": "founders-factory-africa",
+    "label": "Founders Factory Africa",
+    "url": "https://foundersfactory.africa/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Africa"
+  },
+  {
+    "id": "angel-hub-africa",
+    "label": "Angel Hub Ventures",
+    "url": "https://angelhub.co.za/",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Africa · Johannesburg"
   }
 ]

@@ -5,6 +5,7 @@ import {
   isLedgerEnabled,
   countLedgerEntities,
   recordObservations,
+  benchmarkStats,
 } from '@/lib/server/truth-ledger'
 import { checkSourcesIfStale } from '@/lib/server/source-watch'
 import { ensureCompanyRecords } from '@/lib/server/records-backfill'
@@ -62,13 +63,29 @@ export async function GET() {
     indexCheck = { ran: false, error: e.message }
   }
   try {
-    ingest = await ingestIfStale({ maxAgeHours: 12, limit: 1 })
+    ingest = await ingestIfStale({ maxAgeHours: 12, limit: 5 })
   } catch (e) {
     ingest = { ran: false, error: e.message }
   }
 
+  const study = buildPilotCaseStudy()
+  if (isLedgerEnabled()) {
+    try {
+      const bench = await benchmarkStats()
+      if (bench) {
+        study.metrics.verifiedMiss = bench.verifiedMisses ?? study.metrics.verifiedMiss
+        study.metrics.medianAgeDays = bench.medianMissAgeDays ?? study.metrics.medianAgeDays
+        study.metrics.withFirstSeen = bench.entities ?? study.metrics.withFirstSeen
+        study.metrics.ledgerEntities = bench.entities
+        study.metrics.entitiesChecked = bench.entitiesChecked
+      }
+    } catch (e) {
+      study.benchmarkError = e.message
+    }
+  }
+
   return Response.json({
-    ...buildPilotCaseStudy(),
+    ...study,
     ledgerSync,
     recordsSync,
     sourceWatch,

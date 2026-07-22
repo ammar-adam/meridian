@@ -17,6 +17,9 @@ describe('geography-utils', () => {
     expect(looksCanadian({ geography: 'Toronto, Canada', domain: 'acme.com' })).toBe(true)
     expect(looksCanadian({ domain: 'startup.ca' })).toBe(true)
     expect(looksUsOnly({ geography: 'San Francisco, US' })).toBe(true)
+    expect(looksUsOnly({ geography: 'US' })).toBe(true)
+    expect(looksUsOnly({ geography: 'Austin, USA' })).toBe(true)
+    expect(looksUsOnly({ geography: 'Boston, U.S.' })).toBe(true)
   })
 
   it('filters US-only seeds when mandate is Canada-only', () => {

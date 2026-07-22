@@ -25,6 +25,12 @@ export async function POST(req) {
     return Response.json({ ok: false, reason: 'db off' }, { status: 200 })
   }
   const actorId = await resolveActorId(req)
+  if (actorId === 'guest') {
+    return Response.json(
+      { error: 'Sign in or use a registered device to record outcomes' },
+      { status: 401 },
+    )
+  }
   const validated = validateOutcomePayload(await req.json())
   if (!validated.ok) {
     return Response.json({ error: validated.error }, { status: 400 })

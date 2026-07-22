@@ -19,7 +19,7 @@ export default function LandingPage() {
                 <p className="m-landing-eyebrow">Early startup discovery · with dated proof</p>
                 <h1 className="m-landing-brand">Meridian</h1>
                 <p className="m-landing-headline mt-4">
-                  We find promising startups weeks before the databases VCs use — and we can prove the date.
+                  We find promising startups in community sources first — with dated proof you can verify.
                 </p>
                 <p className="m-landing-lead">
                   Meridian watches the places new companies show up first — university incubators,
@@ -54,12 +54,13 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
-              Ahead of Harmonic and the big databases — provably, not promisingly.
+              Dated index checks — StartupHub live today; Harmonic next.
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed text-zinc-500">
               Every company we surface carries a receipt: the source page, the date our server
-              first recorded it, and — where we&apos;ve run a dated index check — whether tools
-              like Harmonic had it at that time. You can re-run the check yourself.
+              first recorded it, and — where we&apos;ve run a dated StartupHub name search —
+              whether the mainstream databases had it at that time. We only claim earliness
+              when the ledger shows it; you can re-run the check yourself.
             </p>
           </div>
 
