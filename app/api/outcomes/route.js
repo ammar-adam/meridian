@@ -1,27 +1,36 @@
+import { enforceRateLimit } from '@/lib/api-guard'
 import { resolveActorId } from '@/lib/actor-id'
+import { validateOutcomePayload } from '@/lib/outcome-validation'
 import {
   isLedgerEnabled,
   recordFlowOutcome,
   getFlowOutcomes,
+  purgeTestOutcomes,
 } from '@/lib/server/truth-ledger'
 
 export const maxDuration = 15
+
+// Purge synthetic audit rows once per server instance — cheap and idempotent.
+let _purged = false
 
 /**
  * Server-side pursue/pass outcomes — durable, cross-device memory.
  * localStorage remains a cache; this is the record (docs/rebuild-plan.md).
  */
 export async function POST(req) {
+  const limited = await enforceRateLimit(req, 'outcomes')
+  if (limited) return limited
+
   if (!isLedgerEnabled()) {
     return Response.json({ ok: false, reason: 'db off' }, { status: 200 })
   }
   const actorId = await resolveActorId(req)
-  const { entityName, domain, outcome, fundName } = await req.json()
-
-  if (!entityName || !['pursue', 'pass'].includes(outcome)) {
-    return Response.json({ error: 'entityName and outcome (pursue|pass) required' }, { status: 400 })
+  const validated = validateOutcomePayload(await req.json())
+  if (!validated.ok) {
+    return Response.json({ error: validated.error }, { status: 400 })
   }
 
+  const { entityName, domain, outcome, fundName } = validated.value
   const ok = await recordFlowOutcome({ actorId, entityName, domain, outcome, fundName })
   return Response.json({ ok })
 }
@@ -29,6 +38,10 @@ export async function POST(req) {
 export async function GET(req) {
   if (!isLedgerEnabled()) {
     return Response.json({ outcomes: [], enabled: false })
+  }
+  if (!_purged) {
+    _purged = true
+    await purgeTestOutcomes()
   }
   const actorId = await resolveActorId(req)
   const rows = await getFlowOutcomes(actorId)
