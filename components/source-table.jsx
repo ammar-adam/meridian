@@ -9,9 +9,12 @@ import CoverageProof from '@/components/coverage-proof'
 import ReachabilityActions from '@/components/reachability-actions'
 import { copyCompanyForCrm } from '@/lib/crm-export'
 
-function FitBadge({ score }) {
+function FitBadge({ score, reasons }) {
   const cls = score >= 80 ? 'm-badge-high' : score >= 60 ? 'm-badge-mid' : 'm-badge-low'
-  return <span className={cls}>{score}</span>
+  const title = Array.isArray(reasons) && reasons.length
+    ? reasons.join(' · ')
+    : score != null ? `Fit ${score}` : ''
+  return <span className={cls} title={title}>{score ?? '—'}</span>
 }
 
 function LearnedBadge({ behavioral }) {
@@ -265,8 +268,13 @@ export default function SourceTable({
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
                 <td>
-                  <FitBadge score={c.fitScore} />
+                  <FitBadge score={c.fitScore} reasons={c.matchReasons} />
                   <LearnedBadge behavioral={c.behavioral} />
+                  {Array.isArray(c.matchReasons) && c.matchReasons.length > 0 && (
+                    <div className="mt-1 max-w-[10rem] text-[10px] leading-snug text-zinc-500">
+                      {c.matchReasons.slice(0, 2).join(' · ')}
+                    </div>
+                  )}
                 </td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.stage || '—'}</td>
                 <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.geography || '—'}</td>
