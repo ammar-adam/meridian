@@ -5,9 +5,10 @@ import { useRouter, usePathname } from 'next/navigation'
 import { needsWelcome, markWelcomeDone } from '@/lib/onboarding'
 import { getFundProfile } from '@/lib/fund-profile'
 
-// Externally-shared surfaces: founders and memo recipients are not investors
-// setting up a workspace — never show them the investor welcome modal.
-const EXTERNAL_PATHS = ['/claim', '/share']
+// Externally-shared surfaces: founders, memo recipients, and visitors reading
+// public pages are not investors setting up a workspace — never show them the
+// investor welcome modal.
+const EXTERNAL_PATHS = ['/claim', '/share', '/about', '/pricing', '/privacy', '/terms']
 
 export default function OnboardingHost() {
   const [open, setOpen] = useState(false)
