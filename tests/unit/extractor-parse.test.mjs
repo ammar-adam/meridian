@@ -50,7 +50,7 @@ describe('validateExtractedCompanies', () => {
 
   it('normalizes domain URLs to hostnames', () => {
     const [c] = validateExtractedCompanies({
-      companies: [{ name: 'X', domain: 'https://www.Example.COM/path' }],
+      companies: [{ name: 'Example Co', domain: 'https://www.Example.COM/path' }],
     })
     expect(c.domain).toBe('example.com')
   })
