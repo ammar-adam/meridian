@@ -1,5 +1,5 @@
 import { buildFlowFeed } from '@/lib/server/flow-feed'
-import { listAllWatches, isRecordsEnabled } from '@/lib/server/company-records'
+import { listAllWatches, isRecordsEnabled, touchWatchDigest } from '@/lib/server/company-records'
 import { dispatchWatchWebhooks } from '@/lib/server/watch-webhooks'
 import { SAGARD_AI_FUND, PANACHE_VENTURES } from '@/lib/fund-seeds'
 
@@ -38,7 +38,7 @@ export async function GET(req) {
     ? (await listAllWatches({ limit: 50 })).map(w => ({
       fundName: w.fund_name || w.fund_id,
       thesis: w.thesis,
-      id: w.fund_id,
+      id: w.id,
       sinceIso: w.last_digest_at,
     }))
     : defaultWatches()
@@ -73,6 +73,10 @@ export async function GET(req) {
       feedStats: feed.meta?.feedStats,
       webhooks: feed.meta?.webhooks,
     })
+
+    if (watch.id && isRecordsEnabled()) {
+      await touchWatchDigest(watch.id)
+    }
   }
 
   return Response.json({

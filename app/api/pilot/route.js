@@ -59,7 +59,7 @@ export async function GET() {
   let ingest = null
   let indexCheck = null
   try {
-    indexCheck = await indexCheckIfStale({ limit: 4 })
+    indexCheck = await indexCheckIfStale({ limit: 6 })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }
@@ -71,7 +71,7 @@ export async function GET() {
 
   let bulkFill = null
   try {
-    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 30, scrapeLimit: 12 })
+    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 35, scrapeLimit: 14 })
   } catch (e) {
     bulkFill = { ran: false, error: e.message }
   }

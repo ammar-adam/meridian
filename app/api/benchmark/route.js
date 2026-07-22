@@ -27,7 +27,7 @@ export async function GET(req) {
   let indexCheck = null
   let bulkFill = null
   try {
-    indexCheck = await indexCheckIfStale({ limit: 5 })
+    indexCheck = await indexCheckIfStale({ limit: 8 })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }
