@@ -13,6 +13,10 @@ import { isRecordsEnabled, listCompanies } from '@/lib/server/company-records'
 import { matchMandate } from '@/lib/server/mandate-match'
 import { filterFlowFeed } from '@/lib/flow-quality'
 import { flagSerialFounders, getSerialFounderFlags } from '@/lib/server/founder-graph'
+import { resolveActorId } from '@/lib/actor-id'
+import { detectWatchEvents, dedupeWatchEvents } from '@/lib/server/watch-events'
+import { dispatchWatchWebhooks } from '@/lib/server/watch-webhooks'
+import { computeFlowFeedStats } from '@/lib/flow-feed-stats'
 
 export const maxDuration = 30
 
@@ -194,6 +198,18 @@ export async function POST(req) {
   const { companies: withLedger, truthLedger } = await withTruthLedger(companies)
   const withSerial = await annotateSerialFounders(withLedger)
   const { companies: feedCompanies, hiddenCount } = filterFlowFeed(withSerial)
+  const feedStats = computeFlowFeedStats(feedCompanies)
+
+  let watchEvents = dedupeWatchEvents(detectWatchEvents(feedCompanies))
+  let webhooks = { dispatched: 0, skipped: true }
+  try {
+    const actorId = await resolveActorId(req)
+    webhooks = await dispatchWatchWebhooks(watchEvents, {
+      actorId,
+      fundName: fundContext.fundName,
+      thesis: text,
+    })
+  } catch { /* optional */ }
 
   return Response.json({
     companies: feedCompanies,
@@ -205,6 +221,9 @@ export async function POST(req) {
       thinRowsHidden: hiddenCount,
       flow: true,
       thesis: text,
+      feedStats,
+      watchEvents: watchEvents.slice(0, 20),
+      webhooks,
       generatedAt: new Date().toISOString(),
     },
     cached: false,

@@ -31,6 +31,8 @@ import { coverageSummary } from '@/lib/coverage-proof'
 import { reachabilitySummary } from '@/lib/reachability'
 import { ledgerSummary } from '@/lib/freshness-ledger'
 import FlowDigestCard from '@/components/flow-digest-card'
+import { FLOW_SOURCE_FILTERS, filterBySourceType } from '@/lib/source-type'
+import { computeFlowFeedStats } from '@/lib/flow-feed-stats'
 
 function formatVisit(iso) {
   if (!iso) return null
@@ -56,6 +58,7 @@ function FlowContent() {
   const [error, setError] = useState('')
   const [lastVisit, setLastVisit] = useState(null)
   const [watching, setWatching] = useState(false)
+  const [sourceFilter, setSourceFilter] = useState('all')
 
   const loadContext = useCallback(() => {
     const profile = getFundProfile()
@@ -199,11 +202,16 @@ function FlowContent() {
   }
 
   const summary = useMemo(() => flowSummary(companies || []), [companies])
-  const coverage = useMemo(() => coverageSummary(companies || []), [companies])
-  const reach = useMemo(() => reachabilitySummary(companies || []), [companies])
-  const ledger = useMemo(() => ledgerSummary(companies || []), [companies])
+  const feedStats = useMemo(() => computeFlowFeedStats(companies || []), [companies])
+  const coverage = useMemo(() => feedStats.coverage || coverageSummary(companies || []), [companies, feedStats])
+  const reach = useMemo(() => feedStats.reach || reachabilitySummary(companies || []), [companies, feedStats])
+  const ledger = useMemo(() => feedStats.ledger || ledgerSummary(companies || []), [companies, feedStats])
   const newRows = useMemo(() => (companies || []).filter(c => c.isNew), [companies])
-  const feedRows = companies || []
+  const filteredRows = useMemo(
+    () => filterBySourceType(companies || [], sourceFilter),
+    [companies, sourceFilter],
+  )
+  const feedRows = filteredRows
   const thesisText = watch?.thesis || getActiveStrategy(fund)?.thesis || ''
 
   if (!hasFundProfile()) {
@@ -302,8 +310,30 @@ function FlowContent() {
           <FlowDigestCard
             fundName={fund?.fundName || 'Fund'}
             thesis={thesisText}
-            companies={feedRows}
+            companies={companies || []}
+            feedStats={feedStats}
           />
+        )}
+
+        {companies?.length > 0 && (
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="text-[12px] text-zinc-500">Source filter</span>
+            {FLOW_SOURCE_FILTERS.map(f => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setSourceFilter(f.id)}
+                className={sourceFilter === f.id ? 'm-btn-primary m-btn-sm' : 'm-btn-ghost m-btn-sm'}
+              >
+                {f.label}
+              </button>
+            ))}
+            {sourceFilter !== 'all' && filteredRows.length !== companies.length && (
+              <span className="text-[12px] text-zinc-500">
+                {filteredRows.length} of {companies.length}
+              </span>
+            )}
+          </div>
         )}
 
         {error && <p className="m-alert-error mb-4">{error}</p>}
@@ -326,6 +356,8 @@ function FlowContent() {
                 onGenerateMemo={briefCompany}
                 batchRunning={false}
                 emptyReason="No new companies"
+                fundName={fund?.fundName}
+                thesis={thesisText}
               />
             </div>
           </WorkspaceSection>
@@ -341,6 +373,8 @@ function FlowContent() {
                 companies={feedRows}
                 onGenerateMemo={briefCompany}
                 batchRunning={false}
+                fundName={fund?.fundName}
+                thesis={thesisText}
               />
             </div>
           </WorkspaceSection>

@@ -7,7 +7,10 @@ import { estimateBatchCost } from '@/lib/cost-estimate'
 import { isPowerBatchEnabled, setPowerBatchEnabled } from '@/lib/discover-state'
 import CoverageProof from '@/components/coverage-proof'
 import ReachabilityActions from '@/components/reachability-actions'
-import { copyCompanyForCrm } from '@/lib/crm-export'
+import DeepDiveLinks from '@/components/deep-dive-links'
+import SourceTypeBadge from '@/components/source-type-badge'
+import ProofPacketActions from '@/components/proof-packet-actions'
+import { copyCompanyForCrm, downloadFlowCsv } from '@/lib/crm-export'
 import { canAutogenBrief, isFlowReady } from '@/lib/flow-quality'
 
 function FitBadge({ score, reasons }) {
@@ -33,41 +36,13 @@ function LearnedBadge({ behavioral }) {
 }
 
 function SourceBadge({ source, unverified, sourceConfidence }) {
-  const isStealth = unverified || source === 'stealth_signal' || source === 'evertrace'
-  if (isStealth || source === 'domain_registry') {
-    return (
-      <span className="m-badge-low border border-amber-300 bg-amber-50 text-amber-900" title="Weak or pre-announcement signal — verify before outreach">
-        {source === 'domain_registry' ? 'Registry · low' : 'Stealth · unverified'}
-      </span>
-    )
-  }
-  if (source === 'incubator') {
-    const enriched = sourceConfidence === 'high'
-    return (
-      <span
-        className="m-badge-high border border-emerald-300 bg-emerald-50 text-emerald-900"
-        title={enriched ? 'Incubator cohort with structured founders/domain' : 'Pre-vetted incubator cohort'}
-      >
-        Incubator
-      </span>
-    )
-  }
-  if (source === 'grant') {
-    return (
-      <span className="m-badge-mid border border-sky-300 bg-sky-50 text-sky-900" title="Public grant recipient disclosure">
-        Grant
-      </span>
-    )
-  }
-  if (source === 'event_host') {
-    return (
-      <span className="m-badge-mid" title="Event host / organizer signal">
-        Event host
-      </span>
-    )
-  }
-  const label = source === 'canadian_web' ? 'Canada web' : (source || 'unknown')
-  return <span className="m-badge-low uppercase">{label}</span>
+  return (
+    <SourceTypeBadge
+      source={source}
+      unverified={unverified}
+      sourceConfidence={sourceConfidence}
+    />
+  )
 }
 
 function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
@@ -147,6 +122,9 @@ export default function SourceTable({
   batchRunning,
   demotedCount = 0,
   emptyReason = 'no_matches',
+  fundName = '',
+  thesis = '',
+  showExport = true,
 }) {
   const [selected, setSelected] = useState(new Set())
   const [powerBatch, setPowerBatch] = useState(isPowerBatchEnabled())
@@ -229,6 +207,18 @@ export default function SourceTable({
             </button>
           </div>
         )}
+        {showExport && companies.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => downloadFlowCsv(companies)}
+              className="m-btn-secondary m-btn-sm"
+              title="Export Affinity-ready CSV with proof columns"
+            >
+              Export CSV
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="m-table-wrap !rounded-none !border-x-0 !border-b-0">
@@ -290,6 +280,8 @@ export default function SourceTable({
                   />
                   <CoverageProof coverage={c.coverage} ledger={c.ledger} stage={c.stage} />
                   <ReachabilityActions reach={c.reach} company={c} compact />
+                  <DeepDiveLinks company={c} compact />
+                  <ProofPacketActions company={c} fundName={fundName} thesis={thesis} compact />
                   <div className="mt-1 text-[11px] italic" style={{ color: 'var(--m-muted-2)' }}>{c.rationale}</div>
                 </td>
                 <td>
