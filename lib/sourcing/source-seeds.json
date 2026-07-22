@@ -1,0 +1,1194 @@
+[
+  {
+    "id": "velocity-news",
+    "label": "Velocity Incubator — news",
+    "url": "https://www.velocityincubator.com/news",
+    "type": "incubator",
+    "cadence": "daily",
+    "geography": "Canada · Waterloo"
+  },
+  {
+    "id": "dmz-blog",
+    "label": "DMZ — blog",
+    "url": "https://dmz.torontomu.ca/blog",
+    "type": "incubator",
+    "cadence": "daily",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "dmz-directory",
+    "label": "DMZ — startup directory",
+    "url": "https://dmz.torontomu.ca/startup-directory",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "mars-news",
+    "label": "MaRS Discovery District — news",
+    "url": "https://www.marsdd.com/news/",
+    "type": "incubator",
+    "cadence": "daily",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "communitech-news",
+    "label": "Communitech — news",
+    "url": "https://www.communitech.ca/news",
+    "type": "incubator",
+    "cadence": "daily",
+    "geography": "Canada · Waterloo"
+  },
+  {
+    "id": "uoft-hatchery-news",
+    "label": "U of T Hatchery — news",
+    "url": "https://hatchery.engineering.utoronto.ca/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "uoft-impact-news",
+    "label": "U of T Impact Centre — news",
+    "url": "https://www.impactcentre.ca/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "mcgill-dobson-news",
+    "label": "McGill Dobson Centre — news",
+    "url": "https://www.mcgill.ca/dobson/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Montreal"
+  },
+  {
+    "id": "ubc-entrepreneurship-news",
+    "label": "UBC Entrepreneurship — news",
+    "url": "https://entrepreneurship.ubc.ca/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Vancouver"
+  },
+  {
+    "id": "queens-qic-news",
+    "label": "Queen's Innovation Centre — news",
+    "url": "https://www.queensu.ca/innovationcentre/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Kingston"
+  },
+  {
+    "id": "western-accelerator",
+    "label": "Western Accelerator",
+    "url": "https://www.westernaccelerator.com/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · London"
+  },
+  {
+    "id": "ualberta-launchpad",
+    "label": "UAlberta Launchpad",
+    "url": "https://www.ualberta.ca/en/science/innovation-and-commercialization/launchpad/index.html",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Edmonton"
+  },
+  {
+    "id": "innovate-calgary-news",
+    "label": "Innovate Calgary — news",
+    "url": "https://www.innovatecalgary.com/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Calgary"
+  },
+  {
+    "id": "sfu-venturelabs-news",
+    "label": "SFU VentureLabs — news",
+    "url": "https://www.venturelabs.ca/news",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Vancouver"
+  },
+  {
+    "id": "concordia-d3-news",
+    "label": "Concordia District 3 — news",
+    "url": "https://d3center.ca/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Montreal"
+  },
+  {
+    "id": "uottawa-entrepreneurship",
+    "label": "uOttawa Entrepreneurship Hub",
+    "url": "https://www.uottawa.ca/research-innovation/entrepreneurship",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Ottawa"
+  },
+  {
+    "id": "carleton-innovation-hub",
+    "label": "Carleton Innovation Hub",
+    "url": "https://carleton.ca/innovationhub/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Ottawa"
+  },
+  {
+    "id": "dalhousie-launchdal",
+    "label": "Dalhousie Launch Dal",
+    "url": "https://www.dal.ca/dept/launchdal.html",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Halifax"
+  },
+  {
+    "id": "york-entrepreneurship",
+    "label": "York University Entrepreneurship",
+    "url": "https://www.yorku.ca/laps/entrepreneurship/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "tmu-zone-learning",
+    "label": "TMU Zone Learning",
+    "url": "https://www.torontomu.ca/zone-learning/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "cdl-news",
+    "label": "Creative Destruction Lab — news",
+    "url": "https://creativedestructionlab.com/news/",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "Canada"
+  },
+  {
+    "id": "cdl-toronto",
+    "label": "CDL Toronto",
+    "url": "https://creativedestructionlab.com/locations/toronto/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "cdl-montreal",
+    "label": "CDL Montreal",
+    "url": "https://creativedestructionlab.com/locations/montreal/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Montreal"
+  },
+  {
+    "id": "cdl-vancouver",
+    "label": "CDL Vancouver",
+    "url": "https://creativedestructionlab.com/locations/vancouver/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Vancouver"
+  },
+  {
+    "id": "cdl-atlantic",
+    "label": "CDL Atlantic",
+    "url": "https://creativedestructionlab.com/locations/atlantic/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Atlantic"
+  },
+  {
+    "id": "next-canada-news",
+    "label": "Next Canada — news",
+    "url": "https://www.nextcanada.com/news/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "next-canada-founders",
+    "label": "Next Canada — founders",
+    "url": "https://www.nextcanada.com/founders/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "oneeleven-companies",
+    "label": "OneEleven — companies",
+    "url": "https://oneeleven.com/companies/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "lspark-companies",
+    "label": "L-SPARK — companies",
+    "url": "https://www.l-spark.com/companies/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Ottawa"
+  },
+  {
+    "id": "evp-portfolio",
+    "label": "Extreme Venture Partners — portfolio",
+    "url": "https://www.evp.vc/portfolio",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "highline-beta-blog",
+    "label": "Highline BETA — blog",
+    "url": "https://www.highlinebeta.com/blog",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "innovation-factory",
+    "label": "Innovation Factory — news",
+    "url": "https://innovationfactory.ca/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Hamilton"
+  },
+  {
+    "id": "platform-calgary",
+    "label": "Platform Calgary — news",
+    "url": "https://www.platformcalgary.com/news",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Calgary"
+  },
+  {
+    "id": "startup-edmonton",
+    "label": "Startup Edmonton — news",
+    "url": "https://www.startupedmonton.com/news",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Edmonton"
+  },
+  {
+    "id": "real-ventures-portfolio",
+    "label": "Real Ventures — portfolio",
+    "url": "https://realventures.com/portfolio/",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "panache-portfolio",
+    "label": "Panache Ventures — portfolio",
+    "url": "https://www.panache.vc/portfolio",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "inovia-news",
+    "label": "Inovia Capital — news",
+    "url": "https://inovia.vc/news/",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "forge-mcmaster",
+    "label": "The Forge (McMaster) — news",
+    "url": "https://theforge.mcmaster.ca/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Hamilton"
+  },
+  {
+    "id": "mcmaster-innovation-park",
+    "label": "McMaster Innovation Park — news",
+    "url": "https://www.mcmasterinnovationpark.ca/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Hamilton"
+  },
+  {
+    "id": "waterloo-edc",
+    "label": "Waterloo EDC — blog",
+    "url": "https://www.waterlooedc.ca/blog",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Waterloo"
+  },
+  {
+    "id": "innovacorp-news",
+    "label": "Innovacorp — news",
+    "url": "https://innovacorp.ca/news",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Canada · Nova Scotia"
+  },
+  {
+    "id": "bdc-capital-news",
+    "label": "BDC Capital — news",
+    "url": "https://www.bdc.ca/en/bdc-capital/news",
+    "type": "capital",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "oci-news",
+    "label": "Ontario Centre of Innovation — news",
+    "url": "https://www.oc-innovation.ca/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Ontario"
+  },
+  {
+    "id": "alberta-innovates-news",
+    "label": "Alberta Innovates — news",
+    "url": "https://albertainnovates.ca/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · Alberta"
+  },
+  {
+    "id": "mitacs-news",
+    "label": "Mitacs — newsroom",
+    "url": "https://www.mitacs.ca/newsroom/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada"
+  },
+  {
+    "id": "humber-launchpad",
+    "label": "Humber LaunchPad",
+    "url": "https://humber.ca/launchpad/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "bcit-venture",
+    "label": "BCIT Venture Development",
+    "url": "https://www.bcit.ca/applied-research/venture-development/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Vancouver"
+  },
+  {
+    "id": "uvic-innovation",
+    "label": "UVic Innovation",
+    "url": "https://www.uvic.ca/innovation/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Victoria"
+  },
+  {
+    "id": "umanitoba-smartpark",
+    "label": "UM Smartpark",
+    "url": "https://umanitoba.ca/research/smartpark",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Winnipeg"
+  },
+  {
+    "id": "usask-innovation",
+    "label": "USask Innovation",
+    "url": "https://research.usask.ca/innovation.php",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Saskatoon"
+  },
+  {
+    "id": "mun-genesis",
+    "label": "Memorial Genesis Centre",
+    "url": "https://www.mun.ca/business/centres/genesis/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "Canada · Newfoundland"
+  },
+  {
+    "id": "ignite-fredericton",
+    "label": "Ignite Fredericton — news",
+    "url": "https://ignitefredericton.com/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · New Brunswick"
+  },
+  {
+    "id": "innovation-pei",
+    "label": "Innovation PEI — news",
+    "url": "https://www.innovationpei.com/news",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "Canada · PEI"
+  },
+  {
+    "id": "betakit",
+    "label": "BetaKit — Canadian startup news",
+    "url": "https://betakit.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Canada"
+  },
+  {
+    "id": "canadian-startup-news",
+    "label": "Canadian Startup News",
+    "url": "https://canadianstartupnews.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Canada"
+  },
+  {
+    "id": "techstars-toronto",
+    "label": "Techstars Toronto",
+    "url": "https://www.techstars.com/accelerators/toronto",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Canada · Toronto"
+  },
+  {
+    "id": "stanford-startx-news",
+    "label": "Stanford StartX — news",
+    "url": "https://startx.com/news/",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US · Stanford"
+  },
+  {
+    "id": "berkeley-skydeck-news",
+    "label": "Berkeley SkyDeck — news",
+    "url": "https://skydeck.berkeley.edu/news/",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US · Berkeley"
+  },
+  {
+    "id": "berkeley-skydeck-companies",
+    "label": "Berkeley SkyDeck — companies",
+    "url": "https://skydeck.berkeley.edu/companies/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Berkeley"
+  },
+  {
+    "id": "mit-deltav",
+    "label": "MIT delta v",
+    "url": "https://innovation.mit.edu/resource/delta-v/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Cambridge"
+  },
+  {
+    "id": "mit-the-engine",
+    "label": "The Engine (MIT) — news",
+    "url": "https://engine.xyz/news",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Cambridge"
+  },
+  {
+    "id": "mit-martin-trust",
+    "label": "MIT Martin Trust Center — news",
+    "url": "https://entrepreneurship.mit.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Cambridge"
+  },
+  {
+    "id": "harvard-ilab-news",
+    "label": "Harvard Innovation Labs — news",
+    "url": "https://innovationlabs.harvard.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Cambridge"
+  },
+  {
+    "id": "harvard-vip",
+    "label": "Harvard Venture Incubation Program",
+    "url": "https://innovationlabs.harvard.edu/venture-incubation-program/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Cambridge"
+  },
+  {
+    "id": "yale-tsai-news",
+    "label": "Yale Tsai CITY — news",
+    "url": "https://city.yale.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · New Haven"
+  },
+  {
+    "id": "princeton-keller",
+    "label": "Princeton Keller Center — news",
+    "url": "https://kellercenter.princeton.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Princeton"
+  },
+  {
+    "id": "cmu-olympus",
+    "label": "CMU Project Olympus",
+    "url": "https://www.cmu.edu/swartz-center-for-entrepreneurship/education-and-resources/project-olympus/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Pittsburgh"
+  },
+  {
+    "id": "gatech-createx",
+    "label": "Georgia Tech Create-X — news",
+    "url": "https://create-x.gatech.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Atlanta"
+  },
+  {
+    "id": "michigan-zell",
+    "label": "Michigan Zell Lurie — news",
+    "url": "https://michiganross.umich.edu/centers-initiatives/zell-lurie-institute/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Ann Arbor"
+  },
+  {
+    "id": "uiuc-research-park",
+    "label": "UIUC Research Park — news",
+    "url": "https://researchpark.illinois.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Champaign"
+  },
+  {
+    "id": "cornell-tech-news",
+    "label": "Cornell Tech — news",
+    "url": "https://tech.cornell.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · New York"
+  },
+  {
+    "id": "nyu-tandon-venture",
+    "label": "NYU Tandon Venture Lab",
+    "url": "https://engineering.nyu.edu/research-innovation/entrepreneurship/venture-lab",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · New York"
+  },
+  {
+    "id": "columbia-entrepreneurship",
+    "label": "Columbia Entrepreneurship — news",
+    "url": "https://entrepreneurship.columbia.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · New York"
+  },
+  {
+    "id": "penn-wharton-venture",
+    "label": "Penn Wharton Venture Lab — news",
+    "url": "https://venturelab.upenn.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Philadelphia"
+  },
+  {
+    "id": "ucla-anderson-price",
+    "label": "UCLA Anderson Price Center — news",
+    "url": "https://www.anderson.ucla.edu/faculty-and-research/price-center/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Los Angeles"
+  },
+  {
+    "id": "usc-viterbi-startup",
+    "label": "USC Viterbi Startup Garage",
+    "url": "https://viterbischool.usc.edu/startup-garage/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Los Angeles"
+  },
+  {
+    "id": "ut-austin-inventionworks",
+    "label": "UT Austin Texas Inventionworks",
+    "url": "https://inventionworks.utexas.edu/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Austin"
+  },
+  {
+    "id": "capital-factory-blog",
+    "label": "Capital Factory — blog",
+    "url": "https://www.capitalfactory.com/blog/",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US · Austin"
+  },
+  {
+    "id": "duke-ie-news",
+    "label": "Duke I&E — news",
+    "url": "https://entrepreneurship.duke.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Durham"
+  },
+  {
+    "id": "unc-launch",
+    "label": "UNC Launch Chapel Hill",
+    "url": "https://www.launchchapelhill.com/companies",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "US · Chapel Hill"
+  },
+  {
+    "id": "uw-comotion",
+    "label": "UW CoMotion — news",
+    "url": "https://comotion.uw.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Seattle"
+  },
+  {
+    "id": "osu-rev1",
+    "label": "Ohio State Rev1 Ventures — news",
+    "url": "https://www.rev1ventures.com/news/",
+    "type": "incubator",
+    "cadence": "weekly",
+    "geography": "US · Columbus"
+  },
+  {
+    "id": "purdue-foundry",
+    "label": "Purdue Foundry — news",
+    "url": "https://www.purduefoundry.com/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · West Lafayette"
+  },
+  {
+    "id": "wisconsin-d2p",
+    "label": "UW–Madison Discovery to Product",
+    "url": "https://d2p.wisc.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Madison"
+  },
+  {
+    "id": "northwestern-farley",
+    "label": "Northwestern Farley Center — news",
+    "url": "https://www.farley.northwestern.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Evanston"
+  },
+  {
+    "id": "chicago-polsky",
+    "label": "Chicago Booth Polsky Center — news",
+    "url": "https://polsky.uchicago.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Chicago"
+  },
+  {
+    "id": "stanford-stvp",
+    "label": "Stanford STVP — news",
+    "url": "https://stvp.stanford.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Stanford"
+  },
+  {
+    "id": "haas-newsroom",
+    "label": "Berkeley Haas newsroom",
+    "url": "https://newsroom.haas.berkeley.edu/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Berkeley"
+  },
+  {
+    "id": "caltech-innovation",
+    "label": "Caltech Innovation — news",
+    "url": "https://innovation.caltech.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Pasadena"
+  },
+  {
+    "id": "northeastern-entrepreneurship",
+    "label": "Northeastern Entrepreneurship — news",
+    "url": "https://entrepreneurship.northeastern.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Boston"
+  },
+  {
+    "id": "bu-innovate",
+    "label": "BU Innovate — news",
+    "url": "https://www.bu.edu/innovate/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Boston"
+  },
+  {
+    "id": "brown-nelson",
+    "label": "Brown Nelson Center — news",
+    "url": "https://entrepreneurship.brown.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Providence"
+  },
+  {
+    "id": "dartmouth-magnuson",
+    "label": "Dartmouth Magnuson Center — news",
+    "url": "https://students.dartmouth.edu/magnuson/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Hanover"
+  },
+  {
+    "id": "jhu-fastforward",
+    "label": "Johns Hopkins FastForward",
+    "url": "https://ventures.jhu.edu/fastforward/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Baltimore"
+  },
+  {
+    "id": "uva-ilab",
+    "label": "UVA Darden i.Lab",
+    "url": "https://www.darden.virginia.edu/innovation-technology/ilab",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Charlottesville"
+  },
+  {
+    "id": "asu-entrepreneurship",
+    "label": "ASU Entrepreneurship — news",
+    "url": "https://entrepreneurship.asu.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Phoenix"
+  },
+  {
+    "id": "uf-innovate",
+    "label": "UF Innovate — news",
+    "url": "https://innovate.research.ufl.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Gainesville"
+  },
+  {
+    "id": "rice-lilie",
+    "label": "Rice Liu Idea Lab — news",
+    "url": "https://lilie.rice.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Houston"
+  },
+  {
+    "id": "colorado-deming",
+    "label": "CU Boulder Deming Center — news",
+    "url": "https://www.colorado.edu/business/deming/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Boulder"
+  },
+  {
+    "id": "washu-skandalaris",
+    "label": "WashU Skandalaris — news",
+    "url": "https://skandalaris.wustl.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · St. Louis"
+  },
+  {
+    "id": "vanderbilt-wondry",
+    "label": "Vanderbilt Wond'ry — news",
+    "url": "https://www.vanderbilt.edu/thewondry/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Nashville"
+  },
+  {
+    "id": "nd-idea",
+    "label": "Notre Dame IDEA Center — news",
+    "url": "https://ideacenter.nd.edu/news-events/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · South Bend"
+  },
+  {
+    "id": "georgetown-entrepreneurship",
+    "label": "Georgetown Entrepreneurship — news",
+    "url": "https://entrepreneurship.georgetown.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Washington DC"
+  },
+  {
+    "id": "maryland-dingman",
+    "label": "Maryland Dingman Center — news",
+    "url": "https://www.rhsmith.umd.edu/centers-initiatives/dingman-center-entrepreneurship/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · College Park"
+  },
+  {
+    "id": "pitt-innovation",
+    "label": "Pitt Innovation Institute — news",
+    "url": "https://www.innovation.pitt.edu/news/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Pittsburgh"
+  },
+  {
+    "id": "case-thinkbox",
+    "label": "Case Western Think[box] — news",
+    "url": "https://engineering.case.edu/thinkbox/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Cleveland"
+  },
+  {
+    "id": "osu-entrepreneurship",
+    "label": "Ohio State Entrepreneurship — news",
+    "url": "https://entrepreneurship.osu.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Columbus"
+  },
+  {
+    "id": "ucsd-triton",
+    "label": "UCSD Triton Innovation Challenge",
+    "url": "https://tritoninnovationchallenge.ucsd.edu/",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · San Diego"
+  },
+  {
+    "id": "ucsb-cnsi",
+    "label": "UCSB CNSI — news",
+    "url": "https://www.cnsi.ucsb.edu/news",
+    "type": "university",
+    "cadence": "weekly",
+    "geography": "US · Santa Barbara"
+  },
+  {
+    "id": "yc-launches",
+    "label": "Y Combinator — launches",
+    "url": "https://www.ycombinator.com/launches",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US"
+  },
+  {
+    "id": "yc-companies",
+    "label": "Y Combinator — companies",
+    "url": "https://www.ycombinator.com/companies",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "yc-blog",
+    "label": "Y Combinator — blog",
+    "url": "https://www.ycombinator.com/blog",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US"
+  },
+  {
+    "id": "techstars-blog",
+    "label": "Techstars — blog",
+    "url": "https://www.techstars.com/blog",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US"
+  },
+  {
+    "id": "techstars-portfolio",
+    "label": "Techstars — portfolio",
+    "url": "https://www.techstars.com/portfolio",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "techstars-nyc",
+    "label": "Techstars New York City",
+    "url": "https://www.techstars.com/accelerators/new-york-city",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · New York"
+  },
+  {
+    "id": "techstars-boulder",
+    "label": "Techstars Boulder",
+    "url": "https://www.techstars.com/accelerators/boulder",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Boulder"
+  },
+  {
+    "id": "techstars-seattle",
+    "label": "Techstars Seattle",
+    "url": "https://www.techstars.com/accelerators/seattle",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Seattle"
+  },
+  {
+    "id": "techstars-austin",
+    "label": "Techstars Austin",
+    "url": "https://www.techstars.com/accelerators/austin",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Austin"
+  },
+  {
+    "id": "techstars-chicago",
+    "label": "Techstars Chicago",
+    "url": "https://www.techstars.com/accelerators/chicago",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Chicago"
+  },
+  {
+    "id": "techstars-boston",
+    "label": "Techstars Boston",
+    "url": "https://www.techstars.com/accelerators/boston",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Boston"
+  },
+  {
+    "id": "techstars-la",
+    "label": "Techstars Los Angeles",
+    "url": "https://www.techstars.com/accelerators/los-angeles",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Los Angeles"
+  },
+  {
+    "id": "techstars-anywhere",
+    "label": "Techstars Anywhere",
+    "url": "https://www.techstars.com/accelerators/anywhere",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Global"
+  },
+  {
+    "id": "500-global-blog",
+    "label": "500 Global — blog",
+    "url": "https://500.co/blog",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US"
+  },
+  {
+    "id": "500-global-companies",
+    "label": "500 Global — companies",
+    "url": "https://500.co/companies",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "antler-blog",
+    "label": "Antler — blog",
+    "url": "https://www.antler.co/blog",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "ef-companies",
+    "label": "Entrepreneur First — companies",
+    "url": "https://www.joinef.com/companies/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Global"
+  },
+  {
+    "id": "plug-and-play-news",
+    "label": "Plug and Play — news",
+    "url": "https://www.plugandplaytechcenter.com/news/",
+    "type": "accelerator",
+    "cadence": "daily",
+    "geography": "US"
+  },
+  {
+    "id": "gener8tor-news",
+    "label": "gener8tor — news",
+    "url": "https://www.gener8tor.com/news",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "masschallenge-news",
+    "label": "MassChallenge — news",
+    "url": "https://masschallenge.org/news/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Boston"
+  },
+  {
+    "id": "boomtown-blog",
+    "label": "Boomtown Accelerators — blog",
+    "url": "https://www.boomtownaccelerators.com/blog",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "alchemist-news",
+    "label": "Alchemist Accelerator — news",
+    "url": "https://alchemistaccelerator.com/news/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · SF"
+  },
+  {
+    "id": "hax-portfolio",
+    "label": "HAX — portfolio",
+    "url": "https://hax.co/portfolio/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "indiebio-companies",
+    "label": "IndieBio — companies",
+    "url": "https://indiebio.co/companies/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · SF"
+  },
+  {
+    "id": "sosv-news",
+    "label": "SOSV — news",
+    "url": "https://sosv.com/news/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Global"
+  },
+  {
+    "id": "a16z-speedrun",
+    "label": "a16z Speedrun",
+    "url": "https://a16z.com/speedrun/",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "south-park-commons",
+    "label": "South Park Commons — blog",
+    "url": "https://www.southparkcommons.com/blog",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · SF"
+  },
+  {
+    "id": "neo-companies",
+    "label": "Neo — companies",
+    "url": "https://neo.com/companies",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "founder-institute",
+    "label": "Founder Institute — news",
+    "url": "https://fi.co/news",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "Global"
+  },
+  {
+    "id": "angelpad-companies",
+    "label": "AngelPad — companies",
+    "url": "https://angelpad.com/companies",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · SF"
+  },
+  {
+    "id": "dreamit-blog",
+    "label": "Dreamit Ventures — blog",
+    "url": "https://www.dreamit.com/blog",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US"
+  },
+  {
+    "id": "launch-house",
+    "label": "Launch House — blog",
+    "url": "https://www.launchhouse.com/blog",
+    "type": "accelerator",
+    "cadence": "weekly",
+    "geography": "US · Detroit"
+  },
+  {
+    "id": "product-hunt",
+    "label": "Product Hunt — launches (adapter)",
+    "url": "https://www.producthunt.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "sec-form-d",
+    "label": "SEC Form D filings (adapter)",
+    "url": "https://efts.sec.gov/LATEST/search-index",
+    "type": "capital",
+    "cadence": "daily",
+    "geography": "US"
+  },
+  {
+    "id": "techcrunch-startups",
+    "label": "TechCrunch — Startups",
+    "url": "https://techcrunch.com/category/startups/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "techcrunch-fundraising",
+    "label": "TechCrunch — Fundraising",
+    "url": "https://techcrunch.com/category/fundraising/",
+    "type": "capital",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "crunchbase-news",
+    "label": "Crunchbase News",
+    "url": "https://news.crunchbase.com/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "venturebeat-ai",
+    "label": "VentureBeat — AI",
+    "url": "https://venturebeat.com/category/ai/",
+    "type": "launch",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "finsmes",
+    "label": "FinSMEs — funding news",
+    "url": "https://www.finsmes.com/",
+    "type": "capital",
+    "cadence": "daily",
+    "geography": "Global"
+  },
+  {
+    "id": "axios-pro-rata",
+    "label": "Axios Pro Rata",
+    "url": "https://www.axios.com/newsletters/axios-pro-rata",
+    "type": "capital",
+    "cadence": "daily",
+    "geography": "US"
+  }
+]
