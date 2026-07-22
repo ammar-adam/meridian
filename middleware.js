@@ -53,6 +53,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/outcomes(.*)',
   '/api/benchmark(.*)',
   '/api/claim(.*)',
+  '/api/watches(.*)',
   '/api/cron(.*)',
 ])
 

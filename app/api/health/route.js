@@ -94,6 +94,7 @@ export async function GET(req) {
     coverageProof: true,
     tier0Signals: db,
     founderClaims: db,
+    companyRecords: db,
   }
 
   if (!authorized) {
