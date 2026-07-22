@@ -73,7 +73,12 @@ jobs:
         run: node --import ./scripts/alias-register.mjs scripts/ingest/seed-sources.mjs
 
       - name: Run ingestion
-        run: node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=${{ steps.cadence.outputs.value }} --limit=40
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=${{ steps.cadence.outputs.value }} --limit=50
+
+      - name: StartupHub bulk (volume)
+        run: |
+          node --import ./scripts/alias-register.mjs scripts/ingest/startuphub-bulk.mjs --offset=0 --queries=20
+        continue-on-error: true
 
       - name: Product Hunt (optional)
         if: ${{ steps.cadence.outputs.value == 'daily' }}

@@ -35,7 +35,7 @@ loadEnv()
 const { runFormDAdapter } = await import('@/lib/sourcing/form-d-adapter')
 const { recordSighting, companyKey } = await import('@/lib/server/company-records')
 
-const result = await runFormDAdapter({ limit: 25, days: 7 })
+const result = await runFormDAdapter({ limit: 200, days: 90 })
 
 let newSightings = 0
 for (const e of result.entities || []) {

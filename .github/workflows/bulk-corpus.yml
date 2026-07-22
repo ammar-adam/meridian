@@ -1,0 +1,80 @@
+# Bulk corpus fill — target 1500+ company records via StartupHub + registry + Form D + scrape.
+#
+# Required secrets: DATABASE_URL, STARTUPHUB_API_KEY
+# Optional: ANTHROPIC_API_KEY (LLM scrape phase), PERPLEXITY_API_KEY
+
+name: Bulk corpus
+
+on:
+  schedule:
+    # Nightly corpus top-up (UTC)
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Minimum companyRecords target'
+        required: true
+        default: '1500'
+        type: string
+      queries:
+        description: 'StartupHub queries per round'
+        required: true
+        default: '30'
+        type: string
+
+concurrency:
+  group: bulk-corpus-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  fill:
+    name: Bulk fill to target
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      STARTUPHUB_API_KEY: ${{ secrets.STARTUPHUB_API_KEY }}
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      PERPLEXITY_API_KEY: ${{ secrets.PERPLEXITY_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Resolve target
+        id: cfg
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "target=${{ github.event.inputs.target }}" >> "$GITHUB_OUTPUT"
+            echo "queries=${{ github.event.inputs.queries }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "target=1500" >> "$GITHUB_OUTPUT"
+            echo "queries=30" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Seed sources
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/seed-sources.mjs
+
+      - name: Run bulk corpus fill
+        run: |
+          node --import ./scripts/alias-register.mjs scripts/ingest/run-bulk-corpus.mjs \
+            --target=${{ steps.cfg.outputs.target }} \
+            --queries=${{ steps.cfg.outputs.queries }}
+        continue-on-error: true
+
+      - name: Live scrape pass
+        run: |
+          node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=daily --limit=50
+        continue-on-error: true
+
+      - name: Index check sweep
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=40
+        continue-on-error: true
+
+      - name: Report count
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/report-count.mjs --target=${{ steps.cfg.outputs.target }}
