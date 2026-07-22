@@ -211,8 +211,9 @@ function FlowContent() {
         [
           fund?.fundName,
           summary.total ? `${summary.total} companies` : null,
-          coverage.communityFirst ? `${coverage.communityFirst} pre-index` : null,
-          reach.reachable ? `${reach.reachable} reachable` : null,
+          coverage.communityFirst ? `${coverage.communityFirst} verified misses` : null,
+          (coverage.communitySourced || 0) > 0 ? `${coverage.communitySourced} community-sourced` : null,
+          reach.direct ? `${reach.direct} direct-reach` : null,
           summary.newCount ? `${summary.newCount} new` : null,
           lastVisit ? `seen ${formatVisit(lastVisit)}` : 'first check',
         ].filter(Boolean).join(' · ')
@@ -241,18 +242,18 @@ function FlowContent() {
         <div className="m-flow-hero mb-6">
           <p className="m-kicker mb-1">Data wedge</p>
           <h2 className="text-[20px] font-semibold tracking-tight text-zinc-900">
-            Canadian community companies — founders, domains, coverage proof — before public indexes.
+            Canadian community companies — founders, domains, coverage proof with receipts.
           </h2>
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-zinc-600">
-            Velocity, DMZ, CDL cohorts with first-seen dates and reachability. Harmonic indexes what&apos;s already public;
-            Meridian surfaces what still lives inside communities. Watch once — digest what&apos;s new.
+            Velocity, DMZ, CDL cohorts with first-seen dates and reachability. We only claim index absence
+            where a dated check exists; everything else is labeled community-sourced. Watch once — digest what&apos;s new.
           </p>
           {feedRows.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-emerald-800">
-              <span>{coverage.communityFirst}/{coverage.total} community-first</span>
-              <span>{Math.round((reach.rate || 0) * 100)}% reachable ({Math.round((reach.founderRate || 0) * 100)}% founder)</span>
+              <span>{(coverage.communitySourced || 0) + (coverage.communityFirst || 0)}/{coverage.total} community-sourced</span>
+              <span>{Math.round((reach.rate || 0) * 100)}% direct-reach{reach.searchOnly ? ` · ${reach.searchOnly} LinkedIn search` : ''}</span>
               <span>{ledger.withFirstSeen} with first-seen dates</span>
-              {ledger.verifiedMiss > 0 && <span>{ledger.verifiedMiss} verified not-in-index</span>}
+              {ledger.verifiedMiss > 0 && <span>{ledger.verifiedMiss} verified index misses</span>}
               {ledger.medianAgeDays != null && <span>median {ledger.medianAgeDays}d fresh</span>}
             </div>
           )}

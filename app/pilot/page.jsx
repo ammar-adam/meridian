@@ -64,10 +64,10 @@ export default function PilotPage() {
         <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <Stat label="Cohort companies" value={m.cohortCompanies} />
           <Stat label="Flow-ready" value={m.flowReady} />
-          <Stat label="Community-first" value={`${m.communityFirst} (${Math.round(m.communityShare * 100)}%)`} />
-          <Stat label="Reachable" value={`${m.reachable} (${Math.round(m.reachRate * 100)}%)`} />
+          <Stat label="Community-sourced" value={`${(m.communitySourced || 0) + (m.communityFirst || 0)} (${Math.round(m.communityShare * 100)}%)`} />
+          <Stat label="Direct-reach" value={`${m.reachable} (${Math.round(m.reachRate * 100)}%)`} />
           <Stat label="With first-seen date" value={m.withFirstSeen} />
-          <Stat label="Verified not-in-index" value={m.verifiedMiss} />
+          <Stat label="Verified index misses" value={m.verifiedMiss} />
           <Stat label="Founder handle" value={`${Math.round((m.founderRate || 0) * 100)}%`} />
           <Stat label="Median freshness" value={m.medianAgeDays != null ? `${m.medianAgeDays}d` : '—'} />
         </div>
@@ -125,7 +125,7 @@ export default function PilotPage() {
           </div>
           <p className="mt-2 text-[11px] text-zinc-500">
             &ldquo;First seen&rdquo; is the community cohort announcement date (cited in each row&rsquo;s provenance).
-            &ldquo;Verified not-in-index&rdquo; means we ran a StartupHub name search and it returned no match — you can repeat it.
+            A verified index miss means we ran a StartupHub name search and it returned no match — you can repeat it.
             We do not assert index absence for rows we haven&rsquo;t tested.
           </p>
         </WorkspaceSection>
@@ -174,6 +174,7 @@ export default function PilotPage() {
         )}
 
         <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/earliness" className="m-btn-secondary">Earliness scoreboard</Link>
           <Link href="/flow" className="m-btn-primary">Open Deal Flow</Link>
           <Link href="/fund" className="m-btn-secondary">Choose fund &amp; watch</Link>
           <Link href="/claim" className="m-btn-secondary">Founder? Claim your profile</Link>

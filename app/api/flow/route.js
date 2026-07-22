@@ -1,6 +1,7 @@
 import { enforceRateLimit } from '@/lib/api-guard'
 import { buildIncubatorFlowDiscover } from '@/lib/discover-fast'
-import { ledgerSummary } from '@/lib/freshness-ledger'
+import { buildCoverageProof } from '@/lib/coverage-proof'
+import { buildLedgerEntry, ledgerSummary } from '@/lib/freshness-ledger'
 import {
   isLedgerEnabled,
   recordObservations,
@@ -24,23 +25,23 @@ async function withTruthLedger(companies) {
     const entityChecks = checks[id]
     if (!obs && !entityChecks?.length) return c
 
-    const ledger = { ...(c.ledger || {}) }
+    const withChecks = entityChecks?.length
+      ? { ...c, checks: entityChecks, indexChecks: entityChecks }
+      : { ...c }
+
+    // Re-derive ledger + coverage from dated checks — never patch labels by hand.
+    const ledger = buildLedgerEntry(withChecks)
     if (obs) ledger.meridianFirstSeen = obs.firstObservedAt
-    if (entityChecks?.length) {
-      ledger.indexChecks = entityChecks
-      const miss = entityChecks.find(x => x.present === false)
-      if (miss && ledger.verification?.status !== 'verified_miss') {
-        const testedAt = String(miss.checkedAt).slice(0, 10)
-        ledger.indexTest = { index: miss.indexName, result: 'no name match', testedAt }
-        ledger.verification = {
-          status: 'verified_miss',
-          label: `Not in ${miss.indexName}`,
-          detail: `Name search returned no match (checked ${testedAt}).`,
-          checkable: true,
-        }
-      }
+    if (entityChecks?.length) ledger.indexChecks = entityChecks
+
+    const coverage = buildCoverageProof(withChecks)
+
+    return {
+      ...withChecks,
+      ledger,
+      coverage,
+      notInHarmonicLikely: coverage.notInHarmonicLikely,
     }
-    return { ...c, ledger }
   })
 
   return {
