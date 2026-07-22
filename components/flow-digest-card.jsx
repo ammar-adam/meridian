@@ -59,7 +59,7 @@ export default function FlowDigestCard({ fundName, thesis, companies }) {
         {digest.stats.newCount || digest.stats.freshCount} companies worth a look for {fundName}
       </h3>
       <p className="mt-1 text-[13px] text-zinc-600">
-        {digest.stats.communityFirst} before public indexes · {digest.stats.reachable} reachable founders · copy or Slack your team
+        {digest.stats.communitySourced || digest.stats.communityFirst} community-sourced · {digest.stats.reachable} direct-reach · copy or Slack your team
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" onClick={copyDigest} className="m-btn-primary m-btn-sm">

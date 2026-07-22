@@ -50,10 +50,11 @@ export async function GET() {
     attestations: attestations || { total: 0, confirmed: 0, pending: 0 },
     honesty: {
       firstObservedAt: 'Timestamp of when Meridian first recorded the company server-side. Accrues from ledger launch; never backdated.',
-      indexChecks: 'Falsifiable name searches against public indexes, stored with dates. Harmonic checks planned; StartupHub live.',
+      indexChecks: 'Falsifiable name searches against public indexes, stored with dates. Harmonic checks planned; StartupHub live via scheduled sweep.',
       preAnnouncementSignals: 'Companies detected via new-incorporation + live-domain cross-reference — before any announcement, cohort, or index.',
       attestations: 'Founder claims are stored pending and marked confirmed only after manual verification.',
       claim: 'We only claim absence where a dated check exists. Everything else is community-sourced, unverified against indexes.',
+      accruing: 'Until entitiesChecked > 0, verifiedMisses and medianMissAgeDays stay at zero / null — we do not invent earliness numbers.',
     },
     at: new Date().toISOString(),
   })

@@ -8,7 +8,7 @@ import { getFundProfile } from '@/lib/fund-profile'
 // Externally-shared surfaces: founders, memo recipients, and visitors reading
 // public pages are not investors setting up a workspace — never show them the
 // investor welcome modal.
-const EXTERNAL_PATHS = ['/claim', '/share', '/about', '/pricing', '/privacy', '/terms']
+const EXTERNAL_PATHS = ['/claim', '/share', '/about', '/pricing', '/privacy', '/terms', '/earliness']
 
 export default function OnboardingHost() {
   const [open, setOpen] = useState(false)

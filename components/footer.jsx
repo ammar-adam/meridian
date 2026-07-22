@@ -12,6 +12,7 @@ export default function Footer() {
           <Link href="/discover" className="transition hover:text-zinc-900">Workspace</Link>
           <Link href="/fund/setup" className="transition hover:text-zinc-900">Fund setup</Link>
           <Link href="/about" className="transition hover:text-zinc-900">About</Link>
+          <Link href="/earliness" className="transition hover:text-zinc-900">Earliness</Link>
           <Link href="/pricing" className="transition hover:text-zinc-900">Pricing</Link>
           <Link href="/privacy" className="transition hover:text-zinc-900">Privacy</Link>
           <Link href="/terms" className="transition hover:text-zinc-900">Terms</Link>

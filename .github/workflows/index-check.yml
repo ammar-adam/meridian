@@ -1,0 +1,37 @@
+name: Index check sweep
+
+# Daily falsifiable StartupHub name searches → index_checks rows.
+# Self-contained (Slice C); parent can merge with ingest.yml later.
+
+on:
+  schedule:
+    - cron: '0 14 * * *' # ~10:00 ET
+  workflow_dispatch:
+
+concurrency:
+  group: index-check-sweep
+  cancel-in-progress: false
+
+jobs:
+  index-check:
+    name: StartupHub index-check sweep
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run index-check sweep
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=50
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          STARTUPHUB_API_KEY: ${{ secrets.STARTUPHUB_API_KEY }}
