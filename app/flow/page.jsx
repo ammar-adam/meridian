@@ -31,6 +31,7 @@ import { coverageSummary } from '@/lib/coverage-proof'
 import { reachabilitySummary } from '@/lib/reachability'
 import { ledgerSummary } from '@/lib/freshness-ledger'
 import FlowDigestCard from '@/components/flow-digest-card'
+import FlowWatchAlerts from '@/components/flow-watch-alerts'
 import { FLOW_SOURCE_FILTERS, filterBySourceType } from '@/lib/source-type'
 import { computeFlowFeedStats } from '@/lib/flow-feed-stats'
 
@@ -201,6 +202,10 @@ function FlowContent() {
     }
   }
 
+  function handleCompanyUpdate(name, updated) {
+    setCompanies(prev => (prev || []).map(c => (c.name === name ? { ...c, ...updated } : c)))
+  }
+
   const summary = useMemo(() => flowSummary(companies || []), [companies])
   const feedStats = useMemo(() => computeFlowFeedStats(companies || []), [companies])
   const coverage = useMemo(() => feedStats.coverage || coverageSummary(companies || []), [companies, feedStats])
@@ -306,6 +311,13 @@ function FlowContent() {
           )}
         </div>
 
+        {flowMeta?.watchEvents?.length > 0 && (
+          <FlowWatchAlerts
+            watchEvents={flowMeta.watchEvents}
+            webhooks={flowMeta.webhooks}
+          />
+        )}
+
         {feedRows.length > 0 && (
           <FlowDigestCard
             fundName={fund?.fundName || 'Fund'}
@@ -354,6 +366,7 @@ function FlowContent() {
               <SourceTable
                 companies={newRows}
                 onGenerateMemo={briefCompany}
+                onCompanyUpdate={handleCompanyUpdate}
                 batchRunning={false}
                 emptyReason="No new companies"
                 fundName={fund?.fundName}
@@ -372,6 +385,7 @@ function FlowContent() {
               <SourceTable
                 companies={feedRows}
                 onGenerateMemo={briefCompany}
+                onCompanyUpdate={handleCompanyUpdate}
                 batchRunning={false}
                 fundName={fund?.fundName}
                 thesis={thesisText}

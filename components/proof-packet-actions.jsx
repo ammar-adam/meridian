@@ -38,6 +38,31 @@ export default function ProofPacketActions({ company, fundName = '', thesis = ''
     URL.revokeObjectURL(a.href)
   }
 
+  async function downloadPdf() {
+    setBusy(true)
+    try {
+      const res = await fetch('/api/proof-packet', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ company, fundName, thesis, format: 'pdf' }),
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}))
+        throw new Error(err.error || 'PDF failed')
+      }
+      const blob = await res.blob()
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob)
+      a.download = `${(company.name || 'company').replace(/\s+/g, '-').toLowerCase()}-proof.pdf`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch (err) {
+      window.alert(err.message || 'Proof PDF failed')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
     <div className={`flex flex-wrap gap-1 ${compact ? '' : 'mt-1'}`}>
       <button
@@ -48,6 +73,15 @@ export default function ProofPacketActions({ company, fundName = '', thesis = ''
         title="Copy proof packet (source, first-seen, index checks)"
       >
         {copied ? 'Copied' : 'Proof'}
+      </button>
+      <button
+        type="button"
+        onClick={downloadPdf}
+        disabled={busy}
+        className="m-btn-ghost m-btn-sm opacity-60 hover:opacity-100"
+        title="Download proof packet PDF"
+      >
+        PDF
       </button>
       <button
         type="button"

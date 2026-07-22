@@ -119,6 +119,7 @@ export default function SourceTable({
   onGenerateMemo,
   onBatchBrief,
   onDemote,
+  onCompanyUpdate,
   batchRunning,
   demotedCount = 0,
   emptyReason = 'no_matches',
@@ -129,6 +130,7 @@ export default function SourceTable({
   const [selected, setSelected] = useState(new Set())
   const [powerBatch, setPowerBatch] = useState(isPowerBatchEnabled())
   const [copiedCrm, setCopiedCrm] = useState(null)
+  const [enriching, setEnriching] = useState(null)
 
   function toggle(name) {
     setSelected(prev => {
@@ -150,6 +152,37 @@ export default function SourceTable({
   }
 
   const selectedCompanies = companies.filter(c => selected.has(c.name))
+
+  async function handleEnrichEmail(company) {
+    const domain = (company.domain || company.url || '').replace(/^https?:\/\//, '').split('/')[0]
+    if (!domain || !domain.includes('.')) {
+      window.alert('Add a domain before verified email lookup.')
+      return
+    }
+    setEnriching(company.name)
+    try {
+      const res = await fetch('/api/enrich', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ domain, company }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Enrichment failed')
+      if (!data.enrichment?.enabled) {
+        window.alert('Hunter.io not configured — set HUNTER_API_KEY on Vercel.')
+        return
+      }
+      if (!data.enrichment?.emails?.length) {
+        window.alert(data.enrichment.error || 'No verified emails found for this domain.')
+        return
+      }
+      if (data.company) onCompanyUpdate?.(company.name, data.company)
+    } catch (err) {
+      window.alert(err.message || 'Enrichment failed')
+    } finally {
+      setEnriching(null)
+    }
+  }
 
   function handleBatch(companiesToBrief) {
     const briefable = companiesToBrief.filter(canAutogenBrief)
@@ -326,6 +359,17 @@ export default function SourceTable({
                     >
                       {copiedCrm === c.name ? 'Copied' : 'CRM'}
                     </button>
+                    {c.domain && !c.reach?.primaryEmail && (
+                      <button
+                        type="button"
+                        onClick={() => handleEnrichEmail(c)}
+                        disabled={enriching === c.name}
+                        className="m-btn-ghost m-btn-sm opacity-70 hover:opacity-100"
+                        title="Look up verified emails via Hunter.io"
+                      >
+                        {enriching === c.name ? '…' : 'Email'}
+                      </button>
+                    )}
                     <button
                       type="button"
                       onClick={() => onDemote?.(c)}

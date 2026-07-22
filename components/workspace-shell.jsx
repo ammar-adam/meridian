@@ -8,6 +8,7 @@ import FundGate from '@/components/fund-gate'
 import WorkflowStrip from '@/components/workflow-strip'
 import WorkspaceContextBar from '@/components/workspace-context-bar'
 import AuthBar from '@/components/auth-bar'
+import ClerkLiveBanner from '@/components/clerk-live-banner'
 import { FundSwitcher, StrategySwitcher, ActiveContextLabel } from '@/components/context-switcher'
 
 const NAV_GROUPS = [
@@ -54,6 +55,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
 
   return (
     <FundGate>
+      <ClerkLiveBanner />
       <div className="flex h-screen overflow-hidden bg-zinc-50">
         <aside className="m-workspace-sidebar flex w-[248px] shrink-0 flex-col">
           <div className="border-b border-white/[0.08] px-4 py-4">

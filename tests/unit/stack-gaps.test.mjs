@@ -133,3 +133,13 @@ describe('clerk live detection', () => {
     expect(isClerkLive()).toBe(false)
   })
 })
+
+describe('renderProofHtml', () => {
+  it('renders proof packet HTML for PDF', async () => {
+    const { renderProofHtml } = await import('@/lib/render-proof-html')
+    const packet = buildProofPacket({ name: 'TestCo', domain: 'test.co' })
+    const html = renderProofHtml(packet)
+    expect(html).toContain('TestCo')
+    expect(html).toContain('Meridian proof packet')
+  })
+})

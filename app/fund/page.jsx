@@ -5,6 +5,7 @@ import Link from 'next/link'
 import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage from '@/components/workspace-page'
 import FundProfileForm from '@/components/fund-profile-form'
+import WatchWebhooksPanel from '@/components/watch-webhooks-panel'
 import { FundSwitcher } from '@/components/context-switcher'
 import { getFundProfile } from '@/lib/fund-profile'
 
@@ -41,6 +42,7 @@ export default function FundPage() {
                 <p className="text-[13px]" style={{ color: 'var(--m-muted)' }}>Loading…</p>
               )}
             </div>
+            <WatchWebhooksPanel />
           </>
         ) : (
           <div className="m-card m-card-pad">

@@ -4,8 +4,8 @@ import {
   registerWebhook,
   removeWebhook,
   listWebhooks,
-  WEBHOOK_EVENT_TYPES,
 } from '@/lib/server/watch-webhooks'
+import { WEBHOOK_EVENT_TYPES } from '@/lib/watch-webhooks-shared'
 import { isRecordsEnabled } from '@/lib/server/company-records'
 
 export const maxDuration = 15

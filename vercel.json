@@ -57,7 +57,7 @@
     "app/api/pilot/route.js": {
       "maxDuration": 300
     },
-    "app/api/cron/scout-sweep/route.js": {
+    "app/api/cron/watch-events/route.js": {
       "maxDuration": 300
     },
     "app/api/proof-packet/route.js": {
@@ -99,6 +99,10 @@
     {
       "path": "/api/cron/scout-sweep",
       "schedule": "0 9,15 * * *"
+    },
+    {
+      "path": "/api/cron/watch-events",
+      "schedule": "0 10,16 * * *"
     }
   ]
 }

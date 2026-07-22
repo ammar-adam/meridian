@@ -3,6 +3,8 @@ import { indexCheckIfStale } from '@/lib/server/index-check-batch'
 import { countCompanies } from '@/lib/server/company-records'
 import { isSourceRegistryEnabled, listActiveSources } from '@/lib/server/source-registry'
 import { bulkFillIfBelowTarget } from '@/lib/server/bulk-fill-opportunistic'
+import { buildFlowFeed } from '@/lib/server/flow-feed'
+import { PANACHE_VENTURES } from '@/lib/fund-seeds'
 
 export const maxDuration = 300
 export const dynamic = 'force-dynamic'
@@ -11,8 +13,13 @@ export const dynamic = 'force-dynamic'
  * Public earliness benchmark — computed from the live truth ledger.
  * Every number here traces to a database row; nothing is asserted.
  * Also opportunistically advances index checks when the ledger is unchecked.
+ * Optional: ?thesis=...&fundName=... adds feedStats from the same Flow builder as digest.
  */
-export async function GET() {
+export async function GET(req) {
+  const { searchParams } = new URL(req.url)
+  const thesisParam = searchParams.get('thesis')?.trim()
+  const fundNameParam = searchParams.get('fundName')?.trim()
+
   if (!isLedgerEnabled()) {
     return Response.json({ enabled: false, reason: 'ledger not configured' })
   }
@@ -60,6 +67,30 @@ export async function GET() {
     })),
   }))
 
+  const referenceThesis = thesisParam || PANACHE_VENTURES.thesis
+  const referenceFund = fundNameParam || PANACHE_VENTURES.fundName
+  let feedParity = null
+  try {
+    const feed = await buildFlowFeed({
+      thesis: referenceThesis,
+      fundContext: {
+        fundName: referenceFund,
+        thesis: referenceThesis,
+        id: PANACHE_VENTURES.id,
+      },
+    })
+    feedParity = {
+      mandate: referenceFund,
+      thesis: referenceThesis.slice(0, 120),
+      feedStats: feed.meta?.feedStats || null,
+      scoutMerged: feed.meta?.scoutMerged || 0,
+      ledgerVerifiedMisses: stats.verifiedMisses ?? 0,
+      note: 'feedStats uses the same builder as /api/flow and /api/digest — ledger stats are entity-wide truth-ledger counts',
+    }
+  } catch (e) {
+    feedParity = { error: e.message }
+  }
+
   return Response.json({
     enabled: true,
     stats: {
@@ -67,6 +98,7 @@ export async function GET() {
       companyRecords: companyCount,
       registeredSources: sourceCount,
     },
+    feedParity,
     rows,
     sourceWatches: sourceWatches.map(w => ({
       label: w.label,
