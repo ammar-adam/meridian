@@ -50,13 +50,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="relative border-t border-slate-200 bg-white py-20">
+      <section className="relative border-t py-20" style={{ borderColor: 'var(--m-border)', background: 'var(--m-bg-subtle)' }}>
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
-            <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
+            <p className="m-kicker mb-3">The data wedge</p>
+            <h2 className="text-[28px] font-bold tracking-tight text-white sm:text-[32px]">
               Dated index checks — StartupHub live today; Harmonic next.
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed text-zinc-500">
+            <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
               Every company we surface carries a receipt: the source page, the date our server
               first recorded it, and — where we&apos;ve run a dated StartupHub name search —
               whether the mainstream databases had it at that time. We only claim earliness
@@ -72,13 +73,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="relative border-t border-slate-200 bg-slate-50 py-24">
+      <section className="relative border-t py-24" style={{ borderColor: 'var(--m-border)', background: 'var(--m-bg)' }}>
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 max-w-lg">
-            <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
+            <p className="m-kicker mb-3">The loop</p>
+            <h2 className="text-[28px] font-bold tracking-tight text-white sm:text-[32px]">
               Source → brief → signal
             </h2>
-            <p className="mt-3 text-[16px] leading-relaxed text-zinc-500">
+            <p className="mt-3 text-[16px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
               The product loop investors care about: community entities in, forwardable memo out, pursue/pass back in.
             </p>
           </div>
@@ -115,10 +117,10 @@ export default function LandingPage() {
 
 function Step({ num, title, desc }) {
   return (
-    <div className="text-center sm:text-left">
-      <span className="font-mono text-[11px] font-medium text-zinc-400">{num}</span>
-      <h3 className="mt-2 text-[17px] font-semibold text-zinc-900">{title}</h3>
-      <p className="mt-2 text-[14px] leading-relaxed text-zinc-500">{desc}</p>
+    <div className="relative text-center sm:text-left">
+      <span className="font-mono text-[12px] font-semibold text-emerald-400">{num}</span>
+      <h3 className="mt-2 text-[17px] font-semibold text-white">{title}</h3>
+      <p className="mt-2 text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>{desc}</p>
     </div>
   )
 }

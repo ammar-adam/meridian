@@ -261,7 +261,7 @@ function FlowContent() {
       actions={(
         <div className="flex flex-wrap gap-2">
           {watch ? (
-            <span className="m-btn-ghost m-btn-sm text-emerald-700">Watching mandate</span>
+            <span className="m-btn-ghost m-btn-sm text-emerald-400">Watching mandate</span>
           ) : (
             <button type="button" onClick={handleWatch} className="m-btn-primary m-btn-sm">
               {watching ? 'Watching…' : 'Watch this mandate'}
@@ -281,22 +281,22 @@ function FlowContent() {
       <WorkspacePage width="wide">
         <div className="m-flow-hero mb-6">
           <p className="m-kicker mb-1">Data wedge</p>
-          <h2 className="text-[20px] font-semibold tracking-tight text-zinc-900">
+          <h2 className="text-[20px] font-semibold tracking-tight text-white">
             Companies matched to your mandate — with receipts.
           </h2>
-          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-zinc-600">
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
             Ranked by thesis overlap, stage, and freshness. Fit scores show why a company matched.
             We only claim index absence where a dated check exists.
           </p>
           {flowMeta?.coverageBanner && (
-            <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
-              <p className="text-[13px] font-semibold text-amber-950">{flowMeta.coverageBanner.title}</p>
-              <p className="mt-1 text-[13px] leading-relaxed text-amber-900">{flowMeta.coverageBanner.detail}</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-amber-800">{flowMeta.coverageBanner.expanding}</p>
+            <div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3">
+              <p className="text-[13px] font-semibold text-amber-200">{flowMeta.coverageBanner.title}</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-amber-100/90">{flowMeta.coverageBanner.detail}</p>
+              <p className="mt-1 text-[12px] leading-relaxed text-amber-100/70">{flowMeta.coverageBanner.expanding}</p>
             </div>
           )}
           {flowMeta?.thinRowsHidden > 0 && (
-            <p className="mt-2 text-[12px] text-zinc-500">
+            <p className="mt-2 text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
               {flowMeta.thinRowsHidden} thin rows hidden (no domain or founder) — expand sources or add domains to brief them.
             </p>
           )}
@@ -345,7 +345,7 @@ function FlowContent() {
 
         {companies?.length > 0 && (
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="text-[12px] text-zinc-500">Source filter</span>
+            <span className="text-[12px]" style={{ color: 'var(--m-muted)' }}>Source filter</span>
             {FLOW_SOURCE_FILTERS.map(f => (
               <button
                 key={f.id}
@@ -356,7 +356,7 @@ function FlowContent() {
                 {f.label}
               </button>
             ))}
-            <span className="mx-1 text-zinc-300">|</span>
+            <span className="mx-1 text-white/20">|</span>
             <button
               type="button"
               onClick={() => setBriefableOnly(v => !v)}
@@ -366,7 +366,7 @@ function FlowContent() {
               Brief-ready ({briefReadyCount})
             </button>
             {(sourceFilter !== 'all' || briefableOnly) && feedRows.length !== companies.length && (
-              <span className="text-[12px] text-zinc-500">
+              <span className="text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
                 {feedRows.length} of {companies.length} shown
               </span>
             )}
@@ -430,9 +430,9 @@ function FlowContent() {
           />
         )}
 
-        <p className="mt-8 text-center text-[12px] text-zinc-500">
+        <p className="mt-8 text-center text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
           Prefer a one-off search?{' '}
-          <Link href="/discover" className="font-medium text-zinc-800 hover:underline">Discover →</Link>
+          <Link href="/discover" className="font-medium text-emerald-400 hover:underline">Discover →</Link>
         </p>
       </WorkspacePage>
     </WorkspaceShell>

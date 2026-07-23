@@ -71,7 +71,7 @@ function SerialFounderBadge({ company }) {
     : ''
   return (
     <span
-      className="ml-1.5 inline-flex rounded border border-violet-300 bg-violet-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-900"
+      className="ml-1.5 inline-flex rounded border border-violet-400/40 bg-violet-400/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-300"
       title={`Serial founder${prior}`}
     >
       Serial
@@ -82,14 +82,14 @@ function SerialFounderBadge({ company }) {
 function FlowBadge({ company }) {
   if (company?.isNew || company?.flowBadge === 'new') {
     return (
-      <span className="ml-1.5 inline-flex rounded border border-emerald-400 bg-emerald-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-emerald-800">
+      <span className="ml-1.5 inline-flex rounded border border-emerald-400/40 bg-emerald-400/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-emerald-300">
         New
       </span>
     )
   }
   if (company?.isFresh || company?.flowBadge === 'fresh') {
     return (
-      <span className="ml-1.5 inline-flex rounded border border-sky-300 bg-sky-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-800">
+      <span className="ml-1.5 inline-flex rounded border border-sky-400/40 bg-sky-400/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-300">
         Fresh
       </span>
     )
@@ -321,7 +321,7 @@ export default function SourceTable({
                   <FitBadge score={c.fitScore} reasons={c.matchReasons} />
                   <LearnedBadge behavioral={c.behavioral} />
                   {Array.isArray(c.matchReasons) && c.matchReasons.length > 0 && (
-                    <div className="mt-1 max-w-[10rem] text-[10px] leading-snug text-zinc-500">
+                    <div className="mt-1 max-w-[10rem] text-[10px] leading-snug" style={{ color: 'var(--m-muted-2)' }}>
                       {c.matchReasons.slice(0, 2).join(' · ')}
                     </div>
                   )}

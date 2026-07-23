@@ -22,21 +22,24 @@ export default function WorkflowStrip() {
   const active = stepIndex(pathname)
 
   return (
-    <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-zinc-200 bg-white px-6 py-2">
+    <div
+      className="flex shrink-0 items-center gap-1 overflow-x-auto border-b px-6 py-2"
+      style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}
+    >
       {STEPS.map((step, i) => {
         const isActive = i === active
         const isPast = active > i
         return (
           <div key={step.id} className="flex shrink-0 items-center">
             {i > 0 && (
-              <span className={`mx-1.5 text-[10px] ${isPast ? 'text-zinc-400' : 'text-zinc-300'}`}>›</span>
+              <span className={`mx-1.5 text-[10px] ${isPast ? 'text-emerald-400/60' : 'text-white/20'}`}>›</span>
             )}
             <Link
               href={step.href}
               className={`rounded-md px-2.5 py-1 text-[12px] font-medium transition ${
                 isActive
-                  ? 'bg-indigo-600 text-white shadow-sm'
-                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
+                  ? 'bg-emerald-500 text-[#04140d] shadow-[0_0_20px_rgba(16,185,129,0.35)]'
+                  : 'text-white/50 hover:bg-white/5 hover:text-white'
               }`}
             >
               {step.label}

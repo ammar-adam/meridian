@@ -59,12 +59,12 @@ export default function FlowDigestCard({ fundName, thesis, companies, feedStats:
   if (!companies?.length) return null
 
   return (
-    <div className="mb-6 rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50/90 to-white px-5 py-4">
+    <div className="mb-6 overflow-hidden rounded-xl border px-5 py-4" style={{ borderColor: 'rgba(16,185,129,0.3)', background: 'radial-gradient(ellipse 70% 140% at 0% 0%, rgba(16,185,129,0.12), transparent 60%), var(--m-surface)' }}>
       <p className="m-kicker mb-1">Monday digest</p>
-      <h3 className="text-[16px] font-semibold tracking-tight text-zinc-900">
+      <h3 className="text-[16px] font-semibold tracking-tight text-white">
         {digest.stats.newCount || digest.stats.freshCount} companies worth a look for {fundName}
       </h3>
-      <p className="mt-1 text-[13px] text-zinc-600">
+      <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>
         {flowFeedStatsLine(feedStats)} · copy or Slack your team
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -79,7 +79,7 @@ export default function FlowDigestCard({ fundName, thesis, companies, feedStats:
         </button>
       </div>
       {slackState && (
-        <p className="mt-2 text-[11px] text-zinc-500">
+        <p className="mt-2 text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
           Slack: {slackState === 'sent' ? 'posted' : slackState}
         </p>
       )}
