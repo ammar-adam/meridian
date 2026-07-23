@@ -301,15 +301,23 @@ function FlowContent() {
             </p>
           )}
           {feedRows.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-emerald-800">
-              <span>{(coverage.communitySourced || 0) + (coverage.communityFirst || 0)}/{coverage.total} community-sourced</span>
-              <span>{Math.round((reach.rate || 0) * 100)}% direct-reach{reach.searchOnly ? ` · ${reach.searchOnly} LinkedIn search` : ''}</span>
-              <span>{ledger.withFirstSeen} with first-seen dates</span>
-              {ledger.verifiedMiss > 0 && <span>{ledger.verifiedMiss} verified index misses</span>}
-              {flowMeta?.match?.strongMatches != null && (
-                <span>{flowMeta.match.strongMatches} strong matches</span>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="m-stat-pill m-stat-pill-success">
+                {(coverage.communitySourced || 0) + (coverage.communityFirst || 0)}/{coverage.total} community-sourced
+              </span>
+              <span className="m-stat-pill">
+                {Math.round((reach.rate || 0) * 100)}% direct-reach{reach.searchOnly ? ` · ${reach.searchOnly} LinkedIn search` : ''}
+              </span>
+              <span className="m-stat-pill">{ledger.withFirstSeen} with first-seen dates</span>
+              {ledger.verifiedMiss > 0 && (
+                <span className="m-stat-pill m-stat-pill-accent">{ledger.verifiedMiss} verified index misses</span>
               )}
-              {ledger.medianAgeDays != null && <span>median {ledger.medianAgeDays}d fresh</span>}
+              {flowMeta?.match?.strongMatches != null && (
+                <span className="m-stat-pill">{flowMeta.match.strongMatches} strong matches</span>
+              )}
+              {ledger.medianAgeDays != null && (
+                <span className="m-stat-pill">median {ledger.medianAgeDays}d fresh</span>
+              )}
             </div>
           )}
           {!watch && (

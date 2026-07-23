@@ -3,30 +3,30 @@
 @tailwind utilities;
 
 :root {
-  --m-bg: #fafafa;
-  --m-bg-subtle: #f4f4f5;
+  --m-bg: #f8fafc;
+  --m-bg-subtle: #f1f5f9;
   --m-surface: #ffffff;
-  --m-surface-2: #f4f4f5;
-  --m-surface-3: #e4e4e7;
-  --m-border: rgba(0, 0, 0, 0.08);
-  --m-border-strong: rgba(0, 0, 0, 0.14);
-  --m-text: #09090b;
-  --m-muted: #71717a;
-  --m-muted-2: #a1a1aa;
-  --m-accent: #dc2626;
-  --m-accent-hover: #b91c1c;
-  --m-accent-soft: rgba(220, 38, 38, 0.1);
-  --m-sidebar: #09090b;
-  --m-sidebar-border: rgba(255, 255, 255, 0.08);
-  --m-sidebar-text: #a1a1aa;
-  --m-sidebar-active-bg: rgba(255, 255, 255, 0.1);
-  --m-sidebar-active-text: #fafafa;
+  --m-surface-2: #f8fafc;
+  --m-surface-3: #e2e8f0;
+  --m-border: rgba(15, 23, 42, 0.08);
+  --m-border-strong: rgba(15, 23, 42, 0.14);
+  --m-text: #0f172a;
+  --m-muted: #64748b;
+  --m-muted-2: #94a3b8;
+  --m-accent: #4f46e5;
+  --m-accent-hover: #4338ca;
+  --m-accent-soft: rgba(79, 70, 229, 0.1);
+  --m-sidebar: #ffffff;
+  --m-sidebar-border: rgba(15, 23, 42, 0.08);
+  --m-sidebar-text: #64748b;
+  --m-sidebar-active-bg: rgba(79, 70, 229, 0.08);
+  --m-sidebar-active-text: #4338ca;
   --m-radius: 10px;
   --m-radius-sm: 6px;
   --m-radius-lg: 14px;
-  --m-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --m-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --m-shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.2);
+  --m-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --m-shadow: 0 4px 24px rgba(15, 23, 42, 0.08);
+  --m-shadow-lg: 0 24px 80px rgba(15, 23, 42, 0.12);
   --m-font: var(--font-sans), system-ui, sans-serif;
   --m-mono: var(--font-mono), ui-monospace, monospace;
 }
@@ -45,19 +45,21 @@ html {
   }
 
   ::selection {
-    background: rgba(220, 38, 38, 0.15);
+    background: rgba(79, 70, 229, 0.15);
   }
 }
 
 @layer components {
   .m-logo {
     @apply flex h-8 w-8 items-center justify-center rounded-lg text-[13px] font-bold;
-    background: var(--m-text);
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
     color: white;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
   }
   .m-logo-light {
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    border: none;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
   }
 
   .m-kicker {
@@ -106,10 +108,11 @@ html {
 
   .m-btn-primary {
     @apply m-btn text-white;
-    background: var(--m-text);
+    background: var(--m-accent);
+    box-shadow: 0 1px 2px rgba(79, 70, 229, 0.2);
   }
   .m-btn-primary:hover:not(:disabled) {
-    background: #27272a;
+    background: var(--m-accent-hover);
   }
 
   .m-btn-secondary {
@@ -135,7 +138,7 @@ html {
   .m-btn-accent {
     @apply m-btn text-white;
     background: var(--m-accent);
-    box-shadow: 0 2px 8px rgba(127, 29, 29, 0.25);
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
   }
   .m-btn-accent:hover:not(:disabled) {
     background: var(--m-accent-hover);
@@ -169,8 +172,8 @@ html {
   .m-input:focus,
   .m-textarea:focus,
   .m-select:focus {
-    border-color: var(--m-border-strong);
-    box-shadow: 0 0 0 3px rgba(26, 26, 24, 0.06);
+    border-color: var(--m-accent);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
   }
 
   .m-textarea {
@@ -273,9 +276,9 @@ html {
     background: var(--m-accent);
   }
 
-  /* —— Landing (Framer / reactbits inspired) —— */
+  /* —— Landing (clean B2B SaaS) —— */
   .m-landing {
-    background: #030303;
+    background: var(--m-bg);
   }
 
   .m-landing-bg {
@@ -285,25 +288,23 @@ html {
   .m-landing-gradient {
     @apply absolute inset-0;
     background:
-      radial-gradient(ellipse 80% 60% at 50% -10%, rgba(120, 50, 255, 0.18), transparent 55%),
-      radial-gradient(ellipse 60% 50% at 90% 20%, rgba(220, 38, 38, 0.12), transparent 50%),
-      radial-gradient(ellipse 50% 40% at 10% 80%, rgba(59, 130, 246, 0.08), transparent 50%),
-      #030303;
+      radial-gradient(ellipse 70% 50% at 50% -20%, rgba(79, 70, 229, 0.12), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(99, 102, 241, 0.08), transparent 50%),
+      radial-gradient(ellipse 40% 35% at 0% 50%, rgba(16, 185, 129, 0.06), transparent 50%),
+      #f8fafc;
   }
 
   .m-landing-grid {
-    @apply absolute inset-0;
+    @apply absolute inset-0 opacity-40;
     background-image:
-      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+      linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 10%, transparent 75%);
   }
 
   .m-landing-grain {
-    @apply absolute inset-0 opacity-[0.35];
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    mix-blend-mode: overlay;
+    display: none;
   }
 
   .m-landing-orb {
@@ -311,20 +312,20 @@ html {
     animation: m-orb-float 14s ease-in-out infinite;
   }
   .m-landing-orb-1 {
-    width: 420px; height: 420px;
-    top: 10%; right: -5%;
-    background: rgba(139, 92, 246, 0.15);
+    width: 480px; height: 480px;
+    top: -10%; right: -10%;
+    background: rgba(79, 70, 229, 0.08);
   }
   .m-landing-orb-2 {
-    width: 320px; height: 320px;
-    bottom: 15%; left: -8%;
-    background: rgba(220, 38, 38, 0.1);
+    width: 360px; height: 360px;
+    bottom: 10%; left: -5%;
+    background: rgba(16, 185, 129, 0.06);
     animation-delay: -5s;
   }
   .m-landing-orb-3 {
-    width: 200px; height: 200px;
-    top: 40%; left: 35%;
-    background: rgba(59, 130, 246, 0.08);
+    width: 240px; height: 240px;
+    top: 35%; left: 40%;
+    background: rgba(99, 102, 241, 0.06);
     animation-delay: -9s;
   }
 
@@ -335,91 +336,114 @@ html {
   }
 
   .m-nav-landing {
-    @apply relative z-20;
-    background: linear-gradient(to bottom, rgba(3, 3, 3, 0.8), transparent);
+    @apply relative z-20 border-b backdrop-blur-xl;
+    border-color: var(--m-border);
+    background: rgba(248, 250, 252, 0.85);
   }
   .m-nav-default {
     @apply sticky top-0 z-50 border-b backdrop-blur-xl;
     border-color: var(--m-border);
-    background: rgba(250, 250, 250, 0.85);
+    background: rgba(248, 250, 252, 0.85);
   }
 
   .m-landing-eyebrow {
-    @apply mb-4 font-mono text-[12px] font-medium tracking-wide text-emerald-400/90;
+    @apply mb-4 inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[12px] font-medium;
+    border-color: rgba(79, 70, 229, 0.2);
+    background: rgba(79, 70, 229, 0.06);
+    color: #4338ca;
   }
   .m-landing-brand {
-    @apply text-[3.25rem] font-bold leading-[1] tracking-[-0.04em] text-white sm:text-[4rem] lg:text-[4.5rem];
+    @apply text-[3rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[3.5rem] lg:text-[4rem];
+    color: var(--m-text);
   }
   .m-landing-headline {
-    @apply text-[1.65rem] font-semibold leading-[1.15] tracking-[-0.02em] text-zinc-100 sm:text-[2rem] lg:text-[2.25rem];
+    @apply text-[1.5rem] font-semibold leading-[1.2] tracking-[-0.02em] sm:text-[1.75rem] lg:text-[2rem];
+    color: #334155;
   }
   .m-landing-lead {
-    @apply mt-6 text-[17px] leading-relaxed text-zinc-400;
+    @apply mt-5 text-[17px] leading-relaxed;
+    color: var(--m-muted);
   }
 
   .m-input-landing {
-    @apply w-full rounded-xl px-4 py-3.5 text-[15px] text-white outline-none transition;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(12px);
+    @apply w-full rounded-xl px-4 py-3.5 text-[15px] outline-none transition;
+    background: var(--m-surface);
+    border: 1px solid var(--m-border);
+    color: var(--m-text);
+    box-shadow: var(--m-shadow-xs);
   }
-  .m-input-landing::placeholder { color: rgba(161, 161, 170, 0.8); }
+  .m-input-landing::placeholder { color: var(--m-muted-2); }
   .m-input-landing:focus {
-    border-color: rgba(255, 255, 255, 0.22);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+    border-color: var(--m-accent);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
   }
 
   .m-btn-glow {
-    @apply inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-[14px] font-semibold text-zinc-900 transition;
-    background: #fafafa;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 8px 32px rgba(255,255,255,0.12);
+    @apply inline-flex items-center justify-center rounded-xl px-6 py-3.5 text-[14px] font-semibold text-white transition;
+    background: var(--m-accent);
+    box-shadow: 0 1px 2px rgba(79, 70, 229, 0.2), 0 8px 24px rgba(79, 70, 229, 0.2);
   }
   .m-btn-glow:hover {
-    background: #fff;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.2), 0 12px 40px rgba(255,255,255,0.18);
+    background: var(--m-accent-hover);
+    box-shadow: 0 1px 2px rgba(79, 70, 229, 0.25), 0 12px 32px rgba(79, 70, 229, 0.25);
     transform: translateY(-1px);
   }
 
   .m-btn-ghost-landing {
-    @apply inline-flex items-center rounded-xl px-4 py-2.5 text-[13px] font-medium text-zinc-400 transition;
+    @apply inline-flex items-center rounded-xl border px-4 py-2.5 text-[13px] font-medium transition;
+    border-color: var(--m-border);
+    background: var(--m-surface);
+    color: var(--m-muted);
+    box-shadow: var(--m-shadow-xs);
   }
-  .m-btn-ghost-landing:hover { color: white; }
+  .m-btn-ghost-landing:hover {
+    border-color: var(--m-border-strong);
+    color: var(--m-text);
+    background: var(--m-surface-2);
+  }
 
-  /* Glass preview panel */
-  .m-glass-panel {
+  /* Product frame (landing preview + Remotion screenshots) */
+  .m-product-frame {
     @apply relative overflow-hidden rounded-2xl;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(24px);
-    box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.05) inset,
-      0 32px 80px rgba(0, 0, 0, 0.5);
+    background: var(--m-surface);
+    border: 1px solid var(--m-border);
+    box-shadow: var(--m-shadow-lg);
   }
-  .m-glass-panel-chrome {
+  .m-product-frame-chrome {
     @apply flex items-center gap-3 border-b px-5 py-3;
-    border-color: rgba(255, 255, 255, 0.06);
-    background: rgba(0, 0, 0, 0.2);
+    border-color: var(--m-border);
+    background: var(--m-surface-2);
   }
-  .m-glass-sidebar {
-    @apply flex w-12 shrink-0 flex-col gap-1 border-r p-2;
-    border-color: rgba(255, 255, 255, 0.06);
-    background: rgba(0, 0, 0, 0.25);
+  .m-product-sidebar {
+    @apply flex w-[52px] shrink-0 flex-col gap-1 border-r p-2;
+    border-color: var(--m-border);
+    background: var(--m-surface-2);
   }
-  .m-glass-nav-item {
-    @apply rounded-md py-2 text-center text-[10px] font-medium text-zinc-600;
+  .m-product-nav-item {
+    @apply rounded-lg py-2 text-center text-[10px] font-semibold;
+    color: var(--m-muted-2);
   }
-  .m-glass-nav-active {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fafafa;
+  .m-product-nav-active {
+    background: var(--m-sidebar-active-bg);
+    color: var(--m-sidebar-active-text);
   }
+  .m-product-glow {
+    @apply absolute -inset-6 -z-10 rounded-3xl opacity-50 blur-3xl;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(16, 185, 129, 0.1));
+  }
+
+  /* Legacy glass panel aliases → product frame */
+  .m-glass-panel { @apply m-product-frame; }
+  .m-glass-panel-chrome { @apply m-product-frame-chrome; }
+  .m-glass-sidebar { @apply m-product-sidebar; }
+  .m-glass-nav-item { @apply m-product-nav-item; }
+  .m-glass-nav-active { @apply m-product-nav-active; }
+  .m-glass-glow { @apply m-product-glow; }
   .m-glass-search {
-    @apply rounded-lg border px-3 py-2 font-mono text-[11px] text-zinc-500;
-    border-color: rgba(255, 255, 255, 0.08);
-    background: rgba(0, 0, 0, 0.3);
-  }
-  .m-glass-glow {
-    @apply absolute -inset-4 -z-10 rounded-3xl opacity-60 blur-3xl;
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(220, 38, 38, 0.15));
+    @apply rounded-lg border px-3 py-2 font-mono text-[11px];
+    border-color: var(--m-border);
+    background: var(--m-surface);
+    color: var(--m-muted);
   }
 
   /* Bento (Skiper / 21st style) */
@@ -500,13 +524,14 @@ html {
   }
 
   .m-nav-item:hover {
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--m-sidebar-active-text);
+    background: var(--m-surface-2);
+    color: var(--m-text);
   }
 
   .m-nav-item-active {
     background: var(--m-sidebar-active-bg) !important;
     color: var(--m-sidebar-active-text) !important;
+    font-weight: 600;
   }
 
   .m-nav-item-rich {
@@ -515,8 +540,8 @@ html {
 
   .m-nav-badge {
     @apply inline-flex h-4 min-w-[16px] items-center justify-center rounded px-1 text-[10px] font-semibold tabular-nums;
-    background: rgba(220, 38, 38, 0.2);
-    color: #fca5a5;
+    background: var(--m-accent-soft);
+    color: var(--m-accent-hover);
   }
 
   /* Workflow pipeline */
@@ -560,8 +585,8 @@ html {
     color: var(--m-muted);
   }
   .m-context-chip-warn {
-    background: rgba(127, 29, 29, 0.08);
-    color: var(--m-accent);
+    background: var(--m-accent-soft);
+    color: var(--m-accent-hover);
   }
 
   /* Workspace sections */
@@ -607,7 +632,7 @@ html {
 
   /* Table row + outcome labels */
   .m-row-attention {
-    background: rgba(127, 29, 29, 0.03);
+    background: rgba(79, 70, 229, 0.03);
   }
   .m-outcome-pursue {
     @apply text-[12px] font-semibold text-emerald-700;
@@ -686,6 +711,24 @@ div[data-clerk-component] a[href*="clerk.com"] {
 }
 
 .m-flow-hero {
-  @apply rounded-xl border border-zinc-200 bg-gradient-to-br from-white to-emerald-50/40 px-6 py-5;
+  @apply rounded-xl border bg-gradient-to-br from-white to-indigo-50/30 px-6 py-5;
+  border-color: var(--m-border);
+}
+
+.m-stat-pill {
+  @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] font-medium tabular-nums;
+  border-color: var(--m-border);
+  background: var(--m-surface);
+  color: #334155;
+}
+.m-stat-pill-accent {
+  border-color: rgba(79, 70, 229, 0.2);
+  background: rgba(79, 70, 229, 0.06);
+  color: #4338ca;
+}
+.m-stat-pill-success {
+  border-color: rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.08);
+  color: #047857;
 }
 

@@ -15,8 +15,8 @@ export default function Nav({ variant = 'default' }) {
     <header className={isLanding ? 'm-nav-landing' : 'm-nav-default'}>
       <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-3">
-          <div className={isLanding ? 'm-logo m-logo-light' : 'm-logo'}>M</div>
-          <span className={`text-[15px] font-semibold tracking-tight ${isLanding ? 'text-white' : ''}`}>
+          <div className="m-logo">M</div>
+          <span className="text-[15px] font-semibold tracking-tight text-slate-900">
             Meridian
           </span>
         </Link>

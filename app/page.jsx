@@ -50,7 +50,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="relative border-t border-zinc-200/80 bg-white py-20">
+      <section className="relative border-t border-slate-200 bg-white py-20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">
@@ -72,7 +72,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="relative border-t border-zinc-200/80 bg-zinc-50 py-24">
+      <section className="relative border-t border-slate-200 bg-slate-50 py-24">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 max-w-lg">
             <h2 className="text-[28px] font-bold tracking-tight text-zinc-900 sm:text-[32px]">

@@ -35,8 +35,8 @@ export default function WorkflowStrip() {
               href={step.href}
               className={`rounded-md px-2.5 py-1 text-[12px] font-medium transition ${
                 isActive
-                  ? 'bg-zinc-900 text-white'
-                  : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
+                  ? 'bg-indigo-600 text-white shadow-sm'
+                  : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
               {step.label}
