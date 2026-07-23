@@ -25,6 +25,7 @@ const NAV_GROUPS = [
   {
     label: 'More',
     items: [
+      { href: '/demo', label: 'Demo checklist', desc: 'Preflight before you record' },
       { href: '/pilot', label: 'Coverage proof', desc: 'Data wedge, measured' },
     ],
   },

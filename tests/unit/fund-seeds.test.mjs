@@ -18,7 +18,8 @@ describe('fund seeds + ensureActiveFund', () => {
 
     const funds = getAllFunds()
     expect(funds.map(f => f.id).sort()).toEqual([PANACHE_VENTURES.id, SAGARD_AI_FUND.id].sort())
-    expect(getFundProfile()?.fundName).toBeTruthy()
+    expect(getFundProfile()?.id).toBe(PANACHE_VENTURES.id)
+    expect(getFundProfile()?.fundName).toBe(PANACHE_VENTURES.fundName)
     expect(getFundProfile()?.fundName).not.toBe('Your Fund')
     expect(hasFundProfile()).toBe(true)
   })
@@ -34,6 +35,7 @@ describe('fund seeds + ensureActiveFund', () => {
 
     expect(getFundProfile()).toBeNull()
     const recovered = ensureActiveFund()
+    expect(recovered?.id).toBe('panache_ventures')
     expect(recovered?.fundName).toBeTruthy()
     expect(getAllFunds().length).toBe(2)
   })
