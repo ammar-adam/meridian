@@ -52,10 +52,10 @@ export default function ClaimPage() {
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
       <p className="m-kicker mb-2">Meridian · for founders</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-zinc-900">
+      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
         Get seen by Canadian funds before you announce
       </h1>
-      <p className="mt-3 text-[15px] leading-relaxed text-zinc-600">
+      <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         Meridian surfaces community-sourced Canadian companies to early-stage funds —
         with receipts. If your company is (or should be) on our ledger, claim your
         profile: confirm your founders, correct anything wrong, and control what
@@ -63,9 +63,9 @@ export default function ClaimPage() {
       </p>
 
       {status === 'done' ? (
-        <div className="mt-8 rounded-xl border border-emerald-200 bg-emerald-50 p-5">
-          <p className="text-[15px] font-medium text-emerald-900">Claim received.</p>
-          <p className="mt-1 text-[13px] leading-relaxed text-emerald-800">
+        <div className="mt-8 rounded-xl border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] p-5">
+          <p className="text-[15px] font-medium text-[color:var(--m-forest)]">Claim received.</p>
+          <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--m-forest)]">
             We review every claim by hand — preferably from an email at your company
             domain. Once verified, your record shows a dated
             &ldquo;Founder-confirmed&rdquo; mark to every fund watching your space.
@@ -93,7 +93,7 @@ export default function ClaimPage() {
             />
           </div>
           <div>
-            <label className="m-kicker mb-1 block">Email * <span className="normal-case tracking-normal text-zinc-400">(company-domain email speeds verification)</span></label>
+            <label className="m-kicker mb-1 block">Email * <span className="normal-case tracking-normal" style={{ color: 'var(--m-muted-2)' }}>(company-domain email speeds verification)</span></label>
             <input
               type="email"
               value={email}
@@ -105,7 +105,7 @@ export default function ClaimPage() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="m-kicker mb-1 block">Stage <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+              <label className="m-kicker mb-1 block">Stage <span className="normal-case tracking-normal" style={{ color: 'var(--m-muted-2)' }}>(optional)</span></label>
               <select
                 value={stage}
                 onChange={e => setStage(e.target.value)}
@@ -118,7 +118,7 @@ export default function ClaimPage() {
               </select>
             </div>
             <div>
-              <label className="m-kicker mb-1 block">Raising <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+              <label className="m-kicker mb-1 block">Raising <span className="normal-case tracking-normal" style={{ color: 'var(--m-muted-2)' }}>(optional)</span></label>
               <input
                 value={raiseAmount}
                 onChange={e => setRaiseAmount(e.target.value)}
@@ -129,7 +129,7 @@ export default function ClaimPage() {
             </div>
           </div>
           <div>
-            <label className="m-kicker mb-1 block">Deck link <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+            <label className="m-kicker mb-1 block">Deck link <span className="normal-case tracking-normal" style={{ color: 'var(--m-muted-2)' }}>(optional)</span></label>
             <input
               type="url"
               value={deckUrl}
@@ -140,7 +140,7 @@ export default function ClaimPage() {
             />
           </div>
           <div>
-            <label className="m-kicker mb-1 block">Sectors <span className="normal-case tracking-normal text-zinc-400">(optional)</span></label>
+            <label className="m-kicker mb-1 block">Sectors <span className="normal-case tracking-normal" style={{ color: 'var(--m-muted-2)' }}>(optional)</span></label>
             <input
               value={sectors}
               onChange={e => setSectors(e.target.value)}
@@ -165,15 +165,15 @@ export default function ClaimPage() {
           <button type="submit" disabled={status === 'sending'} className="m-btn-primary">
             {status === 'sending' ? 'Sending…' : 'Claim my profile'}
           </button>
-          <p className="text-[11px] leading-relaxed text-zinc-500">
+          <p className="text-[11px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
             Claims are reviewed manually. We never mark a record founder-confirmed
             without verification, and we never sell or share your contact details.
           </p>
         </form>
       )}
 
-      <p className="mt-10 text-[12px] text-zinc-500">
-        Investor? <Link href="/flow" className="text-zinc-800 underline">Open Deal Flow</Link>
+      <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
+        Investor? <Link href="/flow" className="text-[color:var(--m-text)] underline">Open Deal Flow</Link>
       </p>
     </div>
   )

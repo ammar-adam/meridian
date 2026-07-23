@@ -50,7 +50,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
             href={linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-sky-800 hover:underline"
+            className="font-medium text-[color:var(--m-ink-blue)] hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             {linkedinIsSearch ? 'Search LinkedIn' : 'LinkedIn'}
@@ -59,7 +59,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
         {email && (
           <a
             href={`mailto:${email}`}
-            className="font-medium text-zinc-700 hover:underline"
+            className="font-medium text-[color:var(--m-forest)] hover:underline"
             title="Verified email"
             onClick={(e) => e.stopPropagation()}
           >
@@ -81,18 +81,18 @@ export default function ReachabilityActions({ reach, company, compact = false })
             href={website}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-zinc-700 hover:underline"
+            className="font-medium text-[color:var(--m-muted)] hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             Website
           </a>
         )}
         {guessOpen && guesses?.length > 0 && (
-          <span className="text-amber-900" title="Pattern guesses — not verified">
+          <span className="text-amber-800" title="Pattern guesses — not verified">
             {guesses[0].email}
           </span>
         )}
-        {guessError && <span className="text-red-700">{guessError}</span>}
+        {guessError && <span className="text-red-800">{guessError}</span>}
       </div>
     )
   }
@@ -101,13 +101,13 @@ export default function ReachabilityActions({ reach, company, compact = false })
     <div className="mt-1.5 space-y-1">
       {(reach.founders || []).slice(0, 2).map((f) => (
         <div key={f.name} className="flex flex-wrap items-center gap-2 text-[11px]">
-          <span className="font-medium text-zinc-800">{f.name}</span>
+          <span className="font-medium" style={{ color: 'var(--m-text)' }}>{f.name}</span>
           {f.linkedinUrl && (
             <a
               href={f.linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-800 hover:underline"
+              className="text-[color:var(--m-ink-blue)] hover:underline"
               onClick={(e) => e.stopPropagation()}
             >
               {f.linkedinKind === 'profile' ? 'Profile' : 'Search LinkedIn'}
@@ -116,7 +116,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
           {f.emails?.[0] && (
             <a
               href={`mailto:${f.emails[0]}`}
-              className="font-mono text-zinc-600 hover:underline"
+              className="font-mono text-[color:var(--m-forest)] hover:underline"
               title="Verified email"
               onClick={(e) => e.stopPropagation()}
             >
@@ -136,11 +136,11 @@ export default function ReachabilityActions({ reach, company, compact = false })
             {guessLoading ? 'Guessing…' : 'Guess email (unverified)'}
           </button>
           {guessOpen && guesses?.map(g => (
-            <span key={g.email} className="font-mono text-amber-900" title={g.confidence}>
+            <span key={g.email} className="font-mono text-amber-800" title={g.confidence}>
               {g.email}
             </span>
           ))}
-          {guessError && <span className="text-red-700">{guessError}</span>}
+          {guessError && <span className="text-red-800">{guessError}</span>}
         </div>
       )}
     </div>

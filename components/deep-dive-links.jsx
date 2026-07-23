@@ -10,12 +10,12 @@ export default function DeepDiveLinks({ company, compact = false }) {
   const links = buildDeepDiveLinks(company)
 
   const btnClass = compact
-    ? 'text-[10px] font-medium text-zinc-600 hover:text-zinc-900 hover:underline'
+    ? 'text-[10px] font-medium text-[color:var(--m-muted)] hover:text-[color:var(--m-text)] hover:underline'
     : 'm-btn-ghost m-btn-sm text-[11px]'
 
   return (
     <div className={`flex flex-wrap gap-x-2 gap-y-0.5 ${compact ? 'mt-1' : 'mt-2'}`}>
-      <span className="text-[10px] font-medium uppercase tracking-wide text-zinc-400">Deep dive</span>
+      <span className="text-[10px] font-medium uppercase tracking-wide" style={{ color: 'var(--m-muted-2)' }}>Deep dive</span>
       <a href={links.harmonic} target="_blank" rel="noopener noreferrer" className={btnClass}>
         Harmonic
       </a>

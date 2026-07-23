@@ -251,8 +251,9 @@ function ListsContent() {
                   disabled={running}
                   onClick={() => setResearchMode(m.id)}
                   className={`rounded-md px-3 py-1.5 text-[12px] font-medium transition ${
-                    researchMode === m.id ? 'bg-zinc-900 text-white' : 'text-zinc-600 hover:bg-zinc-50'
+                    researchMode === m.id ? 'bg-[color:var(--m-text)] text-[color:var(--m-bg)]' : 'hover:bg-[color:var(--m-surface-2)]'
                   }`}
+                  style={researchMode === m.id ? undefined : { color: 'var(--m-muted)' }}
                 >
                   {m.label} <span className="opacity-70">({m.hint})</span>
                 </button>
@@ -294,7 +295,7 @@ function ListsContent() {
           >
             {progress.current && (
               <p className="mb-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
-                Working on <span className="font-medium text-zinc-900">{progress.current}</span>
+                Working on <span className="font-medium text-[color:var(--m-text)]">{progress.current}</span>
               </p>
             )}
             <div className="m-table-wrap">
@@ -357,12 +358,12 @@ function ListsContent() {
 }
 
 function StatusBadge({ row }) {
-  if (row.status === 'done') return <span className="text-emerald-600 text-[12px] font-medium">Ready</span>
-  if (row.status === 'researching') return <span className="text-zinc-600 text-[12px] font-medium">Researching</span>
-  if (row.status === 'skipped') return <span className="text-zinc-500 text-[12px]">In library</span>
-  if (row.status === 'failed') return <span className="text-red-600 text-[12px]" title={row.error}>Failed</span>
-  if (row.status === 'pending') return <span className="text-zinc-400 text-[12px]">Queued</span>
-  return <span className="text-zinc-400 text-[12px]">…</span>
+  if (row.status === 'done') return <span className="text-[color:var(--m-forest)] text-[12px] font-medium">Ready</span>
+  if (row.status === 'researching') return <span className="text-[12px] font-medium" style={{ color: 'var(--m-muted)' }}>Researching</span>
+  if (row.status === 'skipped') return <span className="text-[12px]" style={{ color: 'var(--m-muted)' }}>In library</span>
+  if (row.status === 'failed') return <span className="text-red-800 text-[12px]" title={row.error}>Failed</span>
+  if (row.status === 'pending') return <span className="text-[12px]" style={{ color: 'var(--m-muted-2)' }}>Queued</span>
+  return <span className="text-[12px]" style={{ color: 'var(--m-muted-2)' }}>…</span>
 }
 
 export default function ListsPage() {

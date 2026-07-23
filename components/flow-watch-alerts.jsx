@@ -28,13 +28,13 @@ export default function FlowWatchAlerts({ watchEvents = [], webhooks = null }) {
   if (!lines.length) return null
 
   return (
-    <div className="mb-4 rounded-xl border border-violet-200 bg-violet-50/80 px-4 py-3">
-      <p className="text-[13px] font-semibold text-violet-950">Watch alerts</p>
-      <ul className="mt-1 list-inside list-disc text-[13px] text-violet-900">
+    <div className="mb-4 rounded-xl border border-violet-700/40 bg-violet-600/10 px-4 py-3">
+      <p className="text-[13px] font-semibold text-violet-800">Watch alerts</p>
+      <ul className="mt-1 list-inside list-disc text-[13px] text-violet-800">
         {lines.map(line => <li key={line}>{line}</li>)}
       </ul>
       {webhooks?.dispatched > 0 && (
-        <p className="mt-1 text-[11px] text-violet-700">
+        <p className="mt-1 text-[11px] text-violet-800/80">
           Webhooks dispatched to {webhooks.dispatched} endpoint{webhooks.dispatched === 1 ? '' : 's'}
         </p>
       )}

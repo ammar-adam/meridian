@@ -192,8 +192,9 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
               type="button"
               onClick={() => setActiveStrategyIdx(i)}
               className={`rounded-md px-3 py-1.5 text-[12px] font-medium transition ${
-                i === activeStrategyIdx ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200'
+                i === activeStrategyIdx ? 'bg-[color:var(--m-text)] text-[color:var(--m-bg)]' : 'bg-[color:var(--m-surface-2)] hover:bg-[color:var(--m-surface-3)]'
               }`}
+              style={i === activeStrategyIdx ? undefined : { color: 'var(--m-muted)' }}
             >
               {s.name || `Strategy ${i + 1}`}
             </button>
@@ -209,7 +210,7 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
               placeholder="Strategy name"
             />
             {strategies.length > 1 && (
-              <button type="button" onClick={() => removeStrategy(activeStrategyIdx)} className="m-btn-ghost m-btn-sm text-red-600">
+              <button type="button" onClick={() => removeStrategy(activeStrategyIdx)} className="m-btn-ghost m-btn-sm text-red-800">
                 Remove
               </button>
             )}
@@ -284,7 +285,7 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
         />
       </div>
 
-      {error && <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">{error}</p>}
+      {error && <p className="rounded-md border border-red-700/40 bg-red-500/10 px-3 py-2 text-[12px] text-red-800">{error}</p>}
 
       <button type="submit" disabled={saving} className="m-btn-primary disabled:opacity-50">
         {saving ? 'Saving…' : setupMode ? 'Save & enter workspace' : 'Save fund profile'}

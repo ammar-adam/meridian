@@ -22,22 +22,26 @@ export default function WorkflowStrip() {
   const active = stepIndex(pathname)
 
   return (
-    <div className="flex shrink-0 items-center gap-1 overflow-x-auto border-b border-zinc-200 bg-white px-6 py-2">
+    <div
+      className="flex shrink-0 items-center gap-1 overflow-x-auto border-b px-6 py-2"
+      style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}
+    >
       {STEPS.map((step, i) => {
         const isActive = i === active
         const isPast = active > i
         return (
           <div key={step.id} className="flex shrink-0 items-center">
             {i > 0 && (
-              <span className={`mx-1.5 text-[10px] ${isPast ? 'text-zinc-400' : 'text-zinc-300'}`}>›</span>
+              <span className={`mx-1.5 text-[10px] ${isPast ? 'text-[color:var(--m-accent)]' : 'text-[color:var(--m-muted-2)]'}`}>›</span>
             )}
             <Link
               href={step.href}
-              className={`rounded-md px-2.5 py-1 text-[12px] font-medium transition ${
+              className={`px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-wider transition ${
                 isActive
-                  ? 'bg-zinc-900 text-white'
-                  : 'text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900'
+                  ? 'bg-[color:var(--m-text)] text-[color:var(--m-bg)]'
+                  : 'text-[color:var(--m-muted)] hover:bg-black/5 hover:text-[color:var(--m-text)]'
               }`}
+              style={{ borderRadius: 'var(--m-radius-sm)' }}
             >
               {step.label}
             </Link>

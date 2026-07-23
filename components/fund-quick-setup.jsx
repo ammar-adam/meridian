@@ -140,10 +140,10 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center" aria-hidden>
-          <div className="w-full border-t border-zinc-200" />
+          <div className="w-full border-t" style={{ borderColor: 'var(--m-border)' }} />
         </div>
-        <div className="relative flex justify-center text-[11px] uppercase tracking-wide text-zinc-400">
-          <span className="bg-white px-2">or paste URL</span>
+        <div className="relative flex justify-center text-[11px] uppercase tracking-wide" style={{ color: 'var(--m-muted-2)' }}>
+          <span className="px-2" style={{ background: 'var(--m-surface)' }}>or paste URL</span>
         </div>
       </div>
 
@@ -166,20 +166,20 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       </div>
 
       {preview && (
-        <div className="m-card m-card-pad space-y-3 border-emerald-200 bg-emerald-50/40">
+        <div className="m-card m-card-pad space-y-3 border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)]">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[13px] font-semibold text-zinc-900">{preview.fundName || fundName}</p>
-              <p className="mt-0.5 font-mono text-[11px] text-zinc-500">{extractDomain(fundUrl)}</p>
+              <p className="text-[13px] font-semibold text-[color:var(--m-text)]">{preview.fundName || fundName}</p>
+              <p className="mt-0.5 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{extractDomain(fundUrl)}</p>
             </div>
             {preview.cached && (
               <span className="m-badge-low">cached</span>
             )}
           </div>
           {preview.thesis && (
-            <p className="text-[13px] leading-relaxed text-zinc-600 line-clamp-4">{preview.thesis}</p>
+            <p className="text-[13px] leading-relaxed line-clamp-4" style={{ color: 'var(--m-muted)' }}>{preview.thesis}</p>
           )}
-          <div className="flex flex-wrap gap-3 font-mono text-[11px] text-zinc-500">
+          <div className="flex flex-wrap gap-3 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>
             {preview.portfolio?.length > 0 && <span>{preview.portfolio.length} portfolio cos</span>}
             {preview.mandate?.stages?.length > 0 && <span>{preview.mandate.stages.join(', ')}</span>}
             {preview.importedContacts > 0 && <span>{preview.importedContacts} contacts imported</span>}
@@ -203,8 +203,8 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
                     className="mt-0.5"
                   />
                   <span>
-                    <span className="block text-[13px] font-medium text-zinc-900">{opt.label}</span>
-                    <span className="block text-[11px] text-zinc-500">{opt.description}</span>
+                    <span className="block text-[13px] font-medium text-[color:var(--m-text)]">{opt.label}</span>
+                    <span className="block text-[11px]" style={{ color: 'var(--m-muted)' }}>{opt.description}</span>
                   </span>
                 </label>
               ))}
@@ -217,19 +217,19 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       )}
 
       {error && (
-        <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">{error}</p>
+        <p className="rounded-md border border-red-700/40 bg-red-500/10 px-3 py-2 text-[12px] text-red-800">{error}</p>
       )}
 
       <button
         type="button"
         onClick={() => setShowAdvanced(!showAdvanced)}
-        className="m-btn-ghost m-btn-sm text-zinc-500"
+        className="m-btn-ghost m-btn-sm"
       >
         {showAdvanced ? 'Hide manual fields' : 'Edit manually instead'}
       </button>
 
       {showAdvanced && (
-        <div className="space-y-3 border-t border-zinc-200 pt-4">
+        <div className="space-y-3 border-t pt-4" style={{ borderColor: 'var(--m-border)' }}>
           <label className="m-kicker">Fund name override</label>
           <input value={fundName} onChange={(e) => setFundName(e.target.value)} className="m-input" placeholder="Display name" />
           {preview?.thesis && (

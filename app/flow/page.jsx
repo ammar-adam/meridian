@@ -261,7 +261,7 @@ function FlowContent() {
       actions={(
         <div className="flex flex-wrap gap-2">
           {watch ? (
-            <span className="m-btn-ghost m-btn-sm text-emerald-700">Watching mandate</span>
+            <span className="m-btn-ghost m-btn-sm" style={{ color: 'var(--m-forest)' }}>Watching mandate</span>
           ) : (
             <button type="button" onClick={handleWatch} className="m-btn-primary m-btn-sm">
               {watching ? 'Watching…' : 'Watch this mandate'}
@@ -281,35 +281,43 @@ function FlowContent() {
       <WorkspacePage width="wide">
         <div className="m-flow-hero mb-6">
           <p className="m-kicker mb-1">Data wedge</p>
-          <h2 className="text-[20px] font-semibold tracking-tight text-zinc-900">
+          <h2 className="text-[21px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>
             Companies matched to your mandate — with receipts.
           </h2>
-          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-zinc-600">
+          <p className="mt-2 max-w-2xl text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
             Ranked by thesis overlap, stage, and freshness. Fit scores show why a company matched.
             We only claim index absence where a dated check exists.
           </p>
           {flowMeta?.coverageBanner && (
-            <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3">
-              <p className="text-[13px] font-semibold text-amber-950">{flowMeta.coverageBanner.title}</p>
-              <p className="mt-1 text-[13px] leading-relaxed text-amber-900">{flowMeta.coverageBanner.detail}</p>
-              <p className="mt-1 text-[12px] leading-relaxed text-amber-800">{flowMeta.coverageBanner.expanding}</p>
+            <div className="m-alert-warn mt-4">
+              <p className="text-[13px] font-semibold">{flowMeta.coverageBanner.title}</p>
+              <p className="mt-1 text-[13px] leading-relaxed opacity-90">{flowMeta.coverageBanner.detail}</p>
+              <p className="mt-1 text-[12px] leading-relaxed opacity-75">{flowMeta.coverageBanner.expanding}</p>
             </div>
           )}
           {flowMeta?.thinRowsHidden > 0 && (
-            <p className="mt-2 text-[12px] text-zinc-500">
+            <p className="mt-2 text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
               {flowMeta.thinRowsHidden} thin rows hidden (no domain or founder) — expand sources or add domains to brief them.
             </p>
           )}
           {feedRows.length > 0 && (
-            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-emerald-800">
-              <span>{(coverage.communitySourced || 0) + (coverage.communityFirst || 0)}/{coverage.total} community-sourced</span>
-              <span>{Math.round((reach.rate || 0) * 100)}% direct-reach{reach.searchOnly ? ` · ${reach.searchOnly} LinkedIn search` : ''}</span>
-              <span>{ledger.withFirstSeen} with first-seen dates</span>
-              {ledger.verifiedMiss > 0 && <span>{ledger.verifiedMiss} verified index misses</span>}
-              {flowMeta?.match?.strongMatches != null && (
-                <span>{flowMeta.match.strongMatches} strong matches</span>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="m-stat-pill m-stat-pill-success">
+                {(coverage.communitySourced || 0) + (coverage.communityFirst || 0)}/{coverage.total} community-sourced
+              </span>
+              <span className="m-stat-pill">
+                {Math.round((reach.rate || 0) * 100)}% direct-reach{reach.searchOnly ? ` · ${reach.searchOnly} LinkedIn search` : ''}
+              </span>
+              <span className="m-stat-pill">{ledger.withFirstSeen} with first-seen dates</span>
+              {ledger.verifiedMiss > 0 && (
+                <span className="m-stat-pill m-stat-pill-accent">{ledger.verifiedMiss} verified index misses</span>
               )}
-              {ledger.medianAgeDays != null && <span>median {ledger.medianAgeDays}d fresh</span>}
+              {flowMeta?.match?.strongMatches != null && (
+                <span className="m-stat-pill">{flowMeta.match.strongMatches} strong matches</span>
+              )}
+              {ledger.medianAgeDays != null && (
+                <span className="m-stat-pill">median {ledger.medianAgeDays}d fresh</span>
+              )}
             </div>
           )}
           {!watch && (
@@ -337,7 +345,7 @@ function FlowContent() {
 
         {companies?.length > 0 && (
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <span className="text-[12px] text-zinc-500">Source filter</span>
+            <span className="text-[12px]" style={{ color: 'var(--m-muted)' }}>Source filter</span>
             {FLOW_SOURCE_FILTERS.map(f => (
               <button
                 key={f.id}
@@ -348,7 +356,7 @@ function FlowContent() {
                 {f.label}
               </button>
             ))}
-            <span className="mx-1 text-zinc-300">|</span>
+            <span className="mx-1" style={{ color: 'var(--m-muted-2)' }}>|</span>
             <button
               type="button"
               onClick={() => setBriefableOnly(v => !v)}
@@ -358,7 +366,7 @@ function FlowContent() {
               Brief-ready ({briefReadyCount})
             </button>
             {(sourceFilter !== 'all' || briefableOnly) && feedRows.length !== companies.length && (
-              <span className="text-[12px] text-zinc-500">
+              <span className="text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
                 {feedRows.length} of {companies.length} shown
               </span>
             )}
@@ -422,9 +430,9 @@ function FlowContent() {
           />
         )}
 
-        <p className="mt-8 text-center text-[12px] text-zinc-500">
+        <p className="mt-8 text-center text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
           Prefer a one-off search?{' '}
-          <Link href="/discover" className="font-medium text-zinc-800 hover:underline">Discover →</Link>
+          <Link href="/discover" className="font-medium hover:underline" style={{ color: 'var(--m-accent)' }}>Discover →</Link>
         </p>
       </WorkspacePage>
     </WorkspaceShell>

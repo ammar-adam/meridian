@@ -48,14 +48,14 @@ function SourceBadge({ source, unverified, sourceConfidence }) {
 function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
   if (!provenance && !personName) return null
   const tone = sourceConfidence === 'high'
-    ? 'text-emerald-800'
+    ? 'text-[color:var(--m-forest)]'
     : sourceConfidence === 'low' || source === 'domain_registry'
       ? 'text-amber-800'
-      : 'text-zinc-600'
+      : 'text-[color:var(--m-muted)]'
   return (
     <div className={`mt-1 text-[11px] font-medium leading-snug ${tone}`} title="Source provenance">
       {personName ? (
-        <div className="text-zinc-700">
+        <div style={{ color: 'var(--m-text)' }}>
           Founders: {personName}
         </div>
       ) : null}
@@ -71,7 +71,8 @@ function SerialFounderBadge({ company }) {
     : ''
   return (
     <span
-      className="ml-1.5 inline-flex rounded border border-violet-300 bg-violet-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-900"
+      className="ml-1.5 inline-flex border border-violet-700/40 bg-violet-600/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-800"
+      style={{ borderRadius: 'var(--m-radius-sm)' }}
       title={`Serial founder${prior}`}
     >
       Serial
@@ -82,14 +83,14 @@ function SerialFounderBadge({ company }) {
 function FlowBadge({ company }) {
   if (company?.isNew || company?.flowBadge === 'new') {
     return (
-      <span className="ml-1.5 inline-flex rounded border border-emerald-400 bg-emerald-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-emerald-800">
+      <span className="ml-1.5 inline-flex border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-[color:var(--m-accent)]" style={{ borderRadius: 'var(--m-radius-sm)' }}>
         New
       </span>
     )
   }
   if (company?.isFresh || company?.flowBadge === 'fresh') {
     return (
-      <span className="ml-1.5 inline-flex rounded border border-sky-300 bg-sky-50 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-800">
+      <span className="ml-1.5 inline-flex border border-sky-700/40 bg-sky-600/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-800" style={{ borderRadius: 'var(--m-radius-sm)' }}>
         Fresh
       </span>
     )
@@ -321,7 +322,7 @@ export default function SourceTable({
                   <FitBadge score={c.fitScore} reasons={c.matchReasons} />
                   <LearnedBadge behavioral={c.behavioral} />
                   {Array.isArray(c.matchReasons) && c.matchReasons.length > 0 && (
-                    <div className="mt-1 max-w-[10rem] text-[10px] leading-snug text-zinc-500">
+                    <div className="mt-1 max-w-[10rem] text-[10px] leading-snug" style={{ color: 'var(--m-muted-2)' }}>
                       {c.matchReasons.slice(0, 2).join(' · ')}
                     </div>
                   )}

@@ -48,13 +48,13 @@ export function FundSwitcher({ onChange }) {
           ))}
         </select>
       ) : (
-        <span className="text-[12px] text-zinc-500">No fund yet</span>
+        <span className="text-[12px]" style={{ color: 'var(--m-muted)' }}>No fund yet</span>
       )}
-      <Link href="/fund/setup" className="m-btn-ghost m-btn-sm text-zinc-600">
+      <Link href="/fund/setup" className="m-btn-ghost m-btn-sm">
         + Add fund
       </Link>
       {activeFund?.memoTemplateId && activeFund.memoTemplateId !== 'default' && (
-        <span className="text-[10px] text-zinc-500">· {activeFund.memoTemplateId} template</span>
+        <span className="text-[10px]" style={{ color: 'var(--m-muted-2)' }}>· {activeFund.memoTemplateId} template</span>
       )}
     </div>
   )
@@ -110,5 +110,5 @@ export function ActiveContextLabel() {
   }, [])
 
   if (!label) return null
-  return <span className="truncate text-[11px] text-zinc-500">{label}</span>
+  return <span className="truncate text-[11px]" style={{ color: 'var(--m-muted)' }}>{label}</span>
 }

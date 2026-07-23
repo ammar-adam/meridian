@@ -11,11 +11,11 @@ export default function AboutPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">About</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-zinc-900">
+      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
         Early deal flow you can check, not just believe
       </h1>
 
-      <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-zinc-600">
+      <div className="mt-6 space-y-4 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         <p>
           Meridian finds promising startups in the places they show up first — university
           incubators, accelerator cohorts, grant lists, new incorporations — and puts them
@@ -28,7 +28,7 @@ export default function AboutPage() {
           check — whether the mainstream databases had it at that time. When we have not
           checked something, we say so.
         </p>
-        <p className="font-medium text-zinc-900">
+        <p className="font-medium text-[color:var(--m-text)]">
           Our one rule: no fact without a receipt. We never claim a company is
           &ldquo;not in the databases&rdquo; without a dated, repeatable check behind it,
           and we never backdate when we first saw something.
@@ -36,7 +36,7 @@ export default function AboutPage() {
         <p>
           Meridian is an early-stage product — pre-incorporation, built and run by its
           founder. If your company is on our ledger, you can{' '}
-          <Link href="/claim" className="text-zinc-900 underline">claim and correct your profile</Link>.
+          <Link href="/claim" className="text-[color:var(--m-text)] underline">claim and correct your profile</Link>.
         </p>
       </div>
 
@@ -45,9 +45,9 @@ export default function AboutPage() {
         <Link href="/pricing" className="m-btn-secondary">Pricing</Link>
       </div>
 
-      <p className="mt-10 text-[12px] text-zinc-500">
+      <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
         Contact: submissions through the{' '}
-        <Link href="/claim" className="text-zinc-800 underline">claim form</Link>{' '}
+        <Link href="/claim" className="text-[color:var(--m-muted)] underline">claim form</Link>{' '}
         reach the founder directly — questions, corrections, and data requests included.
       </p>
     </div>

@@ -35,9 +35,10 @@ export default function MetricPreferencesPicker({ value, onChange, compact = fal
               onClick={() => toggle(metric.id)}
               className={`rounded-full px-3 py-1.5 text-[12px] font-medium ring-1 transition ${
                 active
-                  ? 'bg-zinc-900 text-white ring-zinc-900'
-                  : 'bg-white text-zinc-600 ring-zinc-200 hover:bg-zinc-50'
+                  ? 'bg-[color:var(--m-text)] text-[color:var(--m-bg)] ring-[color:var(--m-text)]'
+                  : 'ring-[color:var(--m-border)] hover:bg-[color:var(--m-surface-2)]'
               }`}
+              style={active ? undefined : { background: 'var(--m-surface-2)', color: 'var(--m-muted)' }}
             >
               {order ? `${order}. ` : ''}{metric.label}
             </button>

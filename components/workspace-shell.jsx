@@ -57,13 +57,13 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
   return (
     <FundGate>
       <ClerkLiveBanner />
-      <div className="flex h-screen overflow-hidden bg-zinc-50">
+      <div className="flex h-screen overflow-hidden" style={{ background: 'var(--m-bg)' }}>
         <aside className="m-workspace-sidebar flex w-[248px] shrink-0 flex-col">
-          <div className="border-b border-white/[0.08] px-4 py-4">
+          <div className="border-b px-4 py-4" style={{ borderColor: 'var(--m-sidebar-border)' }}>
             <Link href="/" className="flex items-center gap-3">
-              <div className="m-logo m-logo-light text-[12px]">M</div>
+              <div className="m-logo text-[12px]">M</div>
               <div className="min-w-0">
-                <div className="text-[14px] font-semibold text-white">Meridian</div>
+                <div className="text-[15px] font-semibold" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>Meridian</div>
                 <ActiveContextLabel />
               </div>
             </Link>
@@ -72,7 +72,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
           <nav className="flex-1 overflow-y-auto px-3 py-4">
             {NAV_GROUPS.map(group => (
               <div key={group.label} className="mb-5 last:mb-0">
-                <div className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+                <div className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--m-muted-2)' }}>
                   {group.label}
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -90,7 +90,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                             <span className="text-[13px]">{item.label}</span>
                             {badge != null && <span className="m-nav-badge">{badge}</span>}
                           </div>
-                          <div className="text-[11px] font-normal text-zinc-600">{item.desc}</div>
+                          <div className="text-[11px] font-normal" style={{ color: 'var(--m-muted-2)' }}>{item.desc}</div>
                         </div>
                       </Link>
                     )
@@ -100,17 +100,17 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
             ))}
           </nav>
 
-          <div className="border-t border-white/[0.08] px-3 py-4">
+          <div className="border-t px-3 py-4" style={{ borderColor: 'var(--m-sidebar-border)' }}>
             <Link href="/fund" className="m-nav-item m-nav-item-rich">
               <div className="min-w-0 flex-1">
                 <div className="text-[13px] font-medium">Fund settings</div>
-                <div className="truncate text-[11px] text-zinc-600">Thesis & portfolio</div>
+                <div className="truncate text-[11px]" style={{ color: 'var(--m-muted-2)' }}>Thesis & portfolio</div>
               </div>
             </Link>
 
             {health && (
-              <div className="mt-3 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-2.5">
-                <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-zinc-600">
+              <div className="mt-3 rounded-lg border px-3 py-2.5" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface-2)' }}>
+                <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--m-muted-2)' }}>
                   Status
                 </div>
                 {(() => {
@@ -131,11 +131,11 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                     return (
                       <>
                         <div className="flex justify-between py-0.5 text-[11px]">
-                          <span className="text-zinc-500">Core systems</span>
-                          <span className="text-emerald-400">ok</span>
+                          <span style={{ color: 'var(--m-muted)' }}>Core systems</span>
+                          <span className="font-medium" style={{ color: 'var(--m-forest)' }}>ok</span>
                         </div>
                         {optionalOn.length > 0 && (
-                          <div className="mt-1 text-[10px] leading-relaxed text-zinc-600">
+                          <div className="mt-1 text-[10px] leading-relaxed" style={{ color: 'var(--m-muted-2)' }}>
                             {optionalOn.join(' · ')}
                           </div>
                         )}
@@ -145,8 +145,8 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
 
                   return failing.map(s => (
                     <div key={s.label} className="flex justify-between py-0.5 text-[11px]">
-                      <span className="text-zinc-500">{s.label}</span>
-                      <span className="text-amber-400">off</span>
+                      <span style={{ color: 'var(--m-muted)' }}>{s.label}</span>
+                      <span className="font-medium text-amber-700">off</span>
                     </div>
                   ))
                 })()}
@@ -156,10 +156,10 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex h-14 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-6">
+          <header className="flex h-14 shrink-0 items-center justify-between border-b px-6" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
             <div className="min-w-0">
-              {title && <h1 className="truncate text-[16px] font-semibold tracking-tight text-zinc-900">{title}</h1>}
-              {subtitle && <p className="mt-0.5 truncate text-[13px] text-zinc-500">{subtitle}</p>}
+              {title && <h1 className="truncate text-[17px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>{title}</h1>}
+              {subtitle && <p className="mt-0.5 truncate text-[13px]" style={{ color: 'var(--m-muted)' }}>{subtitle}</p>}
             </div>
             <div className="flex shrink-0 items-center gap-2">
               {actions}
@@ -168,7 +168,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
             </div>
           </header>
 
-          <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-zinc-200 bg-zinc-50 px-6 py-2">
+          <div className="flex shrink-0 flex-wrap items-center gap-2 border-b px-6 py-2" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
             <FundSwitcher onChange={refreshSnap} />
             <StrategySwitcher onChange={refreshSnap} />
           </div>
@@ -176,7 +176,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
           <WorkflowStrip />
           <WorkspaceContextBar />
 
-          <main className="flex-1 overflow-y-auto bg-zinc-50">{children}</main>
+          <main className="flex-1 overflow-y-auto" style={{ background: 'var(--m-bg)' }}>{children}</main>
         </div>
       </div>
     </FundGate>

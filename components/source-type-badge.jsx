@@ -14,7 +14,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
     const enriched = sourceConfidence === 'high'
     return (
       <span
-        className={`${compact ? 'text-[10px]' : ''} m-badge-high border border-emerald-300 bg-emerald-50 text-emerald-900`}
+        className={`${compact ? 'text-[10px]' : ''} m-badge-high`}
         title={enriched ? 'Incubator cohort with structured founders/domain' : 'Pre-vetted incubator cohort'}
       >
         {label}
@@ -24,7 +24,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (source === 'grant') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge-mid border border-sky-300 bg-sky-50 text-sky-900`} title="Public grant recipient disclosure">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-sky-700/40 bg-sky-600/10 text-sky-800`} title="Public grant recipient disclosure">
         {label}
       </span>
     )
@@ -32,7 +32,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (source === 'scout') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge-low border border-violet-300 bg-violet-50 text-violet-900`} title="AI-researched candidate — unverified">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-violet-700/40 bg-violet-600/10 text-violet-800`} title="AI-researched candidate — unverified">
         {label}
       </span>
     )
@@ -40,7 +40,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (isLow || source === 'domain_registry') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge-low border border-amber-300 bg-amber-50 text-amber-900`} title="Weak or pre-announcement signal — verify before outreach">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-amber-700/40 bg-amber-600/10 text-amber-800`} title="Weak or pre-announcement signal — verify before outreach">
         {source === 'domain_registry' ? label : 'Stealth · unverified'}
       </span>
     )

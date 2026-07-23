@@ -34,10 +34,10 @@ export default function EarlinessPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">Earliness scoreboard</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-zinc-900">
+      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
         How early we are — with receipts
       </h1>
-      <p className="mt-3 text-[15px] leading-relaxed text-zinc-600">
+      <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         Accruing since {ledgerSince || 'ledger launch'}. We only claim absence where a dated check exists.
       </p>
 
@@ -46,11 +46,11 @@ export default function EarlinessPage() {
       )}
 
       {!error && !data && (
-        <p className="mt-8 text-[14px] text-zinc-500">Loading ledger…</p>
+        <p className="mt-8 text-[14px]" style={{ color: 'var(--m-muted)' }}>Loading ledger…</p>
       )}
 
       {data && !data.enabled && (
-        <div className="mt-8 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[14px] text-amber-900">
+        <div className="mt-8 rounded-xl border border-amber-700/40 bg-amber-500/10 px-4 py-3 text-[14px] text-amber-800">
           Ledger not configured yet. Numbers will appear once the truth ledger is live.
         </div>
       )}
@@ -68,8 +68,8 @@ export default function EarlinessPage() {
           </div>
 
           {accruing ? (
-            <div className="mt-6 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-4 text-[14px] leading-relaxed text-zinc-700">
-              <p className="font-medium text-zinc-900">Accruing — no invented numbers</p>
+            <div className="mt-6 rounded-xl border px-4 py-4 text-[14px] leading-relaxed text-[color:var(--m-muted)]" style={{ background: 'var(--m-surface-2)', borderColor: 'var(--m-border)' }}>
+              <p className="font-medium text-[color:var(--m-text)]">Accruing — no invented numbers</p>
               <p className="mt-1">
                 Index checks run on a schedule. Until a dated check exists for a company,
                 we do not claim it is missing from public indexes. Zero verified misses on day one
@@ -77,7 +77,7 @@ export default function EarlinessPage() {
               </p>
             </div>
           ) : (
-            <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/60 px-4 py-4 text-[14px] leading-relaxed text-emerald-950">
+            <div className="mt-6 rounded-xl border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-4 py-4 text-[14px] leading-relaxed text-[color:var(--m-forest)]">
               <p className="font-medium">
                 {misses} verified miss{misses === 1 ? '' : 'es'} from {checks} checked entit{checks === 1 ? 'y' : 'ies'}.
               </p>
@@ -88,7 +88,7 @@ export default function EarlinessPage() {
           )}
 
           {data.honesty?.claim && (
-            <p className="mt-6 text-[13px] leading-relaxed text-zinc-500">
+            <p className="mt-6 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
               {data.honesty.claim}
             </p>
           )}
@@ -106,9 +106,9 @@ export default function EarlinessPage() {
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white px-4 py-3">
-      <div className="text-[11px] font-medium uppercase tracking-wide text-zinc-500">{label}</div>
-      <div className="mt-1 text-[22px] font-semibold tracking-tight text-zinc-900">{value}</div>
+    <div className="rounded-xl border px-4 py-3" style={{ background: 'var(--m-surface)', borderColor: 'var(--m-border)' }}>
+      <div className="text-[11px] font-medium uppercase tracking-wide" style={{ color: 'var(--m-muted)' }}>{label}</div>
+      <div className="mt-1 text-[22px] font-semibold tracking-tight text-[color:var(--m-text)]">{value}</div>
     </div>
   )
 }

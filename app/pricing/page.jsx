@@ -49,10 +49,10 @@ export default function PricingPage() {
 
       <div className="mt-10 max-w-xl">
         <p className="m-kicker mb-2">Pricing</p>
-        <h1 className="text-[28px] font-semibold tracking-tight text-zinc-900">
+        <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
           Pay for deal flow you can verify
         </h1>
-        <p className="mt-3 text-[15px] leading-relaxed text-zinc-600">
+        <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
           Per seat, per month. Every tier includes the same honest data — receipts,
           dated first-seen records, and checkable coverage claims.
         </p>
@@ -62,23 +62,23 @@ export default function PricingPage() {
         {TIERS.map(tier => (
           <div
             key={tier.name}
-            className={`m-card m-card-pad flex flex-col ${tier.featured ? 'border-zinc-900' : ''}`}
+            className={`m-card m-card-pad flex flex-col ${tier.featured ? 'border-[color:var(--m-accent)]' : ''}`}
           >
             <p className="m-kicker">{tier.name}</p>
-            <p className="mt-2 text-[28px] font-semibold tracking-tight text-zinc-900">
+            <p className="mt-2 text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
               {tier.price}
-              <span className="text-[13px] font-normal text-zinc-500"> /seat/mo</span>
+              <span className="text-[13px] font-normal" style={{ color: 'var(--m-muted)' }}> /seat/mo</span>
             </p>
-            <p className="mt-1 text-[13px] text-zinc-500">{tier.blurb}</p>
-            <ul className="mt-4 flex-1 space-y-2 text-[13px] leading-relaxed text-zinc-600">
+            <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>{tier.blurb}</p>
+            <ul className="mt-4 flex-1 space-y-2 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
               {tier.features.map(f => (
                 <li key={f} className="flex gap-2">
-                  <span className="text-emerald-600">✓</span>
+                  <span className="text-[color:var(--m-forest)]">✓</span>
                   <span>{f}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 rounded-md bg-amber-50 px-3 py-2 text-[11px] font-medium text-amber-800">
+            <p className="mt-4 rounded-md border border-amber-700/40 bg-amber-500/10 px-3 py-2 text-[11px] font-medium text-amber-800">
               Early access — first 10 funds onboard free for 60 days
             </p>
           </div>
@@ -89,7 +89,7 @@ export default function PricingPage() {
         <Link href="/fund/setup" className="m-btn-primary">
           Start free — set up your deal flow
         </Link>
-        <p className="mt-3 text-[12px] text-zinc-500">
+        <p className="mt-3 text-[12px]" style={{ color: 'var(--m-muted)' }}>
           No credit card during early access. Billing starts only after your free window,
           and only if you stay.
         </p>

@@ -697,42 +697,42 @@ function MemoPageContent() {
       </div>
 
       {finishingBrief && (
-        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-sky-200 bg-sky-50 px-4 py-2">
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-sky-700/40 bg-sky-600/10 px-4 py-2 backdrop-blur">
           <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
-            <p className="text-xs font-medium text-sky-900">
+            <p className="text-xs font-medium text-sky-800">
               Finishing brief — draft below updates when Claude completes (~20–40s)
             </p>
-            <span className="font-mono text-[10px] text-sky-700">Generating…</span>
+            <span className="font-mono text-[10px] text-[color:var(--m-ink-blue)]">Generating…</span>
           </div>
         </div>
       )}
 
       {finishError && (
-        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-200 bg-red-50 px-4 py-2">
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-700/40 bg-red-500/10 px-4 py-2 backdrop-blur">
           <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3">
-            <p className="text-xs text-red-900">{finishError}</p>
+            <p className="text-xs text-red-800">{finishError}</p>
             <div className="flex shrink-0 gap-2">
               <button type="button" onClick={retryGenerate} className="text-xs font-medium text-red-800 underline">
                 Retry generate
               </button>
-              <Link href="/brief" className="text-xs font-medium text-red-700 underline">Back to Brief</Link>
+              <Link href="/brief" className="text-xs font-medium text-red-800 underline">Back to Brief</Link>
             </div>
           </div>
         </div>
       )}
 
       {showErrorBanner && (
-        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-200 bg-red-50 px-4 py-2">
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-red-700/40 bg-red-500/10 px-4 py-2 backdrop-blur">
           <div className="mx-auto flex max-w-3xl items-start justify-between gap-4">
             <div>
-              <p className="text-xs font-medium text-red-900">Verify before forwarding — quality issues detected</p>
+              <p className="text-xs font-medium text-red-800">Verify before forwarding — quality issues detected</p>
               <ul className="mt-1 space-y-0.5">
                 {errors.map((flag, i) => (
-                  <li key={i} className="text-xs text-red-800">{flag.message}</li>
+                  <li key={i} className="text-xs text-red-800/90">{flag.message}</li>
                 ))}
               </ul>
             </div>
-            <button onClick={() => setErrorBannerDismissed(true)} className="shrink-0 text-xs font-medium text-red-700 hover:text-red-900">
+            <button onClick={() => setErrorBannerDismissed(true)} className="shrink-0 text-xs font-medium text-red-800 hover:text-red-900">
               Dismiss
             </button>
           </div>
@@ -740,7 +740,7 @@ function MemoPageContent() {
       )}
 
       {showWarnBanner && (
-        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-amber-200 bg-amber-50 px-4 py-2">
+        <div className="no-print fixed inset-x-0 top-12 z-50 border-b border-amber-700/40 bg-amber-500/10 px-4 py-2 backdrop-blur">
           <div className="mx-auto flex max-w-3xl items-start justify-between gap-4">
             <div>
               <p className="text-xs font-medium text-amber-800">
@@ -753,7 +753,7 @@ function MemoPageContent() {
               {!warnCollapsed && (
                 <ul className="mt-1 space-y-0.5">
                   {sortedWarnings.map((flag, i) => (
-                    <li key={i} className="text-xs text-amber-700">{flag.message}</li>
+                    <li key={i} className="text-xs text-amber-800/90">{flag.message}</li>
                   ))}
                 </ul>
               )}
@@ -768,7 +768,7 @@ function MemoPageContent() {
                   Show
                 </button>
               )}
-              <button onClick={() => setBannerDismissed(true)} className="shrink-0 text-xs text-amber-600 hover:text-amber-800">
+              <button onClick={() => setBannerDismissed(true)} className="shrink-0 text-xs text-amber-800/80 hover:text-amber-900">
                 Dismiss
               </button>
             </div>
@@ -777,13 +777,13 @@ function MemoPageContent() {
       )}
 
       {isGuestFund && (
-        <div className="no-print fixed right-4 top-14 z-50 max-w-[200px] rounded-md border border-violet-200 bg-violet-50 px-3 py-2 text-[10px] text-violet-900">
+        <div className="no-print fixed right-4 top-14 z-50 max-w-[200px] rounded-md border border-violet-700/40 bg-violet-600/10 px-3 py-2 text-[10px] text-violet-800 backdrop-blur">
           Generic fund context — <Link href="/fund/setup" className="font-medium underline">personalize</Link> before GP forward
         </div>
       )}
 
       {isDemo && (
-        <div className="no-print fixed left-4 top-14 z-50 rounded-md border border-blue-200 bg-blue-50 px-3 py-1.5 text-[11px] font-medium text-blue-800">
+        <div className="no-print fixed left-4 top-14 z-50 rounded-md border border-sky-700/40 bg-sky-600/10 px-3 py-1.5 text-[11px] font-medium text-sky-800 backdrop-blur">
           Demo brief · NationGraph
         </div>
       )}
@@ -799,7 +799,7 @@ function MemoPageContent() {
         style={{ width: '210mm', margin: '0 auto', paddingTop: topOffset }}
       />
 
-      <div className="no-print fixed inset-x-0 bottom-0 z-50 border-t bg-white/95 px-4 py-4 backdrop-blur-sm" style={{ borderColor: 'var(--m-border)' }}>
+      <div className="no-print fixed inset-x-0 bottom-0 z-50 border-t px-4 py-4 backdrop-blur-sm" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
         <div className="mx-auto flex max-w-3xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="min-w-0">
             {!outcome ? (
@@ -884,7 +884,7 @@ function MemoPageContent() {
       </div>
 
       {showOutcomeNudge && (
-        <div className="no-print fixed inset-0 z-[60] flex items-end justify-center bg-black/30 p-4 sm:items-center">
+        <div className="no-print fixed inset-0 z-[60] flex items-end justify-center bg-[color:var(--m-text)]/20 p-4 sm:items-center">
           <div className="m-card m-card-pad w-full max-w-sm shadow-xl">
             <p className="text-[14px] font-medium">Mark this deal first?</p>
             <p className="mt-1 text-[12px]" style={{ color: 'var(--m-muted)' }}>
