@@ -60,23 +60,23 @@ export default function PilotPage() {
       <WorkspacePage width="medium">
         <div className="mb-8">
           <p className="m-kicker mb-1">Coverage, measured — not claimed</p>
-          <h2 className="text-[24px] font-semibold tracking-tight text-zinc-900">{study.title}</h2>
-          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-zinc-600">
+          <h2 className="text-[24px] font-semibold tracking-tight text-white">{study.title}</h2>
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
             {study.thesis}
           </p>
         </div>
 
         {(feedStats || bulkFill?.ran) && (
-          <div className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50/80 px-4 py-3">
-            <p className="text-[13px] font-semibold text-emerald-950">Live feed parity</p>
+          <div className="mb-6 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3">
+            <p className="text-[13px] font-semibold text-emerald-200">Live feed parity</p>
             {feedStats && (
-              <p className="mt-1 text-[13px] text-emerald-900">
+              <p className="mt-1 text-[13px] text-emerald-100/90">
                 {flowFeedStatsLine(feedStats)}
                 {benchmark?.feedParity?.mandate ? ` · mandate: ${benchmark.feedParity.mandate}` : ''}
               </p>
             )}
             {bulkFill?.ran && (
-              <p className="mt-1 font-mono text-[12px] text-emerald-800">
+              <p className="mt-1 font-mono text-[12px] text-emerald-300">
                 Corpus pump: +{bulkFill.delta ?? 0} records → {bulkFill.after ?? '—'} (target {bulkFill.target ?? 2500})
               </p>
             )}
@@ -84,7 +84,7 @@ export default function PilotPage() {
         )}
 
         {useLedgerHeadline && (
-          <p className="mb-3 text-[12px] font-medium text-zinc-600">
+          <p className="mb-3 text-[12px] font-medium" style={{ color: 'var(--m-muted)' }}>
             Headline metrics from the live truth ledger — same source as Coverage proof and Deal Flow digest.
           </p>
         )}
@@ -119,10 +119,10 @@ export default function PilotPage() {
           <ol className="space-y-3">
             {study.loop.map((step, i) => (
               <li key={step.step} className="flex gap-3 text-[14px]">
-                <span className="font-mono text-[11px] text-zinc-400">{String(i + 1).padStart(2, '0')}</span>
+                <span className="font-mono text-[11px] text-emerald-400">{String(i + 1).padStart(2, '0')}</span>
                 <div>
-                  <div className="font-medium text-zinc-900">{step.step}</div>
-                  <div className="text-[13px] text-zinc-600">{step.detail}</div>
+                  <div className="font-medium text-white">{step.step}</div>
+                  <div className="text-[13px]" style={{ color: 'var(--m-muted)' }}>{step.detail}</div>
                 </div>
               </li>
             ))}
@@ -149,14 +149,14 @@ export default function PilotPage() {
                   <tr key={c.name}>
                     <td>
                       <div className="font-medium">{c.name}</div>
-                      <div className="font-mono text-[11px] text-zinc-500">{c.domain}</div>
+                      <div className="font-mono text-[11px]" style={{ color: 'var(--m-muted-2)' }}>{c.domain}</div>
                     </td>
-                    <td className="text-[12px] text-zinc-700">{c.founders || '—'}</td>
+                    <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.founders || '—'}</td>
                     <td className="font-mono text-[11px]">{c.cohortDate || '—'}</td>
-                    <td className="text-[12px] text-emerald-800">{c.coverage}</td>
+                    <td className="text-[12px] text-emerald-300">{c.coverage}</td>
                     <td>
                       {c.linkedin ? (
-                        <a href={c.linkedin} target="_blank" rel="noopener noreferrer" className="text-[12px] text-sky-800 hover:underline">
+                        <a href={c.linkedin} target="_blank" rel="noopener noreferrer" className="text-[12px] text-sky-300 hover:underline">
                           LinkedIn
                         </a>
                       ) : '—'}
@@ -166,7 +166,7 @@ export default function PilotPage() {
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-[11px] text-zinc-500">
+          <p className="mt-2 text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
             &ldquo;First seen&rdquo; is the community cohort announcement date (cited in each row&rsquo;s provenance).
             A verified index miss means we ran a StartupHub name search and it returned no match — you can repeat it.
             We do not assert index absence for rows we haven&rsquo;t tested.
@@ -195,24 +195,24 @@ export default function PilotPage() {
               />
             </div>
             {feedStats && (
-              <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2">
-                <p className="text-[12px] font-medium text-zinc-800">Flow feed stats (same builder as Deal Flow digest)</p>
-                <p className="mt-1 font-mono text-[12px] text-zinc-600">{flowFeedStatsLine(feedStats)}</p>
+              <div className="mt-4 rounded-lg border px-3 py-2" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface-2)' }}>
+                <p className="text-[12px] font-medium text-white">Flow feed stats (same builder as Deal Flow digest)</p>
+                <p className="mt-1 font-mono text-[12px]" style={{ color: 'var(--m-muted)' }}>{flowFeedStatsLine(feedStats)}</p>
               </div>
             )}
-            <p className="mt-2 text-[11px] text-zinc-500">
+            <p className="mt-2 text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
               &ldquo;On Meridian since&rdquo; is when our server first recorded the company — separate from the
               cohort announcement date. Index checks are stored name searches with dates
               ({(benchmark.stats.indexes || []).join(', ') || 'StartupHub'}); we only claim absence where a dated check exists.
             </p>
             {benchmark.sourceWatches?.length > 0 && (
               <div className="mt-4">
-                <p className="text-[12px] font-medium text-zinc-800">Source freshness (watched automatically)</p>
+                <p className="text-[12px] font-medium text-white">Source freshness (watched automatically)</p>
                 <div className="mt-2 space-y-1">
                   {benchmark.sourceWatches.map(w => (
                     <div key={w.url} className="flex flex-wrap items-baseline gap-x-3 text-[12px]">
-                      <span className="text-zinc-700">{w.label}</span>
-                      <span className="font-mono text-[11px] text-zinc-500">
+                      <span style={{ color: 'var(--m-muted)' }}>{w.label}</span>
+                      <span className="font-mono text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
                         checked {relativeTime(w.lastCheckedAt)}
                         {w.lastChangedAt ? ` · changed ${relativeTime(w.lastChangedAt)}` : ''}
                       </span>
@@ -247,9 +247,9 @@ function relativeTime(iso) {
 
 function Stat({ label, value }) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white px-4 py-3">
-      <div className="text-[11px] font-medium uppercase tracking-wide text-zinc-500">{label}</div>
-      <div className="mt-1 text-[22px] font-semibold tracking-tight text-zinc-900">{value}</div>
+    <div className="rounded-xl border px-4 py-3" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
+      <div className="text-[11px] font-medium uppercase tracking-wide" style={{ color: 'var(--m-muted-2)' }}>{label}</div>
+      <div className="mt-1 text-[22px] font-semibold tracking-tight text-white">{value}</div>
     </div>
   )
 }

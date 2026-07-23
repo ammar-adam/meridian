@@ -10,16 +10,16 @@ import { PANACHE_VENTURES } from '@/lib/fund-seeds'
 
 function StatusRow({ ok, label, detail, action }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-zinc-100 py-3 last:border-0">
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b py-3 last:border-0" style={{ borderColor: 'var(--m-border)' }}>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span
-            className={`inline-block h-2 w-2 shrink-0 rounded-full ${ok ? 'bg-emerald-500' : ok === false ? 'bg-amber-500' : 'bg-zinc-300'}`}
+            className={`inline-block h-2 w-2 shrink-0 rounded-full ${ok ? 'bg-emerald-400' : ok === false ? 'bg-amber-400' : 'bg-white/20'}`}
             aria-hidden
           />
-          <span className="text-[14px] font-medium text-zinc-900">{label}</span>
+          <span className="text-[14px] font-medium text-white">{label}</span>
         </div>
-        {detail && <p className="mt-1 pl-4 text-[13px] leading-relaxed text-zinc-600">{detail}</p>}
+        {detail && <p className="mt-1 pl-4 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>{detail}</p>}
       </div>
       {action}
     </div>
@@ -31,10 +31,10 @@ function Beat({ n, title, detail, href, hrefLabel }) {
     <li className="flex gap-3 text-[14px]">
       <span className="font-mono text-[11px] text-zinc-400">{String(n).padStart(2, '0')}</span>
       <div>
-        <div className="font-medium text-zinc-900">{title}</div>
-        <div className="mt-0.5 text-[13px] text-zinc-600">{detail}</div>
+        <div className="font-medium text-white">{title}</div>
+        <div className="mt-0.5 text-[13px]" style={{ color: 'var(--m-muted)' }}>{detail}</div>
         {href && (
-          <Link href={href} className="mt-1 inline-block text-[13px] font-medium text-emerald-700 hover:underline">
+          <Link href={href} className="mt-1 inline-block text-[13px] font-medium text-emerald-400 hover:underline">
             {hrefLabel || 'Open →'}
           </Link>
         )}
@@ -146,14 +146,14 @@ export default function DemoPage() {
       )}
     >
       <WorkspacePage width="medium">
-        <div className={`mb-6 rounded-xl border px-4 py-3 ${demoReady ? 'border-emerald-200 bg-emerald-50/80' : 'border-amber-200 bg-amber-50/80'}`}>
-          <p className="text-[13px] font-semibold text-zinc-900">
+        <div className={`mb-6 rounded-xl border px-4 py-3 ${demoReady ? 'border-emerald-400/30 bg-emerald-400/10' : 'border-amber-400/30 bg-amber-400/10'}`}>
+          <p className={`text-[13px] font-semibold ${demoReady ? 'text-emerald-200' : 'text-amber-200'}`}>
             {demoReady ? 'Green light — open Deal Flow and hit record.' : `${readyCount}/5 checks passing — see below.`}
           </p>
-          <p className="mt-1 text-[13px] text-zinc-600">
+          <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>
             Prod: {typeof window !== 'undefined' ? window.location.origin : 'meridian-eight-sandy.vercel.app'}
             {' · '}
-            Script: repo file <code className="rounded bg-zinc-100 px-1">docs/investor-demo-film.md</code>
+            Script: repo file <code className="rounded bg-white/10 px-1 text-white/80">docs/investor-demo-film.md</code>
           </p>
         </div>
 
@@ -273,7 +273,7 @@ export default function DemoPage() {
         </WorkspaceSection>
 
         <WorkspaceSection title="Env vars (minimum)" description="Paste on Vercel → Settings → Environment Variables → redeploy.">
-          <pre className="overflow-x-auto rounded-lg border border-zinc-200 bg-zinc-900 p-4 font-mono text-[12px] leading-relaxed text-emerald-100">
+          <pre className="overflow-x-auto rounded-lg border border-white/10 bg-black/60 p-4 font-mono text-[12px] leading-relaxed text-emerald-200">
 {`DATABASE_URL=postgresql://...
 ANTHROPIC_API_KEY=sk-ant-...
 PERPLEXITY_API_KEY=pplx-...
