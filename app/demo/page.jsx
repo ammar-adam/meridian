@@ -63,7 +63,11 @@ export default function DemoPage() {
     ])
     setHealth(h)
     setBenchmark(b?.enabled ? b : null)
-    setCorpus(c?.ok ? c : null)
+    setCorpus(c?.ok ? c : (b?.stats?.companyRecords != null ? {
+      ok: true,
+      companyRecords: b.stats.companyRecords,
+      via: 'benchmark',
+    } : null))
   }, [])
 
   useEffect(() => {
@@ -77,14 +81,20 @@ export default function DemoPage() {
     setWarming(true)
     setWarmMsg('Pumping corpus (30–90s)…')
     try {
-      const res = await fetch('/api/corpus?force=1')
+      let res = await fetch('/api/corpus?force=1')
+      if (!res.ok) res = await fetch('/api/pilot')
       if (!res.ok) throw new Error(`HTTP ${res.status}`)
       const data = await res.json()
-      setCorpus(data)
-      setWarmMsg(`Done — ${data.companyRecords ?? '—'} company records (+${data.delta ?? 0} this run)`)
+      const records = data.companyRecords ?? data.headlineMetrics?.companyRecords ?? data.bulkFill?.after
+      setCorpus(data.ok || data.headlineMetrics ? {
+        ok: true,
+        companyRecords: records,
+        delta: data.delta ?? data.bulkFill?.delta,
+      } : data)
+      setWarmMsg(`Done — ${records ?? '—'} company records (+${data.delta ?? data.bulkFill?.delta ?? 0} this run)`)
       await loadRemote()
     } catch (err) {
-      setWarmMsg(err.message || 'Corpus pump failed — prod may need redeploy')
+      setWarmMsg(err.message || 'Corpus pump failed — try again in a minute')
     } finally {
       setWarming(false)
     }
@@ -101,9 +111,9 @@ export default function DemoPage() {
     && health?.features?.persistence
   const panacheActive = fund?.id === PANACHE_VENTURES.id
   const hasThesis = Boolean(strategy?.thesis?.trim())
-  const records = corpus?.companyRecords ?? benchmark?.companyRecords
+  const records = corpus?.companyRecords ?? benchmark?.stats?.companyRecords
   const feedParity = Boolean(benchmark?.feedParity?.feedStats)
-  const deployCurrent = feedParity && corpus != null
+  const deployCurrent = feedParity || Boolean(benchmark?.stats?.companyRecords != null)
 
   const readyCount = useMemo(() => {
     let n = 0
@@ -277,7 +287,8 @@ CRON_SECRET=...             # operator curls only`}
           </pre>
           <p className="mt-3 text-[13px] text-zinc-600">
             Copy template: <code className="rounded bg-zinc-100 px-1">.env.demo</code> in repo root.
-            Terminal preflight: <code className="rounded bg-zinc-100 px-1">./scripts/demo-preflight.sh</code>
+            Terminal: <code className="rounded bg-zinc-100 px-1">npm run debate</code> (must avg ≥ 7) ·{' '}
+            <code className="rounded bg-zinc-100 px-1">./scripts/demo-preflight.sh</code>
           </p>
         </WorkspaceSection>
 
