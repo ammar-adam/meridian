@@ -42,8 +42,10 @@ export default function PilotPage() {
   }
 
   const m = study.metrics
+  const headline = study.headlineMetrics || benchmark?.stats
   const feedStats = benchmark?.feedParity?.feedStats
   const bulkFill = study.bulkFill
+  const useLedgerHeadline = Boolean(headline?.companyRecords != null || headline?.entitiesChecked != null)
 
   return (
     <WorkspaceShell
@@ -75,21 +77,42 @@ export default function PilotPage() {
             )}
             {bulkFill?.ran && (
               <p className="mt-1 font-mono text-[12px] text-emerald-800">
-                Corpus pump: +{bulkFill.delta ?? 0} records → {bulkFill.after ?? '—'} (target {bulkFill.target ?? 1500})
+                Corpus pump: +{bulkFill.delta ?? 0} records → {bulkFill.after ?? '—'} (target {bulkFill.target ?? 2500})
               </p>
             )}
           </div>
         )}
 
+        {useLedgerHeadline && (
+          <p className="mb-3 text-[12px] font-medium text-zinc-600">
+            Headline metrics from the live truth ledger — same source as Coverage proof and Deal Flow digest.
+          </p>
+        )}
+
         <div className="mb-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <Stat label="Cohort companies" value={m.cohortCompanies} />
-          <Stat label="Flow-ready" value={m.flowReady} />
-          <Stat label="Community-sourced" value={`${(m.communitySourced || 0) + (m.communityFirst || 0)} (${Math.round(m.communityShare * 100)}%)`} />
-          <Stat label="Direct-reach" value={`${m.reachable} (${Math.round(m.reachRate * 100)}%)`} />
-          <Stat label="With first-seen date" value={m.withFirstSeen} />
-          <Stat label="Verified index misses" value={m.verifiedMiss} />
-          <Stat label="Founder handle" value={`${Math.round((m.founderRate || 0) * 100)}%`} />
-          <Stat label="Median freshness" value={m.medianAgeDays != null ? `${m.medianAgeDays}d` : '—'} />
+          {useLedgerHeadline ? (
+            <>
+              <Stat label="Company records" value={headline.companyRecords ?? '—'} />
+              <Stat label="Index-checked" value={headline.entitiesChecked ?? '—'} />
+              <Stat label="Verified misses (dated)" value={headline.verifiedMisses ?? m.verifiedMiss ?? 0} />
+              <Stat label="Entities on ledger" value={headline.entities ?? '—'} />
+              <Stat label="Flow-ready (community layer)" value={m.flowReady} />
+              <Stat label="Community-sourced" value={`${(m.communitySourced || 0) + (m.communityFirst || 0)} (${Math.round((m.communityShare || 0) * 100)}%)`} />
+              <Stat label="Direct-reach" value={`${m.reachable} (${Math.round((m.reachRate || 0) * 100)}%)`} />
+              <Stat label="Median freshness" value={m.medianAgeDays != null ? `${m.medianAgeDays}d` : '—'} />
+            </>
+          ) : (
+            <>
+              <Stat label="Cohort companies" value={m.cohortCompanies} />
+              <Stat label="Flow-ready" value={m.flowReady} />
+              <Stat label="Community-sourced" value={`${(m.communitySourced || 0) + (m.communityFirst || 0)} (${Math.round(m.communityShare * 100)}%)`} />
+              <Stat label="Direct-reach" value={`${m.reachable} (${Math.round(m.reachRate * 100)}%)`} />
+              <Stat label="With first-seen date" value={m.withFirstSeen} />
+              <Stat label="Verified index misses" value={m.verifiedMiss} />
+              <Stat label="Founder handle" value={`${Math.round((m.founderRate || 0) * 100)}%`} />
+              <Stat label="Median freshness" value={m.medianAgeDays != null ? `${m.medianAgeDays}d` : '—'} />
+            </>
+          )}
         </div>
 
         <WorkspaceSection title="Measured loop" description={study.thesisBandNote}>

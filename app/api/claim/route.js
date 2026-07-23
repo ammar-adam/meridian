@@ -1,4 +1,5 @@
 import { enforceRateLimit } from '@/lib/api-guard'
+import { resolveActorId } from '@/lib/actor-id'
 import { validateClaimPayload } from '@/lib/claim-validation'
 import { isLedgerEnabled, recordAttestation } from '@/lib/server/truth-ledger'
 
@@ -20,6 +21,14 @@ export async function POST(req) {
 
   if (!isLedgerEnabled()) {
     return Response.json({ error: 'Claims are temporarily unavailable' }, { status: 503 })
+  }
+
+  const actorId = await resolveActorId(req)
+  if (actorId === 'guest') {
+    return Response.json(
+      { error: 'Sign in or use a registered device to submit a claim' },
+      { status: 401 },
+    )
   }
 
   const validated = validateClaimPayload(body)

@@ -22,7 +22,7 @@ export default function WorkspacePreview() {
 
           <div className="min-w-0 flex-1 p-5">
             <div className="mb-3 flex items-center justify-between">
-              <div className="text-[11px] font-medium text-zinc-400">12 companies · incubator first</div>
+              <div className="text-[11px] font-medium text-zinc-400">Community sources · founders + domain</div>
               <span className="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-[10px] font-medium text-emerald-400">
                 founders + domain
               </span>

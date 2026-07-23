@@ -20,7 +20,10 @@
     "db:push": "drizzle-kit push",
     "db:migrate": "node scripts/migrate-batch-jobs.mjs",
     "db:studio": "drizzle-kit studio",
-    "smoke": "node scripts/acceptance-smoke.mjs"
+    "smoke": "node scripts/acceptance-smoke.mjs",
+    "debate": "node scripts/adversarial-debate.mjs",
+    "demo:preflight": "./scripts/demo-preflight.sh",
+    "demo:ready": "npm run test:unit && node scripts/adversarial-debate.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",

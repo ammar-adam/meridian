@@ -16,7 +16,7 @@ import {
 } from '@/lib/fund-profile'
 import { findMemoByDomain } from '@/lib/memo-library'
 import { resolveDiscoverCompanyUrl } from '@/lib/discover-url'
-import { canAutogenBrief } from '@/lib/flow-quality'
+import { canAutogenBrief, isFlowReady } from '@/lib/flow-quality'
 import { buildSourceContext } from '@/lib/source-session'
 import {
   upsertWatch,
@@ -60,6 +60,7 @@ function FlowContent() {
   const [lastVisit, setLastVisit] = useState(null)
   const [watching, setWatching] = useState(false)
   const [sourceFilter, setSourceFilter] = useState('all')
+  const [briefableOnly, setBriefableOnly] = useState(true)
 
   const loadContext = useCallback(() => {
     const profile = getFundProfile()
@@ -216,7 +217,14 @@ function FlowContent() {
     () => filterBySourceType(companies || [], sourceFilter),
     [companies, sourceFilter],
   )
-  const feedRows = filteredRows
+  const feedRows = useMemo(
+    () => (briefableOnly ? filteredRows.filter(canAutogenBrief) : filteredRows),
+    [filteredRows, briefableOnly],
+  )
+  const briefReadyCount = useMemo(
+    () => (companies || []).filter(canAutogenBrief).length,
+    [companies],
+  )
   const thesisText = watch?.thesis || getActiveStrategy(fund)?.thesis || ''
 
   if (!hasFundProfile()) {
@@ -340,9 +348,18 @@ function FlowContent() {
                 {f.label}
               </button>
             ))}
-            {sourceFilter !== 'all' && filteredRows.length !== companies.length && (
+            <span className="mx-1 text-zinc-300">|</span>
+            <button
+              type="button"
+              onClick={() => setBriefableOnly(v => !v)}
+              className={briefableOnly ? 'm-btn-primary m-btn-sm' : 'm-btn-ghost m-btn-sm'}
+              title="Hide founder-only rows that need a domain before Brief"
+            >
+              Brief-ready ({briefReadyCount})
+            </button>
+            {(sourceFilter !== 'all' || briefableOnly) && feedRows.length !== companies.length && (
               <span className="text-[12px] text-zinc-500">
-                {filteredRows.length} of {companies.length}
+                {feedRows.length} of {companies.length} shown
               </span>
             )}
           </div>

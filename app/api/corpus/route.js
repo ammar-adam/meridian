@@ -14,14 +14,14 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET(req) {
   const force = new URL(req.url).searchParams.get('force') === '1'
-  const target = Number(new URL(req.url).searchParams.get('target') || 1500) || 1500
+  const target = Number(new URL(req.url).searchParams.get('target') || 2500) || 2500
 
   const before = await countCompanies()
   let bulkFill = null
   let indexCheck = null
 
   try {
-    indexCheck = await indexCheckIfStale({ limit: force ? 15 : 10, force })
+    indexCheck = await indexCheckIfStale({ limit: force ? 40 : 15, force })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }
