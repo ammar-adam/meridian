@@ -58,7 +58,7 @@ export default function GpValidationCard() {
       </div>
 
       {metrics.betaReady && (
-        <p className="mt-4 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-[12px] text-emerald-200">
+        <p className="mt-4 rounded-md border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-3 py-2 text-[12px] text-[color:var(--m-accent)]">
           Ready for GP review — forward a pursue memo without editing the thesis band.
         </p>
       )}

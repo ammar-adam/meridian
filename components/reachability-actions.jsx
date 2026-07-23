@@ -50,7 +50,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
             href={linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-sky-300 hover:underline"
+            className="font-medium text-[color:var(--m-ink-blue)] hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             {linkedinIsSearch ? 'Search LinkedIn' : 'LinkedIn'}
@@ -59,7 +59,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
         {email && (
           <a
             href={`mailto:${email}`}
-            className="font-medium text-emerald-300 hover:underline"
+            className="font-medium text-[color:var(--m-forest)] hover:underline"
             title="Verified email"
             onClick={(e) => e.stopPropagation()}
           >
@@ -69,7 +69,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
         {!email && founderName && domain && (
           <button
             type="button"
-            className="font-medium text-amber-300 hover:underline"
+            className="font-medium text-amber-800 hover:underline"
             onClick={(e) => { e.stopPropagation(); loadGuesses() }}
             disabled={guessLoading}
           >
@@ -81,18 +81,18 @@ export default function ReachabilityActions({ reach, company, compact = false })
             href={website}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-white/60 hover:underline"
+            className="font-medium text-[color:var(--m-muted)] hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             Website
           </a>
         )}
         {guessOpen && guesses?.length > 0 && (
-          <span className="text-amber-200" title="Pattern guesses — not verified">
+          <span className="text-amber-800" title="Pattern guesses — not verified">
             {guesses[0].email}
           </span>
         )}
-        {guessError && <span className="text-red-300">{guessError}</span>}
+        {guessError && <span className="text-red-800">{guessError}</span>}
       </div>
     )
   }
@@ -107,7 +107,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
               href={f.linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sky-300 hover:underline"
+              className="text-[color:var(--m-ink-blue)] hover:underline"
               onClick={(e) => e.stopPropagation()}
             >
               {f.linkedinKind === 'profile' ? 'Profile' : 'Search LinkedIn'}
@@ -116,7 +116,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
           {f.emails?.[0] && (
             <a
               href={`mailto:${f.emails[0]}`}
-              className="font-mono text-emerald-300 hover:underline"
+              className="font-mono text-[color:var(--m-forest)] hover:underline"
               title="Verified email"
               onClick={(e) => e.stopPropagation()}
             >
@@ -129,18 +129,18 @@ export default function ReachabilityActions({ reach, company, compact = false })
         <div className="flex flex-wrap items-center gap-2 text-[11px]">
           <button
             type="button"
-            className="text-amber-300 hover:underline"
+            className="text-amber-800 hover:underline"
             onClick={(e) => { e.stopPropagation(); loadGuesses() }}
             disabled={guessLoading}
           >
             {guessLoading ? 'Guessing…' : 'Guess email (unverified)'}
           </button>
           {guessOpen && guesses?.map(g => (
-            <span key={g.email} className="font-mono text-amber-200" title={g.confidence}>
+            <span key={g.email} className="font-mono text-amber-800" title={g.confidence}>
               {g.email}
             </span>
           ))}
-          {guessError && <span className="text-red-300">{guessError}</span>}
+          {guessError && <span className="text-red-800">{guessError}</span>}
         </div>
       )}
     </div>

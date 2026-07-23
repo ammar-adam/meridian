@@ -60,23 +60,23 @@ export default function PilotPage() {
       <WorkspacePage width="medium">
         <div className="mb-8">
           <p className="m-kicker mb-1">Coverage, measured — not claimed</p>
-          <h2 className="text-[24px] font-semibold tracking-tight text-white">{study.title}</h2>
+          <h2 className="text-[24px] font-semibold tracking-tight text-[color:var(--m-text)]">{study.title}</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
             {study.thesis}
           </p>
         </div>
 
         {(feedStats || bulkFill?.ran) && (
-          <div className="mb-6 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-3">
-            <p className="text-[13px] font-semibold text-emerald-200">Live feed parity</p>
+          <div className="mb-6 rounded-xl border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-4 py-3">
+            <p className="text-[13px] font-semibold text-[color:var(--m-forest)]">Live feed parity</p>
             {feedStats && (
-              <p className="mt-1 text-[13px] text-emerald-100/90">
+              <p className="mt-1 text-[13px] text-[color:var(--m-forest)]">
                 {flowFeedStatsLine(feedStats)}
                 {benchmark?.feedParity?.mandate ? ` · mandate: ${benchmark.feedParity.mandate}` : ''}
               </p>
             )}
             {bulkFill?.ran && (
-              <p className="mt-1 font-mono text-[12px] text-emerald-300">
+              <p className="mt-1 font-mono text-[12px] text-[color:var(--m-forest)]">
                 Corpus pump: +{bulkFill.delta ?? 0} records → {bulkFill.after ?? '—'} (target {bulkFill.target ?? 2500})
               </p>
             )}
@@ -119,9 +119,9 @@ export default function PilotPage() {
           <ol className="space-y-3">
             {study.loop.map((step, i) => (
               <li key={step.step} className="flex gap-3 text-[14px]">
-                <span className="font-mono text-[11px] text-emerald-400">{String(i + 1).padStart(2, '0')}</span>
+                <span className="font-mono text-[11px] text-[color:var(--m-forest)]">{String(i + 1).padStart(2, '0')}</span>
                 <div>
-                  <div className="font-medium text-white">{step.step}</div>
+                  <div className="font-medium text-[color:var(--m-text)]">{step.step}</div>
                   <div className="text-[13px]" style={{ color: 'var(--m-muted)' }}>{step.detail}</div>
                 </div>
               </li>
@@ -153,10 +153,10 @@ export default function PilotPage() {
                     </td>
                     <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>{c.founders || '—'}</td>
                     <td className="font-mono text-[11px]">{c.cohortDate || '—'}</td>
-                    <td className="text-[12px] text-emerald-300">{c.coverage}</td>
+                    <td className="text-[12px] text-[color:var(--m-forest)]">{c.coverage}</td>
                     <td>
                       {c.linkedin ? (
-                        <a href={c.linkedin} target="_blank" rel="noopener noreferrer" className="text-[12px] text-sky-300 hover:underline">
+                        <a href={c.linkedin} target="_blank" rel="noopener noreferrer" className="text-[12px] text-[color:var(--m-ink-blue)] hover:underline">
                           LinkedIn
                         </a>
                       ) : '—'}
@@ -196,7 +196,7 @@ export default function PilotPage() {
             </div>
             {feedStats && (
               <div className="mt-4 rounded-lg border px-3 py-2" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface-2)' }}>
-                <p className="text-[12px] font-medium text-white">Flow feed stats (same builder as Deal Flow digest)</p>
+                <p className="text-[12px] font-medium text-[color:var(--m-text)]">Flow feed stats (same builder as Deal Flow digest)</p>
                 <p className="mt-1 font-mono text-[12px]" style={{ color: 'var(--m-muted)' }}>{flowFeedStatsLine(feedStats)}</p>
               </div>
             )}
@@ -207,7 +207,7 @@ export default function PilotPage() {
             </p>
             {benchmark.sourceWatches?.length > 0 && (
               <div className="mt-4">
-                <p className="text-[12px] font-medium text-white">Source freshness (watched automatically)</p>
+                <p className="text-[12px] font-medium text-[color:var(--m-text)]">Source freshness (watched automatically)</p>
                 <div className="mt-2 space-y-1">
                   {benchmark.sourceWatches.map(w => (
                     <div key={w.url} className="flex flex-wrap items-baseline gap-x-3 text-[12px]">
@@ -249,7 +249,7 @@ function Stat({ label, value }) {
   return (
     <div className="rounded-xl border px-4 py-3" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
       <div className="text-[11px] font-medium uppercase tracking-wide" style={{ color: 'var(--m-muted-2)' }}>{label}</div>
-      <div className="mt-1 text-[22px] font-semibold tracking-tight text-white">{value}</div>
+      <div className="mt-1 text-[22px] font-semibold tracking-tight text-[color:var(--m-text)]">{value}</div>
     </div>
   )
 }

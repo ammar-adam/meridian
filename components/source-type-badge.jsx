@@ -24,7 +24,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (source === 'grant') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-sky-400/40 bg-sky-400/10 text-sky-200`} title="Public grant recipient disclosure">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-sky-700/40 bg-sky-600/10 text-sky-800`} title="Public grant recipient disclosure">
         {label}
       </span>
     )
@@ -32,7 +32,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (source === 'scout') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-violet-400/40 bg-violet-400/10 text-violet-200`} title="AI-researched candidate — unverified">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-violet-700/40 bg-violet-600/10 text-violet-800`} title="AI-researched candidate — unverified">
         {label}
       </span>
     )
@@ -40,7 +40,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (isLow || source === 'domain_registry') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-amber-400/40 bg-amber-400/10 text-amber-200`} title="Weak or pre-announcement signal — verify before outreach">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-amber-700/40 bg-amber-600/10 text-amber-800`} title="Weak or pre-announcement signal — verify before outreach">
         {source === 'domain_registry' ? label : 'Stealth · unverified'}
       </span>
     )

@@ -6,9 +6,13 @@ export default function LandingBackground() {
       <div className="m-landing-gradient" />
       <div className="m-landing-grid" />
       <div className="m-landing-grain" />
-      <div className="m-landing-orb m-landing-orb-1" />
-      <div className="m-landing-orb m-landing-orb-2" />
-      <div className="m-landing-orb m-landing-orb-3" />
+      {/* Ghost classification watermark */}
+      <div
+        className="absolute -right-10 top-[18%] select-none font-mono text-[13vw] font-bold leading-none tracking-tighter"
+        style={{ color: 'rgba(26,26,23,0.035)' }}
+      >
+        FILE&nbsp;001
+      </div>
     </div>
   )
 }

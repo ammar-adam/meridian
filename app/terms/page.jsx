@@ -11,7 +11,7 @@ export default function TermsPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">Terms of use</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-white">
+      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
         Short, honest terms for an early product
       </h1>
       <p className="mt-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
@@ -22,7 +22,7 @@ export default function TermsPage() {
 
       <div className="mt-6 space-y-6 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         <section>
-          <h2 className="text-[16px] font-semibold text-white">The deal</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">The deal</h2>
           <p className="mt-2">
             Meridian surfaces early-stage companies from community sources with dated
             provenance, and generates screening briefs. You can use it to research and
@@ -32,7 +32,7 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">Not investment advice</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">Not investment advice</h2>
           <p className="mt-2">
             Nothing here is investment advice or a recommendation. Briefs are
             AI-assisted summaries of sourced material — verify before you wire money.
@@ -41,27 +41,27 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">Your content</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">Your content</h2>
           <p className="mt-2">
             Fund profiles, theses, memos, and claims stay yours. You give us permission
             to store and process them to run the product — that&apos;s it. Founders can
             correct or remove their company&apos;s record via the{' '}
-            <Link href="/claim" className="text-white underline">claim form</Link>.
+            <Link href="/claim" className="text-[color:var(--m-text)] underline">claim form</Link>.
           </p>
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">Early-access reality</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">Early-access reality</h2>
           <p className="mt-2">
             The product is in early access: things may break, coverage is still growing,
             and we may change features. We won&apos;t silently change pricing on an active
             subscription. Either of us can end the arrangement at any time; on request we
-            delete your data (see <Link href="/privacy" className="text-white underline">Privacy</Link>).
+            delete your data (see <Link href="/privacy" className="text-[color:var(--m-text)] underline">Privacy</Link>).
           </p>
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">Liability, plainly</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">Liability, plainly</h2>
           <p className="mt-2">
             To the maximum extent the law allows, Meridian is provided as-is and we are
             not liable for investment outcomes or indirect damages. If we ever owe you
@@ -72,7 +72,7 @@ export default function TermsPage() {
 
       <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
         Questions? Reach the founder through the{' '}
-        <Link href="/claim" className="text-white/80 underline">claim form</Link>.
+        <Link href="/claim" className="text-[color:var(--m-text)]/80 underline">claim form</Link>.
       </p>
     </div>
   )

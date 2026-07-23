@@ -109,9 +109,9 @@ export default function LibraryPage() {
   }
 
   function qualityLabel(entry) {
-    if (entry.qualityErrorCount > 0) return { text: 'Needs fix', cls: 'text-red-300' }
-    if (entry.qualityWarnCount > 0) return { text: `${entry.qualityWarnCount} flag${entry.qualityWarnCount !== 1 ? 's' : ''}`, cls: 'text-amber-300' }
-    if (entry.qualityPassed === true) return { text: 'Verified', cls: 'text-emerald-300' }
+    if (entry.qualityErrorCount > 0) return { text: 'Needs fix', cls: 'text-red-800' }
+    if (entry.qualityWarnCount > 0) return { text: `${entry.qualityWarnCount} flag${entry.qualityWarnCount !== 1 ? 's' : ''}`, cls: 'text-amber-800' }
+    if (entry.qualityPassed === true) return { text: 'Verified', cls: 'text-[color:var(--m-forest)]' }
     return { text: '—', cls: 'text-[color:var(--m-muted)]' }
   }
 
@@ -145,7 +145,7 @@ export default function LibraryPage() {
     >
       <WorkspacePage width="wide">
         {pending > 0 && (
-          <div className="mb-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-[13px] text-amber-200">
+          <div className="mb-4 rounded-lg border border-amber-700/40 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-800">
             <span className="font-medium">{pending} brief{pending !== 1 ? 's' : ''} need review.</span>
             {' '}Pursue/pass signals train Discover ranking and thesis band.
             {outcomeFilter !== 'pending' && (
@@ -163,7 +163,7 @@ export default function LibraryPage() {
           </FilterChip>
           <FilterChip active={outcomeFilter === 'pursue'} onClick={() => setOutcomeFilter('pursue')}>Pursue</FilterChip>
           <FilterChip active={outcomeFilter === 'pass'} onClick={() => setOutcomeFilter('pass')}>Pass</FilterChip>
-          <span className="mx-1 w-px self-stretch bg-white/10" aria-hidden />
+          <span className="mx-1 w-px self-stretch bg-[color:var(--m-border)]" aria-hidden />
           <FilterChip active={qualityFilter === 'all'} onClick={() => setQualityFilter('all')}>Any quality</FilterChip>
           <FilterChip active={qualityFilter === 'flags'} onClick={() => setQualityFilter('flags')}>
             Quality flags{flagged > 0 ? ` (${flagged})` : ''}
@@ -261,7 +261,7 @@ export default function LibraryPage() {
                           {entry.outcome ? (
                             <span className={entry.outcome === 'pursue' ? 'm-outcome-pursue' : 'm-outcome-pass'}>{entry.outcome}</span>
                           ) : entry.gpOutcome ? (
-                            <span className="text-[12px] text-violet-300" title={entry.gpReviewer ? `GP: ${entry.gpReviewer}` : ''}>
+                            <span className="text-[12px] text-violet-800" title={entry.gpReviewer ? `GP: ${entry.gpReviewer}` : ''}>
                               GP: {entry.gpOutcome}
                             </span>
                           ) : (
@@ -304,7 +304,7 @@ function FilterChip({ active, onClick, children }) {
       type="button"
       onClick={onClick}
       className={`rounded-md px-3 py-1.5 text-[12px] font-medium transition ${
-        active ? 'bg-emerald-500 text-[#04140d]' : 'ring-1 ring-white/10 hover:bg-white/5'
+        active ? 'bg-[color:var(--m-text)] text-[color:var(--m-bg)]' : 'ring-1 ring-[color:var(--m-border)] hover:bg-[color:var(--m-surface-2)]'
       }`}
       style={active ? undefined : { background: 'var(--m-surface-2)', color: 'var(--m-muted)' }}
     >

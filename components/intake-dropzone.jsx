@@ -61,11 +61,11 @@ export default function IntakeDropzone({
       onPaste={onPaste}
       tabIndex={0}
       className={`rounded-xl border-2 border-dashed transition-colors outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 ${
-        dragging ? 'border-violet-400 bg-violet-400/10' : 'border-white/10 bg-white/5 hover:border-white/20'
+        dragging ? 'border-violet-700 bg-violet-600/10' : 'border-[color:var(--m-border)] bg-[color:var(--m-surface-2)] hover:border-[color:var(--m-border-strong)]'
       } ${compact ? 'px-4 py-5' : 'px-6 py-8'} ${className}`}
     >
       <div className="text-center">
-        <p className={`font-medium text-white/80 ${compact ? 'text-[13px]' : 'text-[14px]'}`}>
+        <p className={`font-medium text-[color:var(--m-text)] ${compact ? 'text-[13px]' : 'text-[14px]'}`}>
           {busy ? 'Reading…' : 'Drop or paste here'}
         </p>
         <p className={`mt-1 text-[color:var(--m-muted)] ${compact ? 'text-[11px]' : 'text-[12px]'}`}>{hint}</p>

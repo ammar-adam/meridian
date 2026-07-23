@@ -10,7 +10,7 @@ export default function DeepDiveLinks({ company, compact = false }) {
   const links = buildDeepDiveLinks(company)
 
   const btnClass = compact
-    ? 'text-[10px] font-medium text-white/50 hover:text-white hover:underline'
+    ? 'text-[10px] font-medium text-[color:var(--m-muted)] hover:text-[color:var(--m-text)] hover:underline'
     : 'm-btn-ghost m-btn-sm text-[11px]'
 
   return (

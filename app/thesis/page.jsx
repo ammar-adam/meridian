@@ -86,22 +86,22 @@ export default function ThesisPage() {
         ) : (
           <>
             {statInsight && (
-              <div className="m-card m-card-pad mb-6 border-violet-400/30 bg-violet-400/10">
+              <div className="m-card m-card-pad mb-6 border-violet-700/40 bg-violet-600/10">
                 <p className="m-kicker mb-1">Metric preferences learning</p>
-                <p className="text-[13px] leading-relaxed text-violet-200">{statInsight.message}</p>
-                <Link href="/fund" className="mt-2 inline-block text-[12px] font-medium text-violet-300 hover:underline">
+                <p className="text-[13px] leading-relaxed text-violet-800">{statInsight.message}</p>
+                <Link href="/fund" className="mt-2 inline-block text-[12px] font-medium text-violet-800 hover:underline">
                   Adjust metric priorities →
                 </Link>
               </div>
             )}
 
             {learning && (
-              <div className="m-card m-card-pad mb-6 border-emerald-400/30 bg-emerald-400/10">
-                <p className="text-[13px] font-medium text-emerald-200">Applied to your next briefs</p>
-                <p className="mt-1 text-[12px] text-emerald-200">
+              <div className="m-card m-card-pad mb-6 border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)]">
+                <p className="text-[13px] font-medium text-[color:var(--m-accent)]">Applied to your next briefs</p>
+                <p className="mt-1 text-[12px] text-[color:var(--m-accent-deep)]">
                   Meridian uses {learning.signalCount} signal{learning.signalCount !== 1 ? 's' : ''} from your reviews ({learning.summary}) when generating the thesis band.
                 </p>
-                <Link href="/brief" className="mt-3 inline-block text-[12px] font-medium text-emerald-300 hover:underline">
+                <Link href="/brief" className="mt-3 inline-block text-[12px] font-medium text-[color:var(--m-forest)] hover:underline">
                   Generate another brief →
                 </Link>
               </div>
@@ -174,7 +174,7 @@ export default function ThesisPage() {
                       {summary.outcomes.map(o => (
                         <tr key={o.id}>
                           <td>{o.companyName}</td>
-                          <td className={o.newValue === 'pursue' ? 'font-medium text-emerald-300' : ''} style={o.newValue !== 'pursue' ? { color: 'var(--m-muted)' } : undefined}>{o.newValue}</td>
+                          <td className={o.newValue === 'pursue' ? 'font-medium text-[color:var(--m-forest)]' : ''} style={o.newValue !== 'pursue' ? { color: 'var(--m-muted)' } : undefined}>{o.newValue}</td>
                           <td className="text-[13px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{o.editCount ?? 0}</td>
                           <td className="text-[13px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{o.editedAt?.slice(0, 10)}</td>
                         </tr>

@@ -48,14 +48,14 @@ function SourceBadge({ source, unverified, sourceConfidence }) {
 function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
   if (!provenance && !personName) return null
   const tone = sourceConfidence === 'high'
-    ? 'text-emerald-300'
+    ? 'text-[color:var(--m-forest)]'
     : sourceConfidence === 'low' || source === 'domain_registry'
-      ? 'text-amber-300'
-      : 'text-white/55'
+      ? 'text-amber-800'
+      : 'text-[color:var(--m-muted)]'
   return (
     <div className={`mt-1 text-[11px] font-medium leading-snug ${tone}`} title="Source provenance">
       {personName ? (
-        <div className="text-white/70">
+        <div style={{ color: 'var(--m-text)' }}>
           Founders: {personName}
         </div>
       ) : null}
@@ -71,7 +71,8 @@ function SerialFounderBadge({ company }) {
     : ''
   return (
     <span
-      className="ml-1.5 inline-flex rounded border border-violet-400/40 bg-violet-400/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-300"
+      className="ml-1.5 inline-flex border border-violet-700/40 bg-violet-600/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-violet-800"
+      style={{ borderRadius: 'var(--m-radius-sm)' }}
       title={`Serial founder${prior}`}
     >
       Serial
@@ -82,14 +83,14 @@ function SerialFounderBadge({ company }) {
 function FlowBadge({ company }) {
   if (company?.isNew || company?.flowBadge === 'new') {
     return (
-      <span className="ml-1.5 inline-flex rounded border border-emerald-400/40 bg-emerald-400/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-emerald-300">
+      <span className="ml-1.5 inline-flex border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-[color:var(--m-accent)]" style={{ borderRadius: 'var(--m-radius-sm)' }}>
         New
       </span>
     )
   }
   if (company?.isFresh || company?.flowBadge === 'fresh') {
     return (
-      <span className="ml-1.5 inline-flex rounded border border-sky-400/40 bg-sky-400/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-300">
+      <span className="ml-1.5 inline-flex border border-sky-700/40 bg-sky-600/10 px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide text-sky-800" style={{ borderRadius: 'var(--m-radius-sm)' }}>
         Fresh
       </span>
     )

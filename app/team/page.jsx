@@ -148,7 +148,7 @@ export default function TeamPage() {
                           <td className="text-[12px]" style={{ color: 'var(--m-muted)' }}>
                             {s.outcome
                               ? `${s.outcome}${s.reviewerName ? ` · ${s.reviewerName}` : ''}`
-                              : <span className="text-amber-300">Pending review</span>}
+                              : <span className="text-amber-800">Pending review</span>}
                           </td>
                           <td className="text-[12px] tabular-nums" style={{ color: 'var(--m-muted)' }}>{s.createdAt?.slice(0, 10)}</td>
                           <td>

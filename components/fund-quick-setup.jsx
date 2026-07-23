@@ -166,10 +166,10 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       </div>
 
       {preview && (
-        <div className="m-card m-card-pad space-y-3 border-emerald-400/30 bg-emerald-400/10">
+        <div className="m-card m-card-pad space-y-3 border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)]">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-[13px] font-semibold text-white">{preview.fundName || fundName}</p>
+              <p className="text-[13px] font-semibold text-[color:var(--m-text)]">{preview.fundName || fundName}</p>
               <p className="mt-0.5 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{extractDomain(fundUrl)}</p>
             </div>
             {preview.cached && (
@@ -203,7 +203,7 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
                     className="mt-0.5"
                   />
                   <span>
-                    <span className="block text-[13px] font-medium text-white">{opt.label}</span>
+                    <span className="block text-[13px] font-medium text-[color:var(--m-text)]">{opt.label}</span>
                     <span className="block text-[11px]" style={{ color: 'var(--m-muted)' }}>{opt.description}</span>
                   </span>
                 </label>
@@ -217,7 +217,7 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       )}
 
       {error && (
-        <p className="rounded-md border border-red-400/30 bg-red-400/10 px-3 py-2 text-[12px] text-red-300">{error}</p>
+        <p className="rounded-md border border-red-700/40 bg-red-500/10 px-3 py-2 text-[12px] text-red-800">{error}</p>
       )}
 
       <button

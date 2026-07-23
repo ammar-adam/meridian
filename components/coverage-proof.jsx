@@ -13,29 +13,37 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
   const verifiedMiss = ledger?.verification?.status === 'verified_miss'
   const signalBased = ledger?.verification?.status === 'signal_based'
 
+  // The verified-miss / community-first case is the hero — render it as a stamp.
+  const isStamp = communityFirst || verifiedMiss
   const chip = signalBased
-    ? 'border-violet-400/40 bg-violet-400/10 text-violet-200'
-    : communityFirst || verifiedMiss
-      ? 'border-emerald-400/40 bg-emerald-400/10 text-emerald-200'
+    ? 'border-violet-500/40 bg-violet-500/10 text-violet-800'
+    : isStamp
+      ? '' // handled by m-stamp below
       : alsoPublic
-        ? 'border-white/15 bg-white/5 text-white/60'
-        : 'border-amber-400/40 bg-amber-400/10 text-amber-200'
+        ? 'border-[color:var(--m-border-strong)] bg-[color:var(--m-surface-2)] text-[color:var(--m-muted)]'
+        : 'border-amber-600/40 bg-amber-500/10 text-amber-800'
 
   if (compact) {
+    if (isStamp) {
+      return (
+        <span className="m-stamp" title={ledger?.verification?.detail || coverage?.detail || coverage?.label}>
+          Not in index
+        </span>
+      )
+    }
     return (
       <span
-        className={`inline-flex rounded border px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide ${chip}`}
+        className={`inline-flex border px-1.5 py-0.5 font-mono text-[9px] font-semibold uppercase tracking-wide ${chip}`}
+        style={{ borderRadius: 'var(--m-radius-sm)' }}
         title={ledger?.verification?.detail || coverage?.detail || coverage?.label}
       >
         {signalBased
           ? 'Signal'
-          : verifiedMiss || communityFirst
-            ? 'Not in index'
-            : alsoPublic
-              ? 'Public'
-              : communitySourced
-                ? 'Community'
-                : 'Unchecked'}
+          : alsoPublic
+            ? 'Public'
+            : communitySourced
+              ? 'Community'
+              : 'Unchecked'}
       </span>
     )
   }
@@ -45,9 +53,14 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
   const meridianFirstSeen = ledger?.meridianFirstSeen
   const indexTest = ledger?.indexTest
 
+  const stampBox = isStamp
+    ? 'border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] text-[color:var(--m-accent-deep)]'
+    : chip
+
   return (
-    <div className={`mt-1.5 rounded border px-2 py-1.5 ${chip}`}>
+    <div className={`mt-1.5 border px-2 py-1.5 ${stampBox}`} style={{ borderRadius: 'var(--m-radius-sm)', borderLeftWidth: isStamp ? '3px' : undefined }}>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] font-medium">
+        {isStamp && <span className="m-stamp mr-1">Not in index</span>}
         <span>{ledger?.verification?.label || coverage?.label}</span>
         {indexTest?.testedAt && (
           <span className="font-mono text-[10px] opacity-80">
@@ -55,7 +68,7 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
           </span>
         )}
         {stage && (
-          <span className="rounded bg-white/60 px-1 font-mono text-[9px] uppercase tracking-wide opacity-80">
+          <span className="rounded bg-black/5 px-1 font-mono text-[9px] uppercase tracking-wide opacity-80">
             {stage}
           </span>
         )}

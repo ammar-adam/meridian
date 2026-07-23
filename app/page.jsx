@@ -16,16 +16,16 @@ export default function LandingPage() {
           <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-20 pt-8 lg:pb-28">
             <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
               <div className="max-w-xl">
-                <p className="m-landing-eyebrow">Early startup discovery · with dated proof</p>
+                <p className="m-landing-eyebrow">Confidential · Deal Intelligence</p>
                 <h1 className="m-landing-brand">Meridian</h1>
                 <p className="m-landing-headline mt-4">
-                  We find promising startups in community sources first — with dated proof you can verify.
+                  A dossier on every startup — <em className="italic" style={{ color: 'var(--m-accent)' }}>found first</em>, dated, and verifiable.
                 </p>
                 <p className="m-landing-lead">
-                  Meridian watches the places new companies show up first — university incubators,
-                  accelerator cohorts, grant lists — and shows you each one with founder contacts,
-                  where we found it, and the date we found it. Tell us what you invest in; we&apos;ll
-                  brief the ones that matter.
+                  Meridian watches where new companies surface first — university incubators,
+                  accelerator cohorts, grant lists — and files each one with founder contacts,
+                  the source we found it in, and the date we found it. Every claim of earliness
+                  carries a re-runnable receipt.
                 </p>
                 <div className="mt-10 flex flex-wrap gap-3">
                   <Link href="/flow" className="m-btn-glow">
@@ -39,7 +39,7 @@ export default function LandingPage() {
                   </Link>
                 </div>
                 <div className="mt-8">
-                  <p className="mb-2 text-[12px]" style={{ color: 'var(--m-muted)' }}>Or brief a company you already know</p>
+                  <p className="mb-2 font-mono text-[11px] uppercase tracking-wider" style={{ color: 'var(--m-muted)' }}>Or open a file on a company you know</p>
                   <HeroInput variant="landing" />
                 </div>
               </div>
@@ -53,8 +53,8 @@ export default function LandingPage() {
       <section className="relative border-t py-20" style={{ borderColor: 'var(--m-border)', background: 'var(--m-bg-subtle)' }}>
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-14 text-center">
-            <p className="m-kicker mb-3">The data wedge</p>
-            <h2 className="text-[28px] font-bold tracking-tight text-white sm:text-[32px]">
+            <p className="m-kicker mb-3 justify-center">The data wedge</p>
+            <h2 className="text-[28px] font-semibold tracking-tight sm:text-[34px]" style={{ color: 'var(--m-text)' }}>
               Dated index checks — StartupHub live today; Harmonic next.
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -77,7 +77,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 max-w-lg">
             <p className="m-kicker mb-3">The loop</p>
-            <h2 className="text-[28px] font-bold tracking-tight text-white sm:text-[32px]">
+            <h2 className="text-[28px] font-semibold tracking-tight sm:text-[34px]" style={{ color: 'var(--m-text)' }}>
               Source → brief → signal
             </h2>
             <p className="mt-3 text-[16px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -117,9 +117,9 @@ export default function LandingPage() {
 
 function Step({ num, title, desc }) {
   return (
-    <div className="relative text-center sm:text-left">
-      <span className="font-mono text-[12px] font-semibold text-emerald-400">{num}</span>
-      <h3 className="mt-2 text-[17px] font-semibold text-white">{title}</h3>
+    <div className="relative border-t pt-4 text-left" style={{ borderColor: 'var(--m-border-strong)' }}>
+      <span className="font-mono text-[12px] font-semibold" style={{ color: 'var(--m-accent)' }}>{num}</span>
+      <h3 className="mt-2 text-[18px] font-semibold" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>{title}</h3>
       <p className="mt-2 text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>{desc}</p>
     </div>
   )
