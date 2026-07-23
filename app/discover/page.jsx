@@ -440,13 +440,13 @@ function DiscoverContent() {
             trailing={<span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{filtered.length}/{companies.length}</span>}
           />
           {meta?.thinCanadian && (
-            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+            <div className="mb-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-[13px] text-amber-200">
               <span className="font-medium">Thin Canadian web hits.</span>
               {' '}StartupHub skews US/global. Prefer incubator and grant rows with provenance when present — treat registry as low-confidence skim.
             </div>
           )}
           {meta?.thin && !meta?.thinCanadian && (
-            <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] text-amber-900">
+            <div className="mb-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-[13px] text-amber-200">
               <span className="font-medium">Thin results.</span>
               {' '}Try a broader thesis or hit Refresh. Database seeds: {meta.seedCount ?? 0}
               {meta.startuphubRawCount > meta.startuphubCount ? ` (${meta.startuphubRawCount - meta.startuphubCount} filtered by geography)` : ''}.

@@ -20,7 +20,7 @@ export default function ClerkLiveBanner() {
   if (!show) return null
 
   return (
-    <div className="border-b border-amber-200 bg-amber-50 px-4 py-2 text-center text-[12px] text-amber-950">
+    <div className="border-b border-amber-400/30 bg-amber-400/10 px-4 py-2 text-center text-[12px] text-amber-200">
       Clerk is in <strong>test mode</strong> on this deployment — swap to{' '}
       <code className="font-mono">pk_live_</code> / <code className="font-mono">sk_live_</code> on Vercel for investor-ready auth.
     </div>

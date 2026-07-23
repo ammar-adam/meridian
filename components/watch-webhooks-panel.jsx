@@ -120,7 +120,7 @@ export default function WatchWebhooksPanel() {
         </button>
       </form>
 
-      {message && <p className="mt-2 text-[12px] text-zinc-600">{message}</p>}
+      {message && <p className="mt-2 text-[12px]" style={{ color: 'var(--m-muted)' }}>{message}</p>}
 
       {webhooks.length > 0 && (
         <ul className="mt-4 space-y-2">
@@ -128,7 +128,7 @@ export default function WatchWebhooksPanel() {
             <li key={h.id} className="flex items-start justify-between gap-2 rounded-md border px-3 py-2 text-[12px]">
               <div className="min-w-0">
                 <p className="truncate font-mono">{h.url}</p>
-                <p className="text-zinc-500">{(h.events || []).join(', ')}</p>
+                <p style={{ color: 'var(--m-muted)' }}>{(h.events || []).join(', ')}</p>
               </div>
               <button type="button" onClick={() => remove(h.url)} className="m-btn-ghost m-btn-sm shrink-0">
                 Remove

@@ -11,17 +11,17 @@ export default function PrivacyPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">Privacy</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-zinc-900">
+      <h1 className="text-[28px] font-semibold tracking-tight text-white">
         What we store, in plain English
       </h1>
-      <p className="mt-3 text-[13px] text-zinc-500">
+      <p className="mt-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
         Meridian is a pre-incorporation product of its founder. This is the honest,
         short version — no legalese theater.
       </p>
 
-      <div className="mt-6 space-y-6 text-[15px] leading-relaxed text-zinc-600">
+      <div className="mt-6 space-y-6 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         <section>
-          <h2 className="text-[16px] font-semibold text-zinc-900">What we store</h2>
+          <h2 className="text-[16px] font-semibold text-white">What we store</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Fund profiles you set up (fund name, website, thesis, portfolio list).</li>
             <li>Watches — the mandates you ask us to monitor.</li>
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-zinc-900">What we don&apos;t do</h2>
+          <h2 className="text-[16px] font-semibold text-white">What we don&apos;t do</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>We do not sell your data. Not to anyone, not in aggregate.</li>
             <li>We do not share founder contact details submitted through claims.</li>
@@ -41,17 +41,17 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-zinc-900">Deletion</h2>
+          <h2 className="text-[16px] font-semibold text-white">Deletion</h2>
           <p className="mt-2">
             Want your fund profile, memos, or claim removed? Send a note through the{' '}
-            <Link href="/claim" className="text-zinc-900 underline">claim form</Link>{' '}
+            <Link href="/claim" className="text-white underline">claim form</Link>{' '}
             mentioning &ldquo;data deletion&rdquo; and we&apos;ll delete it. Company
             records sourced from public pages can be corrected or annotated the same way.
           </p>
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-zinc-900">Third parties</h2>
+          <h2 className="text-[16px] font-semibold text-white">Third parties</h2>
           <p className="mt-2">
             We use hosted infrastructure (hosting, database, AI model APIs) to run the
             product. Content you submit for brief generation is processed by those
@@ -60,9 +60,9 @@ export default function PrivacyPage() {
         </section>
       </div>
 
-      <p className="mt-10 text-[12px] text-zinc-500">
-        See also <Link href="/terms" className="text-zinc-800 underline">Terms</Link> and{' '}
-        <Link href="/about" className="text-zinc-800 underline">About</Link>.
+      <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
+        See also <Link href="/terms" className="text-white/80 underline">Terms</Link> and{' '}
+        <Link href="/about" className="text-white/80 underline">About</Link>.
       </p>
     </div>
   )

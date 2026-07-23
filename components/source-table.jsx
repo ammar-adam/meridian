@@ -48,14 +48,14 @@ function SourceBadge({ source, unverified, sourceConfidence }) {
 function ProvenanceLine({ provenance, sourceConfidence, source, personName }) {
   if (!provenance && !personName) return null
   const tone = sourceConfidence === 'high'
-    ? 'text-emerald-800'
+    ? 'text-emerald-300'
     : sourceConfidence === 'low' || source === 'domain_registry'
-      ? 'text-amber-800'
-      : 'text-zinc-600'
+      ? 'text-amber-300'
+      : 'text-white/55'
   return (
     <div className={`mt-1 text-[11px] font-medium leading-snug ${tone}`} title="Source provenance">
       {personName ? (
-        <div className="text-zinc-700">
+        <div className="text-white/70">
           Founders: {personName}
         </div>
       ) : null}

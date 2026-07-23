@@ -285,15 +285,15 @@ CLERK_SECRET_KEY=sk_live_...
 HUNTER_API_KEY=...          # Flow email enrich button
 CRON_SECRET=...             # operator curls only`}
           </pre>
-          <p className="mt-3 text-[13px] text-zinc-600">
-            Copy template: <code className="rounded bg-zinc-100 px-1">.env.demo</code> in repo root.
-            Terminal: <code className="rounded bg-zinc-100 px-1">npm run debate</code> (must avg ≥ 7) ·{' '}
-            <code className="rounded bg-zinc-100 px-1">./scripts/demo-preflight.sh</code>
+          <p className="mt-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
+            Copy template: <code className="rounded bg-white/10 px-1 text-white/80">.env.demo</code> in repo root.
+            Terminal: <code className="rounded bg-white/10 px-1 text-white/80">npm run debate</code> (must avg ≥ 7) ·{' '}
+            <code className="rounded bg-white/10 px-1 text-white/80">./scripts/demo-preflight.sh</code>
           </p>
         </WorkspaceSection>
 
         <WorkspaceSection title="Honest numbers" description="Say what is measured; do not over-claim.">
-          <ul className="list-disc space-y-2 pl-5 text-[13px] text-zinc-600">
+          <ul className="list-disc space-y-2 pl-5 text-[13px]" style={{ color: 'var(--m-muted)' }}>
             <li>Community-sourced companies with founder lines and cohort provenance — not a full national registry.</li>
             <li>Verified index misses are checkable rows in Coverage proof — cite the count on screen, not a round marketing number.</li>
             <li>Corpus is growing via StartupHub + incubators (~300 today, target 1500) — say &quot;live corpus, measured daily&quot; not &quot;we have PitchBook.&quot;</li>
@@ -302,8 +302,8 @@ CRON_SECRET=...             # operator curls only`}
         </WorkspaceSection>
 
         <WorkspaceSection title="Reset browser state (optional)" description="If a prior demo left the wrong fund or empty Flow.">
-          <p className="text-[13px] text-zinc-600">
-            DevTools → Application → Local Storage → clear <code className="rounded bg-zinc-100 px-1">meridian_funds_store</code>
+          <p className="text-[13px]" style={{ color: 'var(--m-muted)' }}>
+            DevTools → Application → Local Storage → clear <code className="rounded bg-white/10 px-1 text-white/80">meridian_funds_store</code>
             {' '}and reload — Panache re-seeds automatically.
           </p>
         </WorkspaceSection>

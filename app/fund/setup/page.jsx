@@ -36,8 +36,8 @@ function FundSetupContent() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <header className="border-b border-zinc-200 bg-white px-6 py-4">
+    <div className="min-h-screen" style={{ background: 'var(--m-bg)' }}>
+      <header className="border-b px-6 py-4" style={{ background: 'var(--m-surface)', borderColor: 'var(--m-border)' }}>
         <Link href="/" className="flex items-center gap-3">
           <div className="m-logo text-[12px]">M</div>
           <span className="text-[15px] font-semibold">Meridian</span>
@@ -45,11 +45,11 @@ function FundSetupContent() {
       </header>
 
       <main className="mx-auto w-full max-w-lg px-6 py-16 lg:py-24">
-        <p className="font-mono text-[12px] font-medium text-violet-600">Personalize</p>
-        <h1 className="mt-3 text-[28px] font-bold tracking-tight text-zinc-900">
+        <p className="font-mono text-[12px] font-medium text-violet-300">Personalize</p>
+        <h1 className="mt-3 text-[28px] font-bold tracking-tight text-white">
           {returning ? 'Sharpen what we watch for you' : 'Tell us what you invest in'}
         </h1>
-        <p className="mt-3 text-[15px] leading-relaxed text-zinc-500">
+        <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
           {mode === 'personal'
             ? 'Family offices and angels: a few words about your interests is enough — no fund website required.'
             : 'Have a fund site? We pull mandate, portfolio, and stage focus automatically (optional).'}
@@ -84,7 +84,7 @@ function FundSetupContent() {
             />
           )}
         </div>
-        <p className="mt-6 text-center text-[13px] text-zinc-500">
+        <p className="mt-6 text-center text-[13px]" style={{ color: 'var(--m-muted)' }}>
           <button type="button" onClick={() => router.push('/brief')} className="underline-offset-2 hover:underline">
             Skip — brief with generic fund context →
           </button>

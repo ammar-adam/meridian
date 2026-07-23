@@ -112,7 +112,7 @@ export default function OutreachDrawer({
         aria-label="Close outreach drawer"
         onClick={onClose}
       />
-      <div className="relative flex h-full w-full max-w-lg flex-col border-l bg-white shadow-xl" style={{ borderColor: 'var(--m-border)' }}>
+      <div className="relative flex h-full w-full max-w-lg flex-col border-l shadow-xl" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
         <div className="flex items-center justify-between border-b px-5 py-4" style={{ borderColor: 'var(--m-border)' }}>
           <div>
             <p className="text-[14px] font-semibold">Draft outreach</p>
@@ -149,8 +149,8 @@ export default function OutreachDrawer({
           ) : (
             <div className="space-y-4">
               {personalizationSource && (
-                <p className="rounded-md bg-zinc-50 px-3 py-2 text-[11px] leading-relaxed text-zinc-600">
-                  <span className="font-medium text-zinc-800">Built around:</span> {personalizationSource}
+                <p className="rounded-md px-3 py-2 text-[11px] leading-relaxed" style={{ background: 'var(--m-surface-2)', color: 'var(--m-muted)' }}>
+                  <span className="font-medium text-white/80">Built around:</span> {personalizationSource}
                 </p>
               )}
 
@@ -180,7 +180,7 @@ export default function OutreachDrawer({
           )}
 
           {error && (
-            <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-[12px] text-red-700">{error}</p>
+            <p className="mt-3 rounded-md border border-red-400/30 bg-red-400/10 px-3 py-2 text-[12px] text-red-300">{error}</p>
           )}
         </div>
 

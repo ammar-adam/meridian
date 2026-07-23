@@ -63,7 +63,7 @@ export default function AllocatorSetup({ onSaved }) {
   return (
     <form onSubmit={handleSave} className="space-y-4">
       <div>
-        <label className="m-kicker mb-1 block">Your name <span className="normal-case tracking-normal text-zinc-400">(optional — used to label your workspace)</span></label>
+        <label className="m-kicker mb-1 block">Your name <span className="normal-case tracking-normal" style={{ color: 'var(--m-muted-2)' }}>(optional — used to label your workspace)</span></label>
         <input
           value={name}
           onChange={e => setName(e.target.value)}
@@ -110,7 +110,7 @@ export default function AllocatorSetup({ onSaved }) {
       <button type="submit" className="m-btn-primary w-full">
         Save &amp; start screening
       </button>
-      <p className="text-[11px] leading-relaxed text-zinc-500">
+      <p className="text-[11px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         No fund website needed. You can refine all of this later in Fund settings.
       </p>
     </form>

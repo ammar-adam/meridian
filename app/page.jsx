@@ -39,7 +39,7 @@ export default function LandingPage() {
                   </Link>
                 </div>
                 <div className="mt-8">
-                  <p className="mb-2 text-[12px] text-zinc-500">Or brief a company you already know</p>
+                  <p className="mb-2 text-[12px]" style={{ color: 'var(--m-muted)' }}>Or brief a company you already know</p>
                   <HeroInput variant="landing" />
                 </div>
               </div>
