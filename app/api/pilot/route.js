@@ -59,7 +59,7 @@ export async function GET() {
   let ingest = null
   let indexCheck = null
   try {
-    indexCheck = await indexCheckIfStale({ limit: 6 })
+    indexCheck = await indexCheckIfStale({ limit: 20 })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }
@@ -71,7 +71,7 @@ export async function GET() {
 
   let bulkFill = null
   try {
-    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 35, scrapeLimit: 14 })
+    bulkFill = await bulkFillIfBelowTarget({ target: 2500, queryBatch: 35, scrapeLimit: 14 })
   } catch (e) {
     bulkFill = { ran: false, error: e.message }
   }
@@ -86,6 +86,14 @@ export async function GET() {
         study.metrics.withFirstSeen = bench.entities ?? study.metrics.withFirstSeen
         study.metrics.ledgerEntities = bench.entities
         study.metrics.entitiesChecked = bench.entitiesChecked
+        study.headlineMetrics = {
+          companyRecords: bench.companyRecords,
+          entitiesChecked: bench.entitiesChecked,
+          verifiedMisses: bench.verifiedMisses,
+          entities: bench.entities,
+          registeredSources: bench.registeredSources,
+          source: 'truth_ledger',
+        }
       }
     } catch (e) {
       study.benchmarkError = e.message

@@ -31,11 +31,15 @@ After redeploy, wait ~2 min for build to finish.
 
 ```bash
 ./scripts/demo-preflight.sh
+npm run debate
 # or against prod explicitly:
 ./scripts/demo-preflight.sh https://meridian-eight-sandy.vercel.app
+node scripts/adversarial-debate.mjs https://meridian-eight-sandy.vercel.app
 ```
 
-Expect: `Core stack: ok`, `companyRecords` ≥ 150, ideally ≥ 200. If `/api/corpus` returns 404, prod is still on an old deploy — redeploy from latest `main`.
+**Adversarial debate** scores four personas (Investor, Analyst, GP, FO) from live prod probes + repo checks. **Average must be ≥ 7** before recording. Fix any amber persona the script prints.
+
+Expect: `Overall average: 7.x/10 — READY`
 
 Optional warm-up (adds records + index checks, ~60–90s):
 
@@ -106,6 +110,8 @@ Optional foil (25s): https://getfundingfromavc.vercel.app — fabricated portfol
 |------|---------|
 | `.env.demo` | Minimal paste-ready env template |
 | `scripts/demo-preflight.sh` | One-command prod health check |
+| `scripts/adversarial-debate.mjs` | Four-persona score (must avg ≥ 7) |
+| `lib/adversarial-debate.js` | Scoring rubric (unit-tested) |
 | `app/demo/page.jsx` | In-app checklist + warm corpus |
 | `docs/investor-demo-film.md` | Full spoken script + don’ts |
 | `lib/fund-seeds.js` | Panache + Sagard auto-seed; Panache default active |

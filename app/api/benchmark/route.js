@@ -27,12 +27,12 @@ export async function GET(req) {
   let indexCheck = null
   let bulkFill = null
   try {
-    indexCheck = await indexCheckIfStale({ limit: 8 })
+    indexCheck = await indexCheckIfStale({ limit: 25 })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }
   try {
-    bulkFill = await bulkFillIfBelowTarget({ target: 1500, queryBatch: 30, scrapeLimit: 10 })
+    bulkFill = await bulkFillIfBelowTarget({ target: 2500, queryBatch: 30, scrapeLimit: 10 })
   } catch (e) {
     bulkFill = { ran: false, error: e.message }
   }
