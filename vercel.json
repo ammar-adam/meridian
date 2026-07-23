@@ -90,32 +90,12 @@
   },
   "crons": [
     {
-      "path": "/api/cron/bulk-fill?phase=startuphub&autoOffset=1&queries=30",
-      "schedule": "0 2 * * *"
-    },
-    {
-      "path": "/api/cron/ingest?limit=15&indexCheck=1",
-      "schedule": "0 6 * * *"
-    },
-    {
       "path": "/api/corpus?force=1",
       "schedule": "0 10 * * *"
     },
     {
-      "path": "/api/cron/scout-sweep",
-      "schedule": "0 14 * * *"
-    },
-    {
-      "path": "/api/cron/watch-events",
-      "schedule": "0 18 * * *"
-    },
-    {
-      "path": "/api/cron/bulk-fill?phase=registry",
-      "schedule": "30 3 * * 1"
-    },
-    {
-      "path": "/api/cron/bulk-fill?phase=scrape&scrapeLimit=20",
-      "schedule": "0 4 * * *"
+      "path": "/api/cron/ingest?limit=15&indexCheck=1",
+      "schedule": "0 6 * * *"
     }
   ]
 }
