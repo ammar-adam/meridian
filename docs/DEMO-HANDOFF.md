@@ -10,6 +10,16 @@
 
 ## Tomorrow morning (15 min)
 
+### 0. Redeploy Vercel production (2 min) — **do this first if `/api/corpus` is 404**
+
+Prod may lag GitHub `main`. If `./scripts/demo-preflight.sh` warns about corpus 404 or missing `feedParity`:
+
+1. Vercel → **meridian** project → **Deployments**
+2. Latest deployment from `main` → **⋯** → **Redeploy** (Production)
+3. Wait ~2 min, then re-run `npm run debate`
+
+Optional: GitHub → Actions → **Vercel production deploy** (needs `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID` secrets).
+
 ### 1. Env vars on Vercel (5 min)
 
 Vercel → Project → Settings → Environment Variables → **Production** → paste from `.env.demo` → **Redeploy** (Deployments → … → Redeploy).

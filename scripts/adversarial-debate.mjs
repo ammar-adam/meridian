@@ -170,6 +170,12 @@ function printReport(result, probe) {
   console.log(`  pilot/benchmark parity: ${probe.pilotBenchmarkParity}`)
   console.log(`  auth locks (outcomes/claim): ${probe.outcomesLocked}/${probe.claimLocked}`)
   console.log(`  geo fallback removed: ${!probe.geoFallbackInCode}`)
+
+  const deployFresh = probe.corpusLive && probe.feedParity
+  console.log(`\nDeploy freshness: ${deployFresh ? 'CURRENT' : 'STALE — Redeploy Vercel production from main'}`)
+  if (!deployFresh) {
+    console.log('  Fix: Vercel → Deployments → Redeploy (or Actions → Vercel production deploy)')
+  }
 }
 
 async function main() {

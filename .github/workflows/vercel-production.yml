@@ -1,0 +1,69 @@
+# Manual production deploy — requires Vercel secrets on the repo.
+# Vercel dashboard → Settings → Environment Variables is still required for runtime keys.
+# Add secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+
+name: Vercel production deploy
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy main to Vercel production
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check Vercel secrets
+        id: secrets
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::VERCEL_TOKEN not set — add secrets and re-run, or redeploy manually in Vercel dashboard"
+            exit 0
+          fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Node
+        if: steps.secrets.outputs.ready == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install
+        if: steps.secrets.outputs.ready == 'true'
+        run: npm ci
+
+      - name: Deploy to Vercel production
+        if: steps.secrets.outputs.ready == 'true'
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+
+      - name: Wait for propagation
+        if: steps.secrets.outputs.ready == 'true'
+        run: sleep 90
+
+      - name: Verify deploy freshness
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          URL="${{ vars.PRODUCTION_URL || 'https://meridian-eight-sandy.vercel.app' }}"
+          CODE=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/api/corpus")
+          echo "/api/corpus HTTP $CODE"
+          curl -sS "$URL/api/benchmark" | python3 - <<'PY'
+          import sys, json
+          d = json.load(sys.stdin)
+          print("feedParity:", bool((d.get("feedParity") or {}).get("feedStats")))
+          print("bulkFill key:", "bulkFill" in d)
+          PY
+          test "$CODE" = "200"

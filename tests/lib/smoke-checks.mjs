@@ -2,6 +2,12 @@
  * Shared HTTP smoke checks — used by scripts/acceptance-smoke.mjs and deploy CI.
  * Use SMOKE_BASE_URL in vitest (Vite overwrites BASE_URL to "/").
  */
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { spawnSync } from 'node:child_process'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const ROOT = path.resolve(__dirname, '../..')
 const DEFAULT_PRODUCTION = 'https://meridian-eight-sandy.vercel.app'
 
 export function resolveSmokeBaseUrl(override) {
@@ -75,6 +81,35 @@ export async function runSmokeChecks(baseUrl) {
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || `status ${res.status}`)
     if (!('job' in data)) throw new Error('missing job field in batch response')
+  })
+
+  await check('deploy freshness (corpus + feedParity)', async () => {
+    const corpusRes = await fetch(`${base}/api/corpus`, { cache: 'no-store' })
+    const benchRes = await fetch(`${base}/api/benchmark`, { cache: 'no-store' })
+    const bench = await benchRes.json()
+    if (!benchRes.ok || !bench.enabled) throw new Error('benchmark unavailable')
+    const hasFeedParity = Boolean(bench.feedParity?.feedStats)
+    const hasBulkFill = 'bulkFill' in bench
+    if (corpusRes.status !== 200) {
+      throw new Error(
+        `/api/corpus HTTP ${corpusRes.status} — prod deploy lagging main. Redeploy Vercel production from latest main.`,
+      )
+    }
+    if (!hasFeedParity || !hasBulkFill) {
+      throw new Error(
+        'benchmark missing feedParity/bulkFill — prod deploy stale. Vercel → Deployments → Redeploy.',
+      )
+    }
+  })
+
+  await check('adversarial debate (avg >= 7)', async () => {
+    const result = spawnSync('node', ['scripts/adversarial-debate.mjs', base], {
+      cwd: ROOT,
+      encoding: 'utf8',
+    })
+    if (result.status !== 0) {
+      throw new Error(result.stdout?.split('\n').slice(-8).join('\n') || 'debate failed')
+    }
   })
 
   const failed = results.filter(r => !r.ok)

@@ -23,7 +23,8 @@
     "smoke": "node scripts/acceptance-smoke.mjs",
     "debate": "node scripts/adversarial-debate.mjs",
     "demo:preflight": "./scripts/demo-preflight.sh",
-    "demo:ready": "npm run test:unit && node scripts/adversarial-debate.mjs"
+    "demo:ready": "npm run test:unit && node scripts/adversarial-debate.mjs",
+    "prod:pump": "./scripts/prod-pump.sh"
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
