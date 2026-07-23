@@ -11,7 +11,7 @@ on:
       target:
         description: 'Target company record count'
         required: false
-        default: '1500'
+        default: '2500'
 
 concurrency:
   group: prod-corpus-pump
@@ -27,9 +27,14 @@ jobs:
         run: |
           set -e
           URL="${MERIDIAN_PROD_URL:-https://meridian-eight-sandy.vercel.app}"
-          TARGET="${{ github.event.inputs.target || '1500' }}"
+          TARGET="${{ github.event.inputs.target || '2500' }}"
           echo "Pumping $URL/api/corpus?force=1&target=$TARGET"
-          curl -sfS -m 280 "$URL/api/corpus?force=1&target=$TARGET" | tee corpus.json
+          if curl -sfS -m 280 "$URL/api/corpus?force=1&target=$TARGET" | tee corpus.json; then
+            echo "corpus route ok"
+          else
+            echo "corpus route unavailable — falling back to /api/pilot"
+            curl -sfS -m 280 "$URL/api/pilot" | tee corpus.json
+          fi
           python3 - <<'PY'
           import json
           d=json.load(open("corpus.json"))

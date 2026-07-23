@@ -51,6 +51,12 @@ else
   warn "Benchmark HTTP ${BENCH_CODE}"
 fi
 
+# Deploy freshness
+BF=$(python3 -c "import json; d=json.load(open('/tmp/m-bench.json')); print('yes' if 'bulkFill' in d else 'no')" 2>/dev/null || echo "no")
+if [[ "$CORPUS_CODE" != "200" || "$FEED" == "no" || "$BF" == "no" ]]; then
+  warn "Deploy STALE — Vercel → Deployments → Redeploy from main (see docs/DEMO-HANDOFF.md §0)"
+fi
+
 # Corpus
 CORPUS_CODE=$(curl -sS -o /tmp/m-corpus.json -w "%{http_code}" "${BASE}/api/corpus")
 if [[ "$CORPUS_CODE" == "200" ]]; then
