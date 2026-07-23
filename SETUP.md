@@ -142,7 +142,7 @@ GET https://meridian-eight-sandy.vercel.app/api/cron/flow-digest
 Authorization: Bearer <CRON_SECRET>
 ```
 
-(Mondays preferred. Vercel Hobby cannot reliably ship `crons` in `vercel.json` — use an external scheduler.)
+(Mondays preferred. Vercel Hobby allows **at most 2 crons** in `vercel.json` — extra schedules live in GitHub Actions: `prod-corpus-pump.yml`, `bulk-corpus.yml`, `index-check.yml`, `ingest.yml`.)
 
 Production: **https://meridian-eight-sandy.vercel.app**
 
