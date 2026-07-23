@@ -87,15 +87,5 @@
     "app/api/workspace/route.js": {
       "maxDuration": 30
     }
-  },
-  "crons": [
-    {
-      "path": "/api/corpus?force=1",
-      "schedule": "0 10 * * *"
-    },
-    {
-      "path": "/api/cron/ingest?limit=15&indexCheck=1",
-      "schedule": "0 6 * * *"
-    }
-  ]
+  }
 }
