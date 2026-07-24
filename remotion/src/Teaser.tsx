@@ -358,7 +358,7 @@ function SceneClose({ frame, fps }: { frame: number; fps: number }) {
           marginBottom: 36,
         }}
       >
-        Early Canadian companies — with proof.
+        School ecosystems → fund mandates.
       </div>
       <div
         style={{

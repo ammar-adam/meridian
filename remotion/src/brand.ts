@@ -19,7 +19,7 @@ export const brand = {
 
 /** Honest ballpark from prod debate — update if numbers move. */
 export const stats = {
-  companyRecords: 405,
+  companyRecords: 475,
   verifiedMisses: 70,
   entitiesChecked: 78,
 } as const;
