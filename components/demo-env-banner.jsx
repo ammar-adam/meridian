@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { isDemoHost } from '@/lib/app-url'
+import { DEMO_LABEL, isDemoHost } from '@/lib/app-url'
 
 export default function DemoEnvBanner() {
   const [show, setShow] = useState(false)
@@ -21,8 +21,7 @@ export default function DemoEnvBanner() {
         color: 'var(--m-muted)',
       }}
     >
-      Demo environment · data may reset ·{' '}
-      <span style={{ color: 'var(--m-accent)' }}>meridian-mentor</span>
+      {DEMO_LABEL} · data may reset · feedback build
     </div>
   )
 }

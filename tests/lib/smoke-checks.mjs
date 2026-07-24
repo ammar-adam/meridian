@@ -8,7 +8,7 @@ import { spawnSync } from 'node:child_process'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '../..')
-const DEFAULT_PRODUCTION = 'https://meridian-mentor.vercel.app'
+const DEFAULT_PRODUCTION = 'https://meridian-stg.vercel.app'
 
 export function resolveSmokeBaseUrl(override) {
   const raw = (

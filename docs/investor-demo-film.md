@@ -3,7 +3,7 @@
 **Runtime:** ~5 minutes (Flow-first)  
 **Claim:** Meridian surfaces early Canadian companies from community sources (founders + domains + provenance) before US-centric tools index them — then briefs them against your fund thesis with falsifiable proof packets.
 
-**Prod:** https://meridian-mentor.vercel.app  
+**Prod:** https://meridian-stg.vercel.app  
 **Preflight:** `/demo` or `./scripts/demo-preflight.sh`
 
 ---

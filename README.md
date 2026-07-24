@@ -2,7 +2,7 @@
 
 **AI-powered investment memos for venture capital.** Paste a company URL — get a mandate-specific one-page research brief in under a minute (Auto mode).
 
-**Live demo:** [meridian-mentor.vercel.app](https://meridian-mentor.vercel.app) (legacy: meridian-eight-sandy.vercel.app until redirect is attached)
+**Live demo:** [meridian-stg.vercel.app](https://meridian-stg.vercel.app) (legacy: meridian-eight-sandy.vercel.app until redirect is attached)
 
 ---
 
@@ -101,7 +101,7 @@ Pipeline details and agent rules → **[AGENTS.md](./AGENTS.md)**
 ## Health check
 
 ```bash
-curl https://meridian-eight-sandy.vercel.app/api/health
+curl https://meridian-stg.vercel.app/api/health
 ```
 
 Returns status for Anthropic, Perplexity, database, Clerk, and feature flags.

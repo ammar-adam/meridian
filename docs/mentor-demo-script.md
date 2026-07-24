@@ -6,7 +6,7 @@
 
 | Surface | URL |
 |---------|-----|
-| Meridian | https://meridian-mentor.vercel.app |
+| Meridian | https://meridian-stg.vercel.app |
 | Foil (GiveFund analytics) | https://getfundingfromavc.vercel.app |
 
 ---

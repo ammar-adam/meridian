@@ -15,7 +15,13 @@ export default function SchoolsPage() {
   const [lastScout, setLastScout] = useState(null)
 
   function refresh() {
-    fetch('/api/schools').then(r => r.json()).then(setData).catch(e => setError(e.message))
+    fetch('/api/schools')
+      .then(async r => {
+        const json = await r.json()
+        if (!r.ok) throw new Error(json.error || 'Failed to load schools')
+        setData(json)
+      })
+      .catch(e => setError(e.message || 'Failed to load schools'))
     fetch('/api/schools/emerging').then(r => r.json()).then(setEmerging).catch(() => {})
     fetch('/api/jobs?limit=12').then(r => r.json()).then(d => setJobs(d.jobs || [])).catch(() => {})
   }
@@ -104,8 +110,9 @@ export default function SchoolsPage() {
         {error && <p className="m-alert-error mb-4">{error}</p>}
         {lastScout && (
           <p className="m-alert-warn mb-4">
-            Scouted {lastScout.schoolName}: {lastScout.newSightings} sightings
-            {lastScout.perplexity ? '' : ' (source registration — add PERPLEXITY_API_KEY for live company scout)'}
+            Scouted {lastScout.schoolName}: {lastScout.candidatesFound || 0} candidates · {lastScout.newSightings} writes
+            {typeof lastScout.fromLocal === 'number' ? ` (${lastScout.fromLocal} local seed · ${lastScout.fromPerplexity || 0} AI)` : ''}
+            {!lastScout.perplexity ? ' · Perplexity off — local seeds + source URLs still run' : ''}
           </p>
         )}
 

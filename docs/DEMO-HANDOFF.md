@@ -2,7 +2,7 @@
 
 **Goal:** Open laptop → paste env vars on Vercel (or `.env.local`) → open `/demo` → warm corpus → record a ~5 min investor film on prod.
 
-**Prod URL:** https://meridian-mentor.vercel.app  
+**Prod URL:** https://meridian-stg.vercel.app  
 **Mentor package:** [docs/mentor-send-package.md](mentor-send-package.md)
 
 **In-app checklist:** `/demo` (sidebar → Demo checklist)
@@ -44,8 +44,8 @@ After redeploy, wait ~2 min for build to finish.
 ./scripts/demo-preflight.sh
 npm run debate
 # or against prod explicitly:
-./scripts/demo-preflight.sh https://meridian-mentor.vercel.app
-node scripts/adversarial-debate.mjs https://meridian-mentor.vercel.app
+./scripts/demo-preflight.sh https://meridian-stg.vercel.app
+node scripts/adversarial-debate.mjs https://meridian-stg.vercel.app
 ```
 
 **Adversarial debate** scores four personas (Investor, Analyst, GP, FO) from live prod probes + repo checks. **Average must be ≥ 7** before recording. Fix any amber persona the script prints.
@@ -55,14 +55,14 @@ Expect: `Overall average: 7.x/10 — READY`
 Optional warm-up (adds records + index checks, ~60–90s):
 
 ```bash
-curl -sS "https://meridian-mentor.vercel.app/api/corpus?force=1" | jq '{companyRecords, delta, bulkFill}'
+curl -sS "https://meridian-stg.vercel.app/api/corpus?force=1" | jq '{companyRecords, delta, bulkFill}'
 ```
 
 Or click **Warm corpus** on `/demo`.
 
 ### 3. Browser preflight (3 min)
 
-1. Open https://meridian-mentor.vercel.app/demo
+1. Open https://meridian-stg.vercel.app/demo
 2. Confirm green **Panache mandate active** (click **Activate Panache** if needed)
 3. Open **Deal Flow** → **Watch this mandate** if not already watching
 4. Confirm rows load with **Founders:** lines and Community filter works

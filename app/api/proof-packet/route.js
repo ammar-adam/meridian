@@ -25,7 +25,7 @@ export async function POST(req) {
 
   const origin = req.headers.get('origin')
     || process.env.NEXT_PUBLIC_APP_URL
-    || 'https://meridian-mentor.vercel.app'
+    || 'https://meridian-stg.vercel.app'
 
   const packet = buildProofPacket(company, {
     origin,

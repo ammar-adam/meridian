@@ -138,13 +138,13 @@ Creator shares `/share/[id]` → GP clicks Pursue / Pass / Need more info → ou
 **Monday digest:** Set `SLACK_WEBHOOK_URL` + `CRON_SECRET`. From the product, Flow → “Send to Slack” / Copy digest works without cron. For a weekly job, schedule:
 
 ```
-GET https://meridian-mentor.vercel.app/api/cron/flow-digest
+GET https://meridian-stg.vercel.app/api/cron/flow-digest
 Authorization: Bearer <CRON_SECRET>
 ```
 
 (Mondays preferred. Vercel Hobby allows **at most 2 crons** in `vercel.json` — extra schedules live in GitHub Actions: `prod-corpus-pump.yml`, `bulk-corpus.yml`, `index-check.yml`, `ingest.yml`.)
 
-Production: **https://meridian-mentor.vercel.app**
+Production: **https://meridian-stg.vercel.app**
 
 `vercel.json` sets API timeouts (research 300s, brief 300s). Vercel **Pro** recommended for long research calls.
 
@@ -160,7 +160,7 @@ Set `CRON_SECRET` on Vercel (random string). The `/api/cron/batch-tick` route is
 **Vercel Hobby:** built-in cron is limited to once/day — use a free external scheduler (e.g. [cron-job.org](https://cron-job.org)) to `GET` your deploy URL every 2 minutes:
 
 ```
-GET https://meridian-mentor.vercel.app/api/cron/batch-tick
+GET https://meridian-stg.vercel.app/api/cron/batch-tick
 Authorization: Bearer <CRON_SECRET>
 ```
 
@@ -187,7 +187,7 @@ Pull requests to `main` run GitHub Actions CI automatically. See [CONTRIBUTING.m
 ```bash
 npm run smoke
 # against production:
-BASE_URL=https://meridian-mentor.vercel.app npm run smoke
+BASE_URL=https://meridian-stg.vercel.app npm run smoke
 ```
 
 Anonymous users get a `meridian_did` cookie for isolated batch jobs (no shared `guest` collision).

@@ -1,7 +1,9 @@
 # Mentor send package
 
-**Live demo:** https://meridian-mentor.vercel.app  
-(Also: https://meridian-eight-sandy.vercel.app — same deploy. `meridian-demo.vercel.app` was taken on Vercel.)
+**Live demo (Meridian Staging):** https://meridian-stg.vercel.app  
+
+Same deploy: https://meridian-eight-sandy.vercel.app · https://meridian-mentor.vercel.app  
+(`meridian-staging.vercel.app` and `meridian-demo.vercel.app` are taken globally on Vercel.)
 
 ---
 
@@ -17,7 +19,7 @@ Quick package for feedback:
 
 - **30s teaser:** [link]
 - **3-min walkthrough:** [link]
-- **Live:** https://meridian-mentor.vercel.app
+- **Live:** https://meridian-stg.vercel.app
 
 Would love 10 minutes of pushback on whether this school↔mandate wedge is something a fund would pay for.
 
@@ -49,7 +51,7 @@ Would love 10 minutes of pushback on whether this school↔mandate wedge is some
 
 ## Preflight before send / record
 
-1. Hard refresh https://meridian-mentor.vercel.app (or sandy until DNS attached)
+1. Hard refresh https://meridian-stg.vercel.app
 2. `/demo` checklist green
 3. Panache · First check active
 4. Warm brief in Library
