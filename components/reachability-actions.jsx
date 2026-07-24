@@ -59,7 +59,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
         {email && (
           <a
             href={`mailto:${email}`}
-            className="font-medium text-emerald-300 hover:underline"
+            className="font-medium text-[color:var(--m-accent)] hover:underline"
             title="Verified email"
             onClick={(e) => e.stopPropagation()}
           >
@@ -81,7 +81,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
             href={website}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-white/60 hover:underline"
+            className="font-medium text-[color:var(--m-muted)] hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             Website
@@ -116,7 +116,7 @@ export default function ReachabilityActions({ reach, company, compact = false })
           {f.emails?.[0] && (
             <a
               href={`mailto:${f.emails[0]}`}
-              className="font-mono text-emerald-300 hover:underline"
+              className="font-mono text-[color:var(--m-accent)] hover:underline"
               title="Verified email"
               onClick={(e) => e.stopPropagation()}
             >

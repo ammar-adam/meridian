@@ -106,7 +106,7 @@ export default function HeroInput({ variant = 'default' }) {
           placeholder="company.com"
           className={isLanding ? 'm-input-landing flex-1' : 'm-input flex-1'}
         />
-        <button type="submit" className={isLanding ? 'm-btn-glow shrink-0' : 'm-btn-primary shrink-0 px-6'}>
+        <button type="submit" className="m-btn-primary shrink-0 px-6">
           Generate brief
         </button>
       </form>
@@ -115,7 +115,6 @@ export default function HeroInput({ variant = 'default' }) {
           compact
           onIntake={handleIntake}
           hint="Drop company URL, contacts, or fund website"
-          className="border-white/10 bg-white/5 hover:border-emerald-400/30 [&_p]:text-white/50"
         />
       )}
     </div>

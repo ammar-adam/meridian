@@ -60,15 +60,24 @@ export default function IntakeDropzone({
       onDrop={onDrop}
       onPaste={onPaste}
       tabIndex={0}
-      className={`rounded-xl border-2 border-dashed transition-colors outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 ${
-        dragging ? 'border-violet-400 bg-violet-400/10' : 'border-white/10 bg-white/5 hover:border-white/20'
-      } ${compact ? 'px-4 py-5' : 'px-6 py-8'} ${className}`}
+      className={`rounded-md border border-dashed transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--m-accent-soft)] ${
+        compact ? 'px-4 py-5' : 'px-6 py-8'
+      } ${className}`}
+      style={{
+        borderColor: dragging ? 'var(--m-accent)' : 'var(--m-border-strong)',
+        background: dragging ? 'var(--m-accent-soft)' : 'var(--m-surface-2)',
+      }}
     >
       <div className="text-center">
-        <p className={`font-medium text-white/80 ${compact ? 'text-[13px]' : 'text-[14px]'}`}>
+        <p
+          className={`font-medium ${compact ? 'text-[13px]' : 'text-[14px]'}`}
+          style={{ color: 'var(--m-text)' }}
+        >
           {busy ? 'Reading…' : 'Drop or paste here'}
         </p>
-        <p className={`mt-1 text-[color:var(--m-muted)] ${compact ? 'text-[11px]' : 'text-[12px]'}`}>{hint}</p>
+        <p className={`mt-1 ${compact ? 'text-[11px]' : 'text-[12px]'}`} style={{ color: 'var(--m-muted)' }}>
+          {hint}
+        </p>
       </div>
     </div>
   )

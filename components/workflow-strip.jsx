@@ -32,15 +32,11 @@ export default function WorkflowStrip() {
         return (
           <div key={step.id} className="flex shrink-0 items-center">
             {i > 0 && (
-              <span className={`mx-1.5 text-[10px] ${isPast ? 'text-emerald-400/60' : 'text-white/20'}`}>›</span>
+              <span className={`m-workflow-sep ${isPast ? 'm-workflow-sep-past' : ''}`}>›</span>
             )}
             <Link
               href={step.href}
-              className={`rounded-md px-2.5 py-1 text-[12px] font-medium transition ${
-                isActive
-                  ? 'bg-emerald-500 text-[#04140d] shadow-[0_0_20px_rgba(16,185,129,0.35)]'
-                  : 'text-white/50 hover:bg-white/5 hover:text-white'
-              }`}
+              className={`m-workflow-link ${isActive ? 'm-workflow-link-active' : ''}`}
             >
               {step.label}
             </Link>

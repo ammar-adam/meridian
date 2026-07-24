@@ -53,9 +53,6 @@ export function FundSwitcher({ onChange }) {
       <Link href="/fund/setup" className="m-btn-ghost m-btn-sm">
         + Add fund
       </Link>
-      {activeFund?.memoTemplateId && activeFund.memoTemplateId !== 'default' && (
-        <span className="text-[10px]" style={{ color: 'var(--m-muted-2)' }}>· {activeFund.memoTemplateId} template</span>
-      )}
     </div>
   )
 }

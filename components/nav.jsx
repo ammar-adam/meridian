@@ -13,16 +13,19 @@ export default function Nav({ variant = 'default' }) {
 
   return (
     <header className={isLanding ? 'm-nav-landing' : 'm-nav-default'}>
-      <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-3">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <Link href="/" className="flex items-center gap-2.5">
           <div className="m-logo">M</div>
-          <span className="text-[15px] font-semibold tracking-tight text-white">
+          <span
+            className="text-[15px] tracking-tight"
+            style={{ fontFamily: 'var(--m-serif)', color: 'var(--m-text)' }}
+          >
             Meridian
           </span>
         </Link>
 
         {!inWorkspace && (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <AuthBar variant={isLanding ? 'landing' : 'default'} />
             {isLanding && (
               <>
@@ -32,12 +35,9 @@ export default function Nav({ variant = 'default' }) {
                 <Link href="/discover" className="m-btn-ghost-landing hidden md:inline-flex">
                   Discover
                 </Link>
-                <Link href="/fund/setup" className="m-btn-ghost-landing hidden md:inline-flex">
-                  Setup
-                </Link>
               </>
             )}
-            <Link href="/flow" className={isLanding ? 'm-btn-glow' : 'm-btn-primary'}>
+            <Link href="/flow" className="m-btn-primary">
               Open Deal Flow
             </Link>
           </div>

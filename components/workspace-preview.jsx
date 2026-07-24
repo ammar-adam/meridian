@@ -1,41 +1,43 @@
 export default function WorkspacePreview() {
   return (
-    <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
+    <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
       <div className="m-product-frame">
         <div className="m-product-frame-chrome">
           <div className="flex gap-1.5">
-            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+            <span className="h-2 w-2 rounded-full" style={{ background: 'var(--m-border-strong)' }} />
+            <span className="h-2 w-2 rounded-full" style={{ background: 'var(--m-border-strong)' }} />
+            <span className="h-2 w-2 rounded-full" style={{ background: 'var(--m-border-strong)' }} />
           </div>
-          <span className="font-mono text-[11px] text-emerald-300/70">meridian.app/flow · Panache Ventures</span>
+          <span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>
+            meridian.app/flow · Panache Ventures
+          </span>
         </div>
 
-        <div className="flex min-h-[368px]">
+        <div className="flex min-h-[360px]">
           <div className="m-product-sidebar">
             {[
-              { label: 'Flow', active: true },
-              { label: 'Brief', active: false },
-              { label: 'Lib', active: false },
-              { label: 'Thesis', active: false },
+              { label: 'F', active: true },
+              { label: 'B', active: false },
+              { label: 'L', active: false },
+              { label: 'T', active: false },
             ].map(({ label, active }) => (
               <div key={label} className={`m-product-nav-item ${active ? 'm-product-nav-active' : ''}`}>
-                {label.slice(0, 1)}
+                {label}
               </div>
             ))}
           </div>
 
-          <div className="min-w-0 flex-1 p-5" style={{ background: 'var(--m-bg-subtle)' }}>
-            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+          <div className="min-w-0 flex-1 p-5" style={{ background: 'var(--m-bg)' }}>
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
               <div>
-                <div className="text-[13px] font-semibold text-white">Deal Flow</div>
-                <div className="text-[11px] text-white/40">Canadian pre-seed · community sources</div>
+                <div className="text-[15px] font-semibold" style={{ color: 'var(--m-text)' }}>Deal Flow</div>
+                <div className="text-[12px]" style={{ color: 'var(--m-muted)' }}>Canadian pre-seed · community sources</div>
               </div>
-              <span className="m-stat-pill-success rounded-full border px-3 py-1 font-mono text-[11px]">12 new</span>
+              <span className="m-stat-pill-success">12 new</span>
             </div>
 
             <div className="mb-3 flex flex-wrap gap-2">
-              <span className="m-stat-pill m-stat-pill-accent">87% community-sourced</span>
+              <span className="m-stat-pill m-stat-pill-accent">87% community</span>
               <span className="m-stat-pill">50 verified misses</span>
             </div>
 
@@ -46,33 +48,45 @@ export default function WorkspacePreview() {
             ].map((row) => (
               <div
                 key={row.name}
-                className="mb-2 rounded-lg border px-3 py-2.5"
-                style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}
+                className="mb-2 border px-3 py-2.5"
+                style={{
+                  borderColor: 'var(--m-border)',
+                  background: 'var(--m-surface)',
+                  borderRadius: 'var(--m-radius-sm)',
+                }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <div className="text-[13px] font-semibold text-white">{row.name}</div>
+                      <div className="text-[13px] font-semibold" style={{ color: 'var(--m-text)' }}>{row.name}</div>
                       <span className="m-badge-high">{row.fit}</span>
                     </div>
-                    <div className="mt-0.5 text-[10px] text-white/40">Founders: {row.founders}</div>
+                    <div className="mt-0.5 text-[11px]" style={{ color: 'var(--m-muted)' }}>
+                      Founders: {row.founders}
+                    </div>
                   </div>
-                  <span className="shrink-0 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-1.5 py-0.5 font-mono text-[9px] font-medium text-emerald-300">
+                  <span
+                    className="shrink-0 px-1.5 py-0.5 font-mono text-[9px] font-medium"
+                    style={{
+                      borderRadius: 'var(--m-radius-sm)',
+                      border: '1px solid var(--m-accent-line)',
+                      background: 'var(--m-accent-soft)',
+                      color: 'var(--m-accent)',
+                    }}
+                  >
                     {row.src}
                   </span>
                 </div>
-                <div className="mt-1 font-mono text-[10px] text-white/30">{row.domain}</div>
+                <div className="mt-1 font-mono text-[10px]" style={{ color: 'var(--m-muted-2)' }}>{row.domain}</div>
               </div>
             ))}
 
-            <div className="mt-3 text-[10px] text-white/30">
+            <div className="mt-3 text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
               Provenance from cohort pages — not a Crunchbase scrape.
             </div>
           </div>
         </div>
       </div>
-
-      <div className="m-product-glow" aria-hidden />
     </div>
   )
 }

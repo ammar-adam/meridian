@@ -150,7 +150,7 @@ export default function OutreachDrawer({
             <div className="space-y-4">
               {personalizationSource && (
                 <p className="rounded-md px-3 py-2 text-[11px] leading-relaxed" style={{ background: 'var(--m-surface-2)', color: 'var(--m-muted)' }}>
-                  <span className="font-medium text-white/80">Built around:</span> {personalizationSource}
+                  <span className="font-medium text-[color:var(--m-muted)]">Built around:</span> {personalizationSource}
                 </p>
               )}
 

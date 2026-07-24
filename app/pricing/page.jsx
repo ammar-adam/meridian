@@ -49,7 +49,7 @@ export default function PricingPage() {
 
       <div className="mt-10 max-w-xl">
         <p className="m-kicker mb-2">Pricing</p>
-        <h1 className="text-[28px] font-semibold tracking-tight text-white">
+        <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
           Pay for deal flow you can verify
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -62,10 +62,10 @@ export default function PricingPage() {
         {TIERS.map(tier => (
           <div
             key={tier.name}
-            className={`m-card m-card-pad flex flex-col ${tier.featured ? 'border-emerald-500' : ''}`}
+            className={`m-card m-card-pad flex flex-col ${tier.featured ? 'border-[color:var(--m-accent)]' : ''}`}
           >
             <p className="m-kicker">{tier.name}</p>
-            <p className="mt-2 text-[28px] font-semibold tracking-tight text-white">
+            <p className="mt-2 text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
               {tier.price}
               <span className="text-[13px] font-normal" style={{ color: 'var(--m-muted)' }}> /seat/mo</span>
             </p>
@@ -73,7 +73,7 @@ export default function PricingPage() {
             <ul className="mt-4 flex-1 space-y-2 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
               {tier.features.map(f => (
                 <li key={f} className="flex gap-2">
-                  <span className="text-emerald-400">✓</span>
+                  <span className="text-[color:var(--m-accent)]">✓</span>
                   <span>{f}</span>
                 </li>
               ))}

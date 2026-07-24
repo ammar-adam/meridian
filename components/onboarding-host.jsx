@@ -46,15 +46,15 @@ export default function OnboardingHost() {
 
         <ol className="mt-5 space-y-3 text-[13px]">
           <li className="flex gap-3">
-            <span className="font-mono text-[11px] text-emerald-400">01</span>
+            <span className="font-mono text-[11px] text-[color:var(--m-accent)]">01</span>
             <span>Tell us what you invest in — set up your fund from its website, or as an individual (angel or family office)</span>
           </li>
           <li className="flex gap-3">
-            <span className="font-mono text-[11px] text-emerald-400">02</span>
+            <span className="font-mono text-[11px] text-[color:var(--m-accent)]">02</span>
             <span>Watch Deal Flow — Velocity, DMZ, CDL, found before the big databases</span>
           </li>
           <li className="flex gap-3">
-            <span className="font-mono text-[11px] text-emerald-400">03</span>
+            <span className="font-mono text-[11px] text-[color:var(--m-accent)]">03</span>
             <span>Brief, pursue or pass — signals compound on Thesis</span>
           </li>
         </ol>

@@ -33,7 +33,7 @@ export default function BriefStarters({ onPickUrl, compact = false }) {
             key={co.url}
             type="button"
             onClick={() => pick(co.url)}
-            className="rounded-full border px-3 py-1.5 text-left text-[12px] transition hover:bg-white/5"
+            className="rounded-full border px-3 py-1.5 text-left text-[12px] transition hover:bg-[color:var(--m-surface-2)]"
             style={{ borderColor: 'var(--m-border)' }}
           >
             <span className="font-medium">{co.name}</span>

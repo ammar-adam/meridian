@@ -1,4 +1,4 @@
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google'
+import { Instrument_Serif, IBM_Plex_Sans, IBM_Plex_Mono } from 'next/font/google'
 import OnboardingHost from '@/components/onboarding-host'
 import Providers from '@/app/providers'
 import {
@@ -9,13 +9,19 @@ import {
 } from '@/lib/clerk-config'
 import './globals.css'
 
-const jakarta = Plus_Jakarta_Sans({
+const serif = Instrument_Serif({
+  subsets: ['latin'],
+  variable: '--font-serif',
+  weight: ['400'],
+})
+
+const sans = IBM_Plex_Sans({
   subsets: ['latin'],
   variable: '--font-sans',
   weight: ['400', '500', '600', '700'],
 })
 
-const jetbrains = JetBrains_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ['latin'],
   variable: '--font-mono',
   weight: ['400', '500'],
@@ -31,7 +37,7 @@ export default function RootLayout({ children }) {
     && clerkKeysMatch(clerkPublishableKey(), clerkSecretKey())
 
   return (
-    <html lang="en" className={`${jakarta.variable} ${jetbrains.variable}`}>
+    <html lang="en" className={`${serif.variable} ${sans.variable} ${mono.variable}`}>
       <body className="min-h-screen antialiased">
         <Providers clerkEnabled={clerkEnabled}>
           <OnboardingHost />

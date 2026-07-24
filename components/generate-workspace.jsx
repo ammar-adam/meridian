@@ -370,7 +370,7 @@ export default function GenerateWorkspace() {
               </p>
             )}
             {learningNote && stepStatus.generate === 'active' && (
-              <p className="mb-3 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-[11px] text-emerald-200">
+              <p className="mb-3 rounded-md border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-3 py-2 text-[11px] text-[color:var(--m-accent)]">
                 {learningNote}
               </p>
             )}
@@ -410,7 +410,7 @@ export default function GenerateWorkspace() {
             </div>
           )}
           {cachedResearch?.sections?.length > 0 && !loading && (
-            <div className="mb-4 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-[13px] text-emerald-200">
+            <div className="mb-4 rounded-lg border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-4 py-3 text-[13px] text-[color:var(--m-accent)]">
               <p className="font-medium">Cached research on file</p>
               <p className="mt-1">
                 {cachedResearch.sections.length} section{cachedResearch.sections.length === 1 ? '' : 's'} from a prior brief
@@ -474,8 +474,8 @@ export default function GenerateWorkspace() {
                   onClick={() => setResearchMode(m.id)}
                   className={`rounded-md px-3 py-1.5 text-[12px] font-medium ring-1 transition ${
                     researchMode === m.id
-                      ? 'bg-emerald-500 text-[#04140d] ring-emerald-400'
-                      : 'bg-white/5 text-white/70 ring-white/10 hover:bg-white/10'
+                      ? 'bg-[color:var(--m-accent)] text-white ring-[color:var(--m-accent)]'
+                      : 'bg-[color:var(--m-surface-2)] text-[color:var(--m-muted)] ring-[color:var(--m-border)] hover:bg-[color:var(--m-surface-3)]'
                   }`}
                 >
                   {m.label} · {m.hint}

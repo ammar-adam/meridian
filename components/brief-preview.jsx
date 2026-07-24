@@ -17,20 +17,20 @@ export default function BriefPreview({ scraped, loading, className = '', researc
   return (
     <div className={`overflow-hidden rounded-xl border ${className}`} style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
       {scraped.ogImage ? (
-        <div className="relative h-28 w-full bg-white/5">
+        <div className="relative h-28 w-full bg-[color:var(--m-surface-2)]">
           <img src={scraped.ogImage} alt="" className="h-full w-full object-cover" />
           {loading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-              <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium text-white backdrop-blur">Researching…</span>
+              <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-medium text-[color:var(--m-text)] backdrop-blur">Researching…</span>
             </div>
           )}
         </div>
       ) : (
-        <div className="flex h-20 items-center justify-center bg-white/5">
+        <div className="flex h-20 items-center justify-center bg-[color:var(--m-surface-2)]">
           {scraped.favicon ? (
             <img src={scraped.favicon} alt="" className="h-10 w-10 rounded-lg" />
           ) : (
-            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500 text-lg font-semibold text-[#04140d]">{initial}</span>
+            <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[color:var(--m-accent)] text-lg font-semibold text-white">{initial}</span>
           )}
         </div>
       )}

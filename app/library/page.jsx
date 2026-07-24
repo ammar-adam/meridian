@@ -111,7 +111,7 @@ export default function LibraryPage() {
   function qualityLabel(entry) {
     if (entry.qualityErrorCount > 0) return { text: 'Needs fix', cls: 'text-red-300' }
     if (entry.qualityWarnCount > 0) return { text: `${entry.qualityWarnCount} flag${entry.qualityWarnCount !== 1 ? 's' : ''}`, cls: 'text-amber-300' }
-    if (entry.qualityPassed === true) return { text: 'Verified', cls: 'text-emerald-300' }
+    if (entry.qualityPassed === true) return { text: 'Verified', cls: 'text-[color:var(--m-accent)]' }
     return { text: '—', cls: 'text-[color:var(--m-muted)]' }
   }
 
@@ -261,7 +261,7 @@ export default function LibraryPage() {
                           {entry.outcome ? (
                             <span className={entry.outcome === 'pursue' ? 'm-outcome-pursue' : 'm-outcome-pass'}>{entry.outcome}</span>
                           ) : entry.gpOutcome ? (
-                            <span className="text-[12px] text-violet-300" title={entry.gpReviewer ? `GP: ${entry.gpReviewer}` : ''}>
+                            <span className="text-[12px] text-[color:var(--m-accent)]" title={entry.gpReviewer ? `GP: ${entry.gpReviewer}` : ''}>
                               GP: {entry.gpOutcome}
                             </span>
                           ) : (
@@ -304,7 +304,7 @@ function FilterChip({ active, onClick, children }) {
       type="button"
       onClick={onClick}
       className={`rounded-md px-3 py-1.5 text-[12px] font-medium transition ${
-        active ? 'bg-emerald-500 text-[#04140d]' : 'ring-1 ring-white/10 hover:bg-white/5'
+        active ? 'bg-[color:var(--m-accent)] text-white' : 'ring-1 ring-[color:var(--m-border)] hover:bg-[color:var(--m-surface-2)]'
       }`}
       style={active ? undefined : { background: 'var(--m-surface-2)', color: 'var(--m-muted)' }}
     >

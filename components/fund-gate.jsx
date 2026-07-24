@@ -15,7 +15,7 @@ function isAlwaysOpen(pathname) {
 export default function FundGate({ children }) {
   const pathname = usePathname()
   const router = useRouter()
-  const [ready, setReady] = useState(false)
+  const [ready, setReady] = useState(() => isAlwaysOpen(pathname))
 
   useEffect(() => {
     if (isAlwaysOpen(pathname)) {
@@ -23,6 +23,7 @@ export default function FundGate({ children }) {
       return
     }
     if (!hasFundProfile()) {
+      setReady(false)
       router.replace('/fund/setup?next=' + encodeURIComponent(pathname))
       return
     }
@@ -31,8 +32,11 @@ export default function FundGate({ children }) {
 
   if (!ready) {
     return (
-      <div className="m-loader flex h-screen items-center justify-center">
-        <p className="font-mono text-[11px]" style={{ color: 'var(--m-muted-2)' }}>Loading workspace…</p>
+      <div className="flex h-screen items-center justify-center" style={{ background: 'var(--m-bg)' }}>
+        <div className="text-center">
+          <div className="m-logo mx-auto mb-3">M</div>
+          <p className="text-[12px]" style={{ color: 'var(--m-muted)' }}>Loading workspace…</p>
+        </div>
       </div>
     )
   }

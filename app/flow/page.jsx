@@ -261,7 +261,7 @@ function FlowContent() {
       actions={(
         <div className="flex flex-wrap gap-2">
           {watch ? (
-            <span className="m-btn-ghost m-btn-sm text-emerald-400">Watching mandate</span>
+            <span className="m-btn-ghost m-btn-sm text-[color:var(--m-accent)]">Watching mandate</span>
           ) : (
             <button type="button" onClick={handleWatch} className="m-btn-primary m-btn-sm">
               {watching ? 'Watching…' : 'Watch this mandate'}
@@ -281,7 +281,7 @@ function FlowContent() {
       <WorkspacePage width="wide">
         <div className="m-flow-hero mb-6">
           <p className="m-kicker mb-1">Data wedge</p>
-          <h2 className="text-[20px] font-semibold tracking-tight text-white">
+          <h2 className="text-[20px] font-semibold tracking-tight text-[color:var(--m-text)]">
             Companies matched to your mandate — with receipts.
           </h2>
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -356,7 +356,7 @@ function FlowContent() {
                 {f.label}
               </button>
             ))}
-            <span className="mx-1 text-white/20">|</span>
+            <span className="mx-1 text-[color:var(--m-muted-2)]">|</span>
             <button
               type="button"
               onClick={() => setBriefableOnly(v => !v)}
@@ -432,7 +432,7 @@ function FlowContent() {
 
         <p className="mt-8 text-center text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
           Prefer a one-off search?{' '}
-          <Link href="/discover" className="font-medium text-emerald-400 hover:underline">Discover →</Link>
+          <Link href="/discover" className="font-medium text-[color:var(--m-accent)] hover:underline">Discover →</Link>
         </p>
       </WorkspacePage>
     </WorkspaceShell>

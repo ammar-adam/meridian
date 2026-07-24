@@ -13,97 +13,96 @@ export default function LandingPage() {
         <div className="relative z-10 flex flex-1 flex-col">
           <Nav variant="landing" />
 
-          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-20 pt-8 lg:pb-28">
-            <div className="grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
-              <div className="max-w-xl">
-                <p className="m-landing-eyebrow">Early startup discovery · with dated proof</p>
+          <div className="mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-6 pb-16 pt-10 lg:pb-24">
+            <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-5">
                 <h1 className="m-landing-brand">Meridian</h1>
-                <p className="m-landing-headline mt-4">
-                  We find promising startups in community sources first — with dated proof you can verify.
+                <p className="m-landing-headline mt-6">
+                  Community deal flow, with receipts.
                 </p>
                 <p className="m-landing-lead">
-                  Meridian watches the places new companies show up first — university incubators,
-                  accelerator cohorts, grant lists — and shows you each one with founder contacts,
-                  where we found it, and the date we found it. Tell us what you invest in; we&apos;ll
-                  brief the ones that matter.
+                  Surface early Canadian companies from incubators and cohorts —
+                  founders, provenance, and dated proof — matched to your mandate.
                 </p>
-                <div className="mt-10 flex flex-wrap gap-3">
-                  <Link href="/flow" className="m-btn-glow">
+                <div className="mt-9 flex flex-wrap items-center gap-3">
+                  <Link href="/flow" className="m-btn-primary px-5 py-3 text-[14px]">
                     Open Deal Flow
                   </Link>
                   <Link href="/pilot" className="m-btn-ghost-landing">
-                    See pilot proof
+                    See the proof
                   </Link>
-                  <Link href="/fund" className="m-btn-ghost-landing">
-                    Choose your fund
-                  </Link>
-                </div>
-                <div className="mt-8">
-                  <p className="mb-2 text-[12px]" style={{ color: 'var(--m-muted)' }}>Or brief a company you already know</p>
-                  <HeroInput variant="landing" />
                 </div>
               </div>
 
-              <WorkspacePreview />
+              <div className="lg:col-span-7">
+                <WorkspacePreview />
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="relative border-t py-20" style={{ borderColor: 'var(--m-border)', background: 'var(--m-bg-subtle)' }}>
+      <section className="relative border-t py-16" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
         <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-14 text-center">
-            <p className="m-kicker mb-3">The data wedge</p>
-            <h2 className="text-[28px] font-bold tracking-tight text-white sm:text-[32px]">
-              Dated index checks — StartupHub live today; Harmonic next.
+          <div className="max-w-xl">
+            <p className="m-kicker mb-3">Brief a company</p>
+            <h2 className="text-[1.75rem] tracking-tight" style={{ fontFamily: 'var(--m-serif)', color: 'var(--m-text)' }}>
+              Already have a name? Generate a fund-native one-pager.
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-[16px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
-              Every company we surface carries a receipt: the source page, the date our server
-              first recorded it, and — where we&apos;ve run a dated StartupHub name search —
-              whether the mainstream databases had it at that time. We only claim earliness
-              when the ledger shows it; you can re-run the check yourself.
-            </p>
           </div>
-
-          <div className="grid gap-8 sm:grid-cols-3">
-            <Step num="01" title="Tell us what you invest in" desc="Your fund's focus — or just your own interests. Meridian watches community sources against it: Velocity, DMZ, CDL, grants." />
-            <Step num="02" title="See what’s new" desc="Net-new companies with founders and domains between visits. Fresh cohort badges when data lands." />
-            <Step num="03" title="Brief & decide" desc="One-pager screening brief against your focus. Pursue or pass — your signals compound." />
+          <div className="mt-8 max-w-xl">
+            <HeroInput variant="landing" />
           </div>
         </div>
       </section>
 
-      <section className="relative border-t py-24" style={{ borderColor: 'var(--m-border)', background: 'var(--m-bg)' }}>
+      <section className="relative border-t py-20" style={{ borderColor: 'var(--m-border)', background: 'var(--m-bg)' }}>
         <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 max-w-lg">
-            <p className="m-kicker mb-3">The loop</p>
-            <h2 className="text-[28px] font-bold tracking-tight text-white sm:text-[32px]">
-              Source → brief → signal
+          <div className="mb-12 max-w-xl">
+            <p className="m-kicker mb-3">How it works</p>
+            <h2 className="text-[1.75rem] tracking-tight" style={{ fontFamily: 'var(--m-serif)', color: 'var(--m-text)' }}>
+              Mandate in. Receipts out.
             </h2>
-            <p className="mt-3 text-[16px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
-              The product loop investors care about: community entities in, forwardable memo out, pursue/pass back in.
+            <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
+              Every company carries where we found it, when we first saw it, and —
+              where checked — whether StartupHub had it at that time.
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:grid-rows-2">
-            <Link href="/flow" className="group m-bento m-bento-lg lg:col-span-7 lg:row-span-2">
-              <span className="m-bento-icon">◈</span>
-              <h3 className="m-bento-title">Deal Flow</h3>
-              <p className="m-bento-desc">What’s new against what you invest in, from community sources — the reason to open Meridian every week.</p>
+          <div className="grid gap-8 sm:grid-cols-3">
+            <Step num="01" title="Set your mandate" desc="Fund thesis or personal focus. Meridian watches Velocity, DMZ, CDL, and grants against it." />
+            <Step num="02" title="Open Deal Flow" desc="Net-new companies with founders and domains. Community sources, not a Crunchbase scrape." />
+            <Step num="03" title="Brief and decide" desc="One-pager against your thesis. Pursue or pass — signals compound on Thesis." />
+          </div>
+        </div>
+      </section>
+
+      <section className="relative border-t py-20" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="mb-10 max-w-lg">
+            <p className="m-kicker mb-3">The loop</p>
+            <h2 className="text-[1.75rem] tracking-tight" style={{ fontFamily: 'var(--m-serif)', color: 'var(--m-text)' }}>
+              Source → brief → signal
+            </h2>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Link href="/flow" className="group m-bento">
+              <span className="m-bento-icon">Deal Flow</span>
+              <h3 className="m-bento-title">What’s new this week</h3>
+              <p className="m-bento-desc">Community companies matched to your mandate — the reason to open Meridian every Monday.</p>
               <span className="m-bento-link">Open Flow →</span>
             </Link>
-
-            <Link href="/brief" className="group m-bento lg:col-span-5">
-              <span className="m-bento-icon">◎</span>
-              <h3 className="m-bento-title">Brief</h3>
-              <p className="m-bento-desc">Any company URL → fund-native one-pager (~30–75s).</p>
+            <Link href="/brief" className="group m-bento">
+              <span className="m-bento-icon">Brief</span>
+              <h3 className="m-bento-title">URL to one-pager</h3>
+              <p className="m-bento-desc">Any company domain → fund-native memo you can forward.</p>
               <span className="m-bento-link">Generate a brief →</span>
             </Link>
-
-            <Link href="/fund" className="group m-bento lg:col-span-5">
-              <span className="m-bento-icon">◇</span>
-              <h3 className="m-bento-title">Fund</h3>
-              <p className="m-bento-desc">Choose or add your mandate. Every thesis band is fund-specific.</p>
+            <Link href="/fund" className="group m-bento">
+              <span className="m-bento-icon">Fund</span>
+              <h3 className="m-bento-title">Your mandate</h3>
+              <p className="m-bento-desc">Choose or add a fund. Every thesis band is specific to you.</p>
               <span className="m-bento-link">Choose a fund →</span>
             </Link>
           </div>
@@ -117,9 +116,9 @@ export default function LandingPage() {
 
 function Step({ num, title, desc }) {
   return (
-    <div className="relative text-center sm:text-left">
-      <span className="font-mono text-[12px] font-semibold text-emerald-400">{num}</span>
-      <h3 className="mt-2 text-[17px] font-semibold text-white">{title}</h3>
+    <div>
+      <div className="font-mono text-[11px] font-semibold tabular-nums" style={{ color: 'var(--m-accent)' }}>{num}</div>
+      <h3 className="mt-3 text-[16px] font-semibold tracking-tight" style={{ fontFamily: 'var(--m-font)', color: 'var(--m-text)' }}>{title}</h3>
       <p className="mt-2 text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>{desc}</p>
     </div>
   )

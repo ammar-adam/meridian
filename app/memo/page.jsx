@@ -777,7 +777,7 @@ function MemoPageContent() {
       )}
 
       {isGuestFund && (
-        <div className="no-print fixed right-4 top-14 z-50 max-w-[200px] rounded-md border border-violet-400/30 bg-violet-400/10 px-3 py-2 text-[10px] text-violet-200 backdrop-blur">
+        <div className="no-print fixed right-4 top-14 z-50 max-w-[200px] rounded-md border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-3 py-2 text-[10px] text-[color:var(--m-accent)] backdrop-blur">
           Generic fund context — <Link href="/fund/setup" className="font-medium underline">personalize</Link> before GP forward
         </div>
       )}
@@ -832,7 +832,7 @@ function MemoPageContent() {
                   {shareCopied && shareUrl ? 'Link copied!' : 'Share link'}
                 </button>
                 {shareCopied && shareUrl && (
-                  <span className="text-[11px] font-medium text-emerald-700">Ready to paste</span>
+                  <span className="text-[11px] font-medium text-[color:var(--m-accent)]">Ready to paste</span>
                 )}
               </>
             )}
@@ -855,7 +855,7 @@ function MemoPageContent() {
             ) : (
               <>
                 {showOutreachPrompt && (
-                  <p className="mb-1 text-[11px] font-medium text-emerald-800">
+                  <p className="mb-1 text-[11px] font-medium text-[color:var(--m-accent)]">
                     Draft outreach to the founder?
                   </p>
                 )}

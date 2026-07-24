@@ -192,7 +192,7 @@ export default function FundProfileForm({ initial, onSaved, setupMode = false, n
               type="button"
               onClick={() => setActiveStrategyIdx(i)}
               className={`rounded-md px-3 py-1.5 text-[12px] font-medium transition ${
-                i === activeStrategyIdx ? 'bg-emerald-500 text-[#04140d]' : 'bg-white/5 hover:bg-white/10'
+                i === activeStrategyIdx ? 'bg-[color:var(--m-accent)] text-white' : 'bg-[color:var(--m-surface-2)] hover:bg-[color:var(--m-surface-3)]'
               }`}
               style={i === activeStrategyIdx ? undefined : { color: 'var(--m-muted)' }}
             >

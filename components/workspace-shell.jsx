@@ -63,7 +63,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
             <Link href="/" className="flex items-center gap-3">
               <div className="m-logo text-[12px]">M</div>
               <div className="min-w-0">
-                <div className="text-[14px] font-semibold text-white">Meridian</div>
+                <div className="text-[14px] font-semibold text-white" style={{ fontFamily: 'var(--m-serif)' }}>Meridian</div>
                 <ActiveContextLabel />
               </div>
             </Link>
@@ -132,7 +132,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                       <>
                         <div className="flex justify-between py-0.5 text-[11px]">
                           <span style={{ color: 'var(--m-muted)' }}>Core systems</span>
-                          <span className="font-medium text-emerald-400">ok</span>
+                          <span className="font-medium" style={{ color: '#6ee7b7' }}>ok</span>
                         </div>
                         {optionalOn.length > 0 && (
                           <div className="mt-1 text-[10px] leading-relaxed" style={{ color: 'var(--m-muted-2)' }}>
@@ -146,7 +146,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                   return failing.map(s => (
                     <div key={s.label} className="flex justify-between py-0.5 text-[11px]">
                       <span style={{ color: 'var(--m-muted)' }}>{s.label}</span>
-                      <span className="font-medium text-amber-400">off</span>
+                      <span className="font-medium" style={{ color: '#fcd34d' }}>off</span>
                     </div>
                   ))
                 })()}
@@ -156,15 +156,19 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
         </aside>
 
         <div className="flex min-w-0 flex-1 flex-col">
-          <header className="flex h-14 shrink-0 items-center justify-between border-b px-6" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
-            <div className="min-w-0">
-              {title && <h1 className="truncate text-[16px] font-semibold tracking-tight text-white">{title}</h1>}
+          <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-5 py-2.5 sm:px-6" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
+            <div className="min-w-0 flex-1">
+              {title && (
+                <h1 className="truncate text-[16px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-font)' }}>
+                  {title}
+                </h1>
+              )}
               {subtitle && <p className="mt-0.5 truncate text-[13px]" style={{ color: 'var(--m-muted)' }}>{subtitle}</p>}
             </div>
-            <div className="flex shrink-0 items-center gap-2">
+            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
               {actions}
               <AuthBar />
-              <Link href="/brief" className="m-btn-primary m-btn-sm">+ New brief</Link>
+              <Link href="/brief" className="m-btn-primary m-btn-sm">New brief</Link>
             </div>
           </header>
 

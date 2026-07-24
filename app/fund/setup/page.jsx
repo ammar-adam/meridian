@@ -45,8 +45,8 @@ function FundSetupContent() {
       </header>
 
       <main className="mx-auto w-full max-w-lg px-6 py-16 lg:py-24">
-        <p className="font-mono text-[12px] font-medium text-violet-300">Personalize</p>
-        <h1 className="mt-3 text-[28px] font-bold tracking-tight text-white">
+        <p className="font-mono text-[12px] font-medium text-[color:var(--m-accent)]">Personalize</p>
+        <h1 className="mt-3 text-[28px] font-bold tracking-tight text-[color:var(--m-text)]">
           {returning ? 'Sharpen what we watch for you' : 'Tell us what you invest in'}
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>

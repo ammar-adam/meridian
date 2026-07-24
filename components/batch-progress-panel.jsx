@@ -39,7 +39,7 @@ export default function BatchProgressPanel({ progress, running, onCancel }) {
             <li key={i} className="flex items-center justify-between py-1.5 text-[11px]">
               <span className="truncate">{r.company?.name || r.companyName || '—'}</span>
               <span className={`ml-2 shrink-0 font-mono ${
-                r.status === 'done' ? 'text-emerald-300' :
+                r.status === 'done' ? 'text-[color:var(--m-accent)]' :
                 r.status === 'failed' ? 'text-red-300' : ''
               }`} style={{ color: r.status === 'skipped' ? 'var(--m-muted)' : undefined }}>
                 {r.status === 'done' ? 'saved' : r.status === 'failed' ? (r.error?.slice(0, 32) || 'failed') : r.reason === 'existing_brief' ? 'in library' : 'skip'}

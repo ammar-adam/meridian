@@ -11,7 +11,7 @@ export default function PrivacyPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">Privacy</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-white">
+      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
         What we store, in plain English
       </h1>
       <p className="mt-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
@@ -21,7 +21,7 @@ export default function PrivacyPage() {
 
       <div className="mt-6 space-y-6 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
         <section>
-          <h2 className="text-[16px] font-semibold text-white">What we store</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">What we store</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>Fund profiles you set up (fund name, website, thesis, portfolio list).</li>
             <li>Watches — the mandates you ask us to monitor.</li>
@@ -32,7 +32,7 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">What we don&apos;t do</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">What we don&apos;t do</h2>
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>We do not sell your data. Not to anyone, not in aggregate.</li>
             <li>We do not share founder contact details submitted through claims.</li>
@@ -41,17 +41,17 @@ export default function PrivacyPage() {
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">Deletion</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">Deletion</h2>
           <p className="mt-2">
             Want your fund profile, memos, or claim removed? Send a note through the{' '}
-            <Link href="/claim" className="text-white underline">claim form</Link>{' '}
+            <Link href="/claim" className="text-[color:var(--m-text)] underline">claim form</Link>{' '}
             mentioning &ldquo;data deletion&rdquo; and we&apos;ll delete it. Company
             records sourced from public pages can be corrected or annotated the same way.
           </p>
         </section>
 
         <section>
-          <h2 className="text-[16px] font-semibold text-white">Third parties</h2>
+          <h2 className="text-[16px] font-semibold text-[color:var(--m-text)]">Third parties</h2>
           <p className="mt-2">
             We use hosted infrastructure (hosting, database, AI model APIs) to run the
             product. Content you submit for brief generation is processed by those
@@ -61,8 +61,8 @@ export default function PrivacyPage() {
       </div>
 
       <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
-        See also <Link href="/terms" className="text-white/80 underline">Terms</Link> and{' '}
-        <Link href="/about" className="text-white/80 underline">About</Link>.
+        See also <Link href="/terms" className="text-[color:var(--m-muted)] underline">Terms</Link> and{' '}
+        <Link href="/about" className="text-[color:var(--m-muted)] underline">About</Link>.
       </p>
     </div>
   )

@@ -61,7 +61,7 @@ export default function FlowDigestCard({ fundName, thesis, companies, feedStats:
   return (
     <div className="mb-6 overflow-hidden rounded-xl border px-5 py-4" style={{ borderColor: 'rgba(16,185,129,0.3)', background: 'radial-gradient(ellipse 70% 140% at 0% 0%, rgba(16,185,129,0.12), transparent 60%), var(--m-surface)' }}>
       <p className="m-kicker mb-1">Monday digest</p>
-      <h3 className="text-[16px] font-semibold tracking-tight text-white">
+      <h3 className="text-[16px] font-semibold tracking-tight text-[color:var(--m-text)]">
         {digest.stats.newCount || digest.stats.freshCount} companies worth a look for {fundName}
       </h3>
       <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>

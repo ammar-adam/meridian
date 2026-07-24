@@ -32,7 +32,7 @@ export default function SourceTypeBadge({ source, unverified, sourceConfidence, 
 
   if (source === 'scout') {
     return (
-      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-violet-400/40 bg-violet-400/10 text-violet-200`} title="AI-researched candidate — unverified">
+      <span className={`${compact ? 'text-[10px]' : ''} m-badge inline-flex border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] text-[color:var(--m-accent)]`} title="AI-researched candidate — unverified">
         {label}
       </span>
     )

@@ -14,11 +14,11 @@ export default function CoverageProof({ coverage, ledger, stage, compact = false
   const signalBased = ledger?.verification?.status === 'signal_based'
 
   const chip = signalBased
-    ? 'border-violet-400/40 bg-violet-400/10 text-violet-200'
+    ? 'border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] text-[color:var(--m-accent)]'
     : communityFirst || verifiedMiss
-      ? 'border-emerald-400/40 bg-emerald-400/10 text-emerald-200'
+      ? 'border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] text-[color:var(--m-accent)]'
       : alsoPublic
-        ? 'border-white/15 bg-white/5 text-white/60'
+        ? 'border-[color:var(--m-border)] bg-[color:var(--m-surface-2)] text-[color:var(--m-muted)]'
         : 'border-amber-400/40 bg-amber-400/10 text-amber-200'
 
   if (compact) {

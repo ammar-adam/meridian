@@ -14,10 +14,10 @@ function StatusRow({ ok, label, detail, action }) {
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span
-            className={`inline-block h-2 w-2 shrink-0 rounded-full ${ok ? 'bg-emerald-400' : ok === false ? 'bg-amber-400' : 'bg-white/20'}`}
+            className={`inline-block h-2 w-2 shrink-0 rounded-full ${ok ? 'bg-[color:var(--m-accent)]' : ok === false ? 'bg-amber-400' : 'bg-[color:var(--m-muted-2)]'}`}
             aria-hidden
           />
-          <span className="text-[14px] font-medium text-white">{label}</span>
+          <span className="text-[14px] font-medium text-[color:var(--m-text)]">{label}</span>
         </div>
         {detail && <p className="mt-1 pl-4 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>{detail}</p>}
       </div>
@@ -31,10 +31,10 @@ function Beat({ n, title, detail, href, hrefLabel }) {
     <li className="flex gap-3 text-[14px]">
       <span className="font-mono text-[11px] text-zinc-400">{String(n).padStart(2, '0')}</span>
       <div>
-        <div className="font-medium text-white">{title}</div>
+        <div className="font-medium text-[color:var(--m-text)]">{title}</div>
         <div className="mt-0.5 text-[13px]" style={{ color: 'var(--m-muted)' }}>{detail}</div>
         {href && (
-          <Link href={href} className="mt-1 inline-block text-[13px] font-medium text-emerald-400 hover:underline">
+          <Link href={href} className="mt-1 inline-block text-[13px] font-medium text-[color:var(--m-accent)] hover:underline">
             {hrefLabel || 'Open →'}
           </Link>
         )}
@@ -146,14 +146,14 @@ export default function DemoPage() {
       )}
     >
       <WorkspacePage width="medium">
-        <div className={`mb-6 rounded-xl border px-4 py-3 ${demoReady ? 'border-emerald-400/30 bg-emerald-400/10' : 'border-amber-400/30 bg-amber-400/10'}`}>
-          <p className={`text-[13px] font-semibold ${demoReady ? 'text-emerald-200' : 'text-amber-200'}`}>
+        <div className={`mb-6 rounded-xl border px-4 py-3 ${demoReady ? 'border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)]' : 'border-amber-400/30 bg-amber-400/10'}`}>
+          <p className={`text-[13px] font-semibold ${demoReady ? 'text-[color:var(--m-accent)]' : 'text-amber-200'}`}>
             {demoReady ? 'Green light — open Deal Flow and hit record.' : `${readyCount}/5 checks passing — see below.`}
           </p>
           <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>
             Prod: {typeof window !== 'undefined' ? window.location.origin : 'meridian-eight-sandy.vercel.app'}
             {' · '}
-            Script: repo file <code className="rounded bg-white/10 px-1 text-white/80">docs/investor-demo-film.md</code>
+            Script: repo file <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">docs/investor-demo-film.md</code>
           </p>
         </div>
 
@@ -273,7 +273,7 @@ export default function DemoPage() {
         </WorkspaceSection>
 
         <WorkspaceSection title="Env vars (minimum)" description="Paste on Vercel → Settings → Environment Variables → redeploy.">
-          <pre className="overflow-x-auto rounded-lg border border-white/10 bg-black/60 p-4 font-mono text-[12px] leading-relaxed text-emerald-200">
+          <pre className="overflow-x-auto rounded-lg border border-[color:var(--m-border)] bg-black/60 p-4 font-mono text-[12px] leading-relaxed text-[color:var(--m-accent)]">
 {`DATABASE_URL=postgresql://...
 ANTHROPIC_API_KEY=sk-ant-...
 PERPLEXITY_API_KEY=pplx-...
@@ -286,9 +286,9 @@ HUNTER_API_KEY=...          # Flow email enrich button
 CRON_SECRET=...             # operator curls only`}
           </pre>
           <p className="mt-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
-            Copy template: <code className="rounded bg-white/10 px-1 text-white/80">.env.demo</code> in repo root.
-            Terminal: <code className="rounded bg-white/10 px-1 text-white/80">npm run debate</code> (must avg ≥ 7) ·{' '}
-            <code className="rounded bg-white/10 px-1 text-white/80">./scripts/demo-preflight.sh</code>
+            Copy template: <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">.env.demo</code> in repo root.
+            Terminal: <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">npm run debate</code> (must avg ≥ 7) ·{' '}
+            <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">./scripts/demo-preflight.sh</code>
           </p>
         </WorkspaceSection>
 
@@ -303,7 +303,7 @@ CRON_SECRET=...             # operator curls only`}
 
         <WorkspaceSection title="Reset browser state (optional)" description="If a prior demo left the wrong fund or empty Flow.">
           <p className="text-[13px]" style={{ color: 'var(--m-muted)' }}>
-            DevTools → Application → Local Storage → clear <code className="rounded bg-white/10 px-1 text-white/80">meridian_funds_store</code>
+            DevTools → Application → Local Storage → clear <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">meridian_funds_store</code>
             {' '}and reload — Panache re-seeds automatically.
           </p>
         </WorkspaceSection>

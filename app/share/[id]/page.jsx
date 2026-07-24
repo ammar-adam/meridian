@@ -109,7 +109,7 @@ export default function SharePage() {
         <div className="no-print fixed inset-x-0 bottom-0 z-40 border-t bg-white/95 px-4 py-4 backdrop-blur-sm" style={{ borderColor: 'var(--m-border)' }}>
           <div className="mx-auto max-w-3xl">
             {submitted ? (
-              <p className="text-center text-[13px] font-medium text-emerald-700">
+              <p className="text-center text-[13px] font-medium text-[color:var(--m-accent)]">
                 Response recorded — thank you.
               </p>
             ) : (
