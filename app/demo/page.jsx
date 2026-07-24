@@ -151,11 +151,25 @@ export default function DemoPage() {
             {demoReady ? 'Green light — open Deal Flow and hit record.' : `${readyCount}/5 checks passing — see below.`}
           </p>
           <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>
-            Prod: {typeof window !== 'undefined' ? window.location.origin : 'meridian-eight-sandy.vercel.app'}
+            Prod: {typeof window !== 'undefined' ? window.location.origin : 'https://meridian-mentor.vercel.app'}
             {' · '}
-            Script: repo file <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">docs/investor-demo-film.md</code>
+            Mentor kit: <code className="rounded bg-white/10 px-1 text-[color:var(--m-muted)]">docs/mentor-send-package.md</code>
           </p>
         </div>
+
+        <WorkspaceSection title="Mentor send" description="Feedback package — vision clear, claims honest.">
+          <div className="m-card m-card-pad space-y-3 text-[13px]" style={{ color: 'var(--m-muted)' }}>
+            <p style={{ color: 'var(--m-text)' }}>
+              We connect school ecosystems to fund mandates — only what we can date and source.
+              Tier-1 CA/US/UK first; emerging schools expand over time. Deal velocity, with receipts.
+            </p>
+            <ul className="list-disc space-y-1 pl-5">
+              <li>Live: <a className="text-[color:var(--m-accent)] underline" href="https://meridian-mentor.vercel.app">meridian-mentor.vercel.app</a></li>
+              <li>Schools infra: <Link href="/schools" className="text-[color:var(--m-accent)] underline">/schools</Link> (scout · emerging · jobs)</li>
+              <li>Copy + film beats: <code className="text-[12px]">docs/mentor-send-package.md</code></li>
+            </ul>
+          </div>
+        </WorkspaceSection>
 
         <WorkspaceSection title="Preflight" description="Run once after pasting env vars on Vercel (or locally in .env.local).">
           <div className="m-card px-4">

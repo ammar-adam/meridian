@@ -8,7 +8,7 @@ room, and (2) a 30-second Remotion hype teaser. The walkthrough sells the
 
 ## 0. Pre-flight (do this 60 seconds before you record)
 
-1. Open `https://meridian-eight-sandy.vercel.app/` and **hard refresh** (Ctrl+Shift+R).
+1. Open `https://meridian-mentor.vercel.app/` and **hard refresh** (Ctrl+Shift+R).
    Wait ~3 seconds after load before clicking anything — the app hydrates
    Clerk in the background. (Landing CTAs are native links now, so they fire
    instantly, but giving it a beat keeps the in-app nav snappy on camera.)

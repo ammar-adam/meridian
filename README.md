@@ -2,7 +2,7 @@
 
 **AI-powered investment memos for venture capital.** Paste a company URL — get a mandate-specific one-page research brief in under a minute (Auto mode).
 
-**Live demo:** [meridian-eight-sandy.vercel.app](https://meridian-eight-sandy.vercel.app)
+**Live demo:** [meridian-mentor.vercel.app](https://meridian-mentor.vercel.app) (legacy: meridian-eight-sandy.vercel.app until redirect is attached)
 
 ---
 

@@ -9,6 +9,7 @@ import WorkflowStrip from '@/components/workflow-strip'
 import WorkspaceContextBar from '@/components/workspace-context-bar'
 import AuthBar from '@/components/auth-bar'
 import ClerkLiveBanner from '@/components/clerk-live-banner'
+import DemoEnvBanner from '@/components/demo-env-banner'
 import { FundSwitcher } from '@/components/context-switcher'
 
 const NAV_GROUPS = [
@@ -25,6 +26,7 @@ const NAV_GROUPS = [
   {
     label: 'More',
     items: [
+      { href: '/schools', label: 'Schools', desc: 'Campus ecosystems → graph' },
       { href: '/demo', label: 'Demo checklist', desc: 'Preflight before you record' },
       { href: '/pilot', label: 'Coverage proof', desc: 'Data wedge, measured' },
     ],
@@ -56,6 +58,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
 
   return (
     <FundGate>
+      <DemoEnvBanner />
       <ClerkLiveBanner />
       <div className="flex h-screen overflow-hidden" style={{ background: 'var(--m-bg)' }}>
         <aside className="m-workspace-sidebar flex w-[248px] shrink-0 flex-col">

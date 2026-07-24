@@ -85,7 +85,7 @@ function SceneBrand({ frame, fps }: { frame: number; fps: number }) {
           letterSpacing: "0.04em",
         }}
       >
-        Deal screening for investment teams
+        School ecosystems → fund mandates
       </div>
     </AbsoluteFill>
   );
@@ -121,7 +121,7 @@ function SceneHeadline({ frame, fps }: { frame: number; fps: number }) {
           maxWidth: 980,
         }}
       >
-        Community deal flow, with receipts.
+        Campus deal flow, with receipts.
       </div>
     </AbsoluteFill>
   );

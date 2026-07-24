@@ -11,7 +11,7 @@ import { scoreAdversarialDebate, PERSONAS } from '../lib/adversarial-debate.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = path.resolve(__dirname, '..')
-const BASE = (process.argv[2] || process.env.SMOKE_BASE_URL || 'https://meridian-eight-sandy.vercel.app').replace(/\/$/, '')
+const BASE = (process.argv[2] || process.env.SMOKE_BASE_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://meridian-mentor.vercel.app').replace(/\/$/, '')
 const MIN_SCORE = Number(process.env.DEBATE_MIN_SCORE || 7)
 
 async function fetchJson(url, init) {

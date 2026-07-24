@@ -29,7 +29,7 @@ npm run test:ci      # all three
 Optional against production (needs network):
 
 ```bash
-BASE_URL=https://meridian-eight-sandy.vercel.app npm run smoke
+BASE_URL=https://meridian-mentor.vercel.app npm run smoke
 ```
 
 ## CI/CD overview

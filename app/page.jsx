@@ -16,17 +16,17 @@ export default function LandingPage() {
             <div className="lg:col-span-6">
               <span className="m-landing-eyebrow">
                 <span className="m-landing-eyebrow-dot" />
-                Thesis-native deal screening
+                School ecosystems → fund mandates
               </span>
               <h1 className="m-landing-headline">
-                Community deal flow,
+                Campus deal flow,
                 <br />
                 <em>with receipts.</em>
               </h1>
               <p className="m-landing-lead">
-                Surface early Canadian companies from incubators and cohorts —
-                founders, provenance, and dated proof — matched to your mandate,
-                before they hit the indexes.
+                Connect Tier-1 — and emerging — university ecosystems in Canada,
+                the US, and the UK to your mandate. Founders, provenance, and
+                dated proof. We only claim what we can source.
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-3">
                 <a href="/flow" className="m-btn-invert">
