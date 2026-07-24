@@ -16,7 +16,7 @@ export default function Nav({ variant = 'default' }) {
       <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between px-6">
         <Link href="/" className="flex items-center gap-3">
           <div className="m-logo">M</div>
-          <span className="text-[16px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>
+          <span className="text-[15px] font-semibold tracking-tight text-white">
             Meridian
           </span>
         </Link>

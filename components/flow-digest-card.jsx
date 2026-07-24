@@ -59,9 +59,9 @@ export default function FlowDigestCard({ fundName, thesis, companies, feedStats:
   if (!companies?.length) return null
 
   return (
-    <div className="mb-6 overflow-hidden px-5 py-4" style={{ border: '1px solid var(--m-border)', borderLeft: '3px solid var(--m-forest)', borderRadius: 'var(--m-radius)', background: 'var(--m-surface)' }}>
+    <div className="mb-6 overflow-hidden rounded-xl border px-5 py-4" style={{ borderColor: 'rgba(16,185,129,0.3)', background: 'radial-gradient(ellipse 70% 140% at 0% 0%, rgba(16,185,129,0.12), transparent 60%), var(--m-surface)' }}>
       <p className="m-kicker mb-1">Monday digest</p>
-      <h3 className="text-[17px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>
+      <h3 className="text-[16px] font-semibold tracking-tight text-white">
         {digest.stats.newCount || digest.stats.freshCount} companies worth a look for {fundName}
       </h3>
       <p className="mt-1 text-[13px]" style={{ color: 'var(--m-muted)' }}>

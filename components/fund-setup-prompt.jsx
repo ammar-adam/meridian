@@ -28,9 +28,9 @@ export default function FundSetupPrompt({ force = false }) {
   if (!visible) return null
 
   return (
-    <div className="m-card m-card-pad mb-6 border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)]">
-      <p className="text-[13px] font-medium text-[color:var(--m-accent)]">Make the thesis band yours</p>
-      <p className="mt-1 text-[12px] text-[color:var(--m-accent-deep)]">
+    <div className="m-card m-card-pad mb-6 border-emerald-400/30 bg-emerald-400/10">
+      <p className="text-[13px] font-medium text-emerald-200">Make the thesis band yours</p>
+      <p className="mt-1 text-[12px] text-emerald-200">
         You&apos;re on generic fund context. Drop your fund URL — portfolio, mandate, and thesis band personalize in ~30 seconds.
       </p>
       <div className="mt-3 flex flex-wrap gap-2">
@@ -40,7 +40,7 @@ export default function FundSetupPrompt({ force = false }) {
         <button
           type="button"
           onClick={() => { dismissFundPrompt(); setVisible(false) }}
-          className="m-btn-ghost m-btn-sm text-[color:var(--m-accent)]"
+          className="m-btn-ghost m-btn-sm text-emerald-300"
         >
           Later
         </button>

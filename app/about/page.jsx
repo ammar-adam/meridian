@@ -11,7 +11,7 @@ export default function AboutPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">About</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
+      <h1 className="text-[28px] font-semibold tracking-tight text-white">
         Early deal flow you can check, not just believe
       </h1>
 
@@ -28,7 +28,7 @@ export default function AboutPage() {
           check — whether the mainstream databases had it at that time. When we have not
           checked something, we say so.
         </p>
-        <p className="font-medium text-[color:var(--m-text)]">
+        <p className="font-medium text-white">
           Our one rule: no fact without a receipt. We never claim a company is
           &ldquo;not in the databases&rdquo; without a dated, repeatable check behind it,
           and we never backdate when we first saw something.
@@ -36,7 +36,7 @@ export default function AboutPage() {
         <p>
           Meridian is an early-stage product — pre-incorporation, built and run by its
           founder. If your company is on our ledger, you can{' '}
-          <Link href="/claim" className="text-[color:var(--m-text)] underline">claim and correct your profile</Link>.
+          <Link href="/claim" className="text-white underline">claim and correct your profile</Link>.
         </p>
       </div>
 
@@ -47,7 +47,7 @@ export default function AboutPage() {
 
       <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
         Contact: submissions through the{' '}
-        <Link href="/claim" className="text-[color:var(--m-muted)] underline">claim form</Link>{' '}
+        <Link href="/claim" className="text-white/80 underline">claim form</Link>{' '}
         reach the founder directly — questions, corrections, and data requests included.
       </p>
     </div>

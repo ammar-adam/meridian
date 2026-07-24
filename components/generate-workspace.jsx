@@ -370,7 +370,7 @@ export default function GenerateWorkspace() {
               </p>
             )}
             {learningNote && stepStatus.generate === 'active' && (
-              <p className="mb-3 rounded-md border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-3 py-2 text-[11px] text-[color:var(--m-accent)]">
+              <p className="mb-3 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-[11px] text-emerald-200">
                 {learningNote}
               </p>
             )}
@@ -400,9 +400,9 @@ export default function GenerateWorkspace() {
           description="Drop a URL, contact export, or company list — we handle the rest."
         >
           {needsDomainHint && (
-            <div className="mb-4 rounded-lg border border-amber-700/40 bg-amber-500/10 px-4 py-3 text-[13px] text-amber-800">
+            <div className="mb-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-[13px] text-amber-200">
               <p className="font-medium">Add a website for {needsDomainHint.name}</p>
-              <p className="mt-1 text-amber-800/80">
+              <p className="mt-1 text-amber-100/80">
                 {needsDomainHint.founder
                   ? `We have founder ${needsDomainHint.founder} from community sources, but need a live domain to scrape and brief.`
                   : 'This company needs a live domain before Meridian can build a brief.'}
@@ -410,7 +410,7 @@ export default function GenerateWorkspace() {
             </div>
           )}
           {cachedResearch?.sections?.length > 0 && !loading && (
-            <div className="mb-4 rounded-lg border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-4 py-3 text-[13px] text-[color:var(--m-accent)]">
+            <div className="mb-4 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-4 py-3 text-[13px] text-emerald-200">
               <p className="font-medium">Cached research on file</p>
               <p className="mt-1">
                 {cachedResearch.sections.length} section{cachedResearch.sections.length === 1 ? '' : 's'} from a prior brief
@@ -474,8 +474,8 @@ export default function GenerateWorkspace() {
                   onClick={() => setResearchMode(m.id)}
                   className={`rounded-md px-3 py-1.5 text-[12px] font-medium ring-1 transition ${
                     researchMode === m.id
-                      ? 'bg-[color:var(--m-text)] text-[color:var(--m-bg)] ring-[color:var(--m-text)]'
-                      : 'bg-[color:var(--m-surface-2)] text-[color:var(--m-muted)] ring-[color:var(--m-border)] hover:bg-[color:var(--m-surface-3)]'
+                      ? 'bg-emerald-500 text-[#04140d] ring-emerald-400'
+                      : 'bg-white/5 text-white/70 ring-white/10 hover:bg-white/10'
                   }`}
                 >
                   {m.label} · {m.hint}

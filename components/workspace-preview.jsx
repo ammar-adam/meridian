@@ -2,15 +2,16 @@ export default function WorkspacePreview() {
   return (
     <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
       <div className="m-product-frame">
-        {/* Case-file header strip */}
         <div className="m-product-frame-chrome">
-          <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em]" style={{ color: 'var(--m-muted)' }}>
-            Case file
-          </span>
-          <span className="font-mono text-[11px]" style={{ color: 'var(--m-accent)' }}>Panache Ventures · Deal Flow</span>
+          <div className="flex gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+            <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+          </div>
+          <span className="font-mono text-[11px] text-emerald-300/70">meridian.app/flow · Panache Ventures</span>
         </div>
 
-        <div className="flex min-h-[372px]">
+        <div className="flex min-h-[368px]">
           <div className="m-product-sidebar">
             {[
               { label: 'Flow', active: true },
@@ -24,13 +25,13 @@ export default function WorkspacePreview() {
             ))}
           </div>
 
-          <div className="min-w-0 flex-1 p-5" style={{ background: 'var(--m-surface)' }}>
+          <div className="min-w-0 flex-1 p-5" style={{ background: 'var(--m-bg-subtle)' }}>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <div>
-                <div className="font-serif text-[15px] font-semibold" style={{ color: 'var(--m-text)' }}>Deal Flow</div>
-                <div className="font-mono text-[10px]" style={{ color: 'var(--m-muted-2)' }}>Canadian pre-seed · community sources</div>
+                <div className="text-[13px] font-semibold text-white">Deal Flow</div>
+                <div className="text-[11px] text-white/40">Canadian pre-seed · community sources</div>
               </div>
-              <span className="m-stat-pill m-stat-pill-success">12 new</span>
+              <span className="m-stat-pill-success rounded-full border px-3 py-1 font-mono text-[11px]">12 new</span>
             </div>
 
             <div className="mb-3 flex flex-wrap gap-2">
@@ -39,33 +40,33 @@ export default function WorkspacePreview() {
             </div>
 
             {[
-              { name: 'SCADABLE', founders: 'Ali Rahbar', date: '2026-05-12', fit: 92, domain: 'scadable.com', stamp: true },
-              { name: 'Photon-IV', founders: 'Sanal Sina Kamal', date: '2026-05-09', fit: 88, domain: 'photon-iv.com', stamp: true },
-              { name: 'Simantic', founders: 'Hong · Shahriar', date: '2026-04-28', fit: 84, domain: 'simantic.dev', stamp: false },
+              { name: 'SCADABLE', founders: 'Ali Rahbar', src: 'Velocity', fit: 92, domain: 'scadable.com' },
+              { name: 'Photon-IV', founders: 'Sanal Sina Kamal', src: 'Velocity', fit: 88, domain: 'photon-iv.com' },
+              { name: 'Simantic', founders: 'Hong · Shahriar', src: 'Velocity', fit: 84, domain: 'simantic.dev' },
             ].map((row) => (
               <div
                 key={row.name}
-                className="mb-2 border-l-2 py-2 pl-3"
-                style={{ borderColor: 'var(--m-border-strong)' }}
+                className="mb-2 rounded-lg border px-3 py-2.5"
+                style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <div className="text-[13px] font-semibold" style={{ color: 'var(--m-text)' }}>{row.name}</div>
+                      <div className="text-[13px] font-semibold text-white">{row.name}</div>
                       <span className="m-badge-high">{row.fit}</span>
                     </div>
-                    <div className="mt-0.5 text-[10px]" style={{ color: 'var(--m-muted)' }}>Founders: {row.founders}</div>
-                    <div className="mt-0.5 font-mono text-[9px]" style={{ color: 'var(--m-muted-2)' }}>
-                      first seen {row.date} · {row.domain}
-                    </div>
+                    <div className="mt-0.5 text-[10px] text-white/40">Founders: {row.founders}</div>
                   </div>
-                  {row.stamp && <span className="m-stamp shrink-0">Not in index</span>}
+                  <span className="shrink-0 rounded-md border border-emerald-400/30 bg-emerald-400/10 px-1.5 py-0.5 font-mono text-[9px] font-medium text-emerald-300">
+                    {row.src}
+                  </span>
                 </div>
+                <div className="mt-1 font-mono text-[10px] text-white/30">{row.domain}</div>
               </div>
             ))}
 
-            <div className="mt-3 font-mono text-[9px]" style={{ color: 'var(--m-muted-2)' }}>
-              Provenance cited from cohort pages — re-runnable index checks.
+            <div className="mt-3 text-[10px] text-white/30">
+              Provenance from cohort pages — not a Crunchbase scrape.
             </div>
           </div>
         </div>

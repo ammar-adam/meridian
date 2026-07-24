@@ -15,7 +15,7 @@ export default function LandingDemoCta() {
   return (
     <div className="rounded-2xl border p-8 text-center sm:p-10" style={{ background: 'var(--m-surface-2)', borderColor: 'var(--m-border)' }}>
       <p className="text-[13px] font-medium uppercase tracking-wide" style={{ color: 'var(--m-muted)' }}>Proof without API cost</p>
-      <h3 className="mt-2 text-[22px] font-bold tracking-tight text-[color:var(--m-text)]">
+      <h3 className="mt-2 text-[22px] font-bold tracking-tight text-white">
         See the reference brief Meridian was built to match
       </h3>
       <p className="mx-auto mt-2 max-w-lg text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>

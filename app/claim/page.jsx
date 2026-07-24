@@ -52,7 +52,7 @@ export default function ClaimPage() {
   return (
     <div className="mx-auto max-w-xl px-6 py-16">
       <p className="m-kicker mb-2">Meridian · for founders</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
+      <h1 className="text-[28px] font-semibold tracking-tight text-white">
         Get seen by Canadian funds before you announce
       </h1>
       <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -63,9 +63,9 @@ export default function ClaimPage() {
       </p>
 
       {status === 'done' ? (
-        <div className="mt-8 rounded-xl border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] p-5">
-          <p className="text-[15px] font-medium text-[color:var(--m-forest)]">Claim received.</p>
-          <p className="mt-1 text-[13px] leading-relaxed text-[color:var(--m-forest)]">
+        <div className="mt-8 rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-5">
+          <p className="text-[15px] font-medium text-emerald-200">Claim received.</p>
+          <p className="mt-1 text-[13px] leading-relaxed text-emerald-200">
             We review every claim by hand — preferably from an email at your company
             domain. Once verified, your record shows a dated
             &ldquo;Founder-confirmed&rdquo; mark to every fund watching your space.
@@ -173,7 +173,7 @@ export default function ClaimPage() {
       )}
 
       <p className="mt-10 text-[12px]" style={{ color: 'var(--m-muted)' }}>
-        Investor? <Link href="/flow" className="text-[color:var(--m-text)] underline">Open Deal Flow</Link>
+        Investor? <Link href="/flow" className="text-white/80 underline">Open Deal Flow</Link>
       </p>
     </div>
   )

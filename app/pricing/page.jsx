@@ -49,7 +49,7 @@ export default function PricingPage() {
 
       <div className="mt-10 max-w-xl">
         <p className="m-kicker mb-2">Pricing</p>
-        <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
+        <h1 className="text-[28px] font-semibold tracking-tight text-white">
           Pay for deal flow you can verify
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -62,10 +62,10 @@ export default function PricingPage() {
         {TIERS.map(tier => (
           <div
             key={tier.name}
-            className={`m-card m-card-pad flex flex-col ${tier.featured ? 'border-[color:var(--m-accent)]' : ''}`}
+            className={`m-card m-card-pad flex flex-col ${tier.featured ? 'border-emerald-500' : ''}`}
           >
             <p className="m-kicker">{tier.name}</p>
-            <p className="mt-2 text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
+            <p className="mt-2 text-[28px] font-semibold tracking-tight text-white">
               {tier.price}
               <span className="text-[13px] font-normal" style={{ color: 'var(--m-muted)' }}> /seat/mo</span>
             </p>
@@ -73,12 +73,12 @@ export default function PricingPage() {
             <ul className="mt-4 flex-1 space-y-2 text-[13px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
               {tier.features.map(f => (
                 <li key={f} className="flex gap-2">
-                  <span className="text-[color:var(--m-forest)]">✓</span>
+                  <span className="text-emerald-400">✓</span>
                   <span>{f}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-4 rounded-md border border-amber-700/40 bg-amber-500/10 px-3 py-2 text-[11px] font-medium text-amber-800">
+            <p className="mt-4 rounded-md bg-amber-400/10 px-3 py-2 text-[11px] font-medium text-amber-200">
               Early access — first 10 funds onboard free for 60 days
             </p>
           </div>

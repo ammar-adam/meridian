@@ -115,7 +115,7 @@ export default function HeroInput({ variant = 'default' }) {
           compact
           onIntake={handleIntake}
           hint="Drop company URL, contacts, or fund website"
-          className="border-[color:var(--m-border-strong)] bg-[color:var(--m-surface-2)] hover:border-[color:var(--m-accent-line)] [&_p]:text-[color:var(--m-muted-2)]"
+          className="border-white/10 bg-white/5 hover:border-emerald-400/30 [&_p]:text-white/50"
         />
       )}
     </div>

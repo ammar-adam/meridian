@@ -34,7 +34,7 @@ export default function EarlinessPage() {
       </Link>
 
       <p className="m-kicker mb-2 mt-10">Earliness scoreboard</p>
-      <h1 className="text-[28px] font-semibold tracking-tight text-[color:var(--m-text)]">
+      <h1 className="text-[28px] font-semibold tracking-tight text-white">
         How early we are — with receipts
       </h1>
       <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -50,7 +50,7 @@ export default function EarlinessPage() {
       )}
 
       {data && !data.enabled && (
-        <div className="mt-8 rounded-xl border border-amber-700/40 bg-amber-500/10 px-4 py-3 text-[14px] text-amber-800">
+        <div className="mt-8 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-[14px] text-amber-200">
           Ledger not configured yet. Numbers will appear once the truth ledger is live.
         </div>
       )}
@@ -68,8 +68,8 @@ export default function EarlinessPage() {
           </div>
 
           {accruing ? (
-            <div className="mt-6 rounded-xl border px-4 py-4 text-[14px] leading-relaxed text-[color:var(--m-muted)]" style={{ background: 'var(--m-surface-2)', borderColor: 'var(--m-border)' }}>
-              <p className="font-medium text-[color:var(--m-text)]">Accruing — no invented numbers</p>
+            <div className="mt-6 rounded-xl border px-4 py-4 text-[14px] leading-relaxed text-white/80" style={{ background: 'var(--m-surface-2)', borderColor: 'var(--m-border)' }}>
+              <p className="font-medium text-white">Accruing — no invented numbers</p>
               <p className="mt-1">
                 Index checks run on a schedule. Until a dated check exists for a company,
                 we do not claim it is missing from public indexes. Zero verified misses on day one
@@ -77,7 +77,7 @@ export default function EarlinessPage() {
               </p>
             </div>
           ) : (
-            <div className="mt-6 rounded-xl border border-[color:var(--m-accent-line)] bg-[color:var(--m-accent-soft)] px-4 py-4 text-[14px] leading-relaxed text-[color:var(--m-forest)]">
+            <div className="mt-6 rounded-xl border border-emerald-400/30 bg-emerald-400/10 px-4 py-4 text-[14px] leading-relaxed text-emerald-200">
               <p className="font-medium">
                 {misses} verified miss{misses === 1 ? '' : 'es'} from {checks} checked entit{checks === 1 ? 'y' : 'ies'}.
               </p>
@@ -108,7 +108,7 @@ function Stat({ label, value }) {
   return (
     <div className="rounded-xl border px-4 py-3" style={{ background: 'var(--m-surface)', borderColor: 'var(--m-border)' }}>
       <div className="text-[11px] font-medium uppercase tracking-wide" style={{ color: 'var(--m-muted)' }}>{label}</div>
-      <div className="mt-1 text-[22px] font-semibold tracking-tight text-[color:var(--m-text)]">{value}</div>
+      <div className="mt-1 text-[22px] font-semibold tracking-tight text-white">{value}</div>
     </div>
   )
 }

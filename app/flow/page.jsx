@@ -261,7 +261,7 @@ function FlowContent() {
       actions={(
         <div className="flex flex-wrap gap-2">
           {watch ? (
-            <span className="m-btn-ghost m-btn-sm" style={{ color: 'var(--m-forest)' }}>Watching mandate</span>
+            <span className="m-btn-ghost m-btn-sm text-emerald-400">Watching mandate</span>
           ) : (
             <button type="button" onClick={handleWatch} className="m-btn-primary m-btn-sm">
               {watching ? 'Watching…' : 'Watch this mandate'}
@@ -281,7 +281,7 @@ function FlowContent() {
       <WorkspacePage width="wide">
         <div className="m-flow-hero mb-6">
           <p className="m-kicker mb-1">Data wedge</p>
-          <h2 className="text-[21px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-serif)' }}>
+          <h2 className="text-[20px] font-semibold tracking-tight text-white">
             Companies matched to your mandate — with receipts.
           </h2>
           <p className="mt-2 max-w-2xl text-[14px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
@@ -289,10 +289,10 @@ function FlowContent() {
             We only claim index absence where a dated check exists.
           </p>
           {flowMeta?.coverageBanner && (
-            <div className="m-alert-warn mt-4">
-              <p className="text-[13px] font-semibold">{flowMeta.coverageBanner.title}</p>
-              <p className="mt-1 text-[13px] leading-relaxed opacity-90">{flowMeta.coverageBanner.detail}</p>
-              <p className="mt-1 text-[12px] leading-relaxed opacity-75">{flowMeta.coverageBanner.expanding}</p>
+            <div className="mt-4 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3">
+              <p className="text-[13px] font-semibold text-amber-200">{flowMeta.coverageBanner.title}</p>
+              <p className="mt-1 text-[13px] leading-relaxed text-amber-100/90">{flowMeta.coverageBanner.detail}</p>
+              <p className="mt-1 text-[12px] leading-relaxed text-amber-100/70">{flowMeta.coverageBanner.expanding}</p>
             </div>
           )}
           {flowMeta?.thinRowsHidden > 0 && (
@@ -356,7 +356,7 @@ function FlowContent() {
                 {f.label}
               </button>
             ))}
-            <span className="mx-1" style={{ color: 'var(--m-muted-2)' }}>|</span>
+            <span className="mx-1 text-white/20">|</span>
             <button
               type="button"
               onClick={() => setBriefableOnly(v => !v)}
@@ -432,7 +432,7 @@ function FlowContent() {
 
         <p className="mt-8 text-center text-[12px]" style={{ color: 'var(--m-muted-2)' }}>
           Prefer a one-off search?{' '}
-          <Link href="/discover" className="font-medium hover:underline" style={{ color: 'var(--m-accent)' }}>Discover →</Link>
+          <Link href="/discover" className="font-medium text-emerald-400 hover:underline">Discover →</Link>
         </p>
       </WorkspacePage>
     </WorkspaceShell>
