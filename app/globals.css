@@ -9,32 +9,35 @@
    ══════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  --m-bg: #f2f3f5;
-  --m-bg-subtle: #e9ebef;
+  --m-bg: #f4f5f7;
+  --m-bg-subtle: #e8eaee;
   --m-surface: #ffffff;
   --m-surface-2: #f7f8fa;
   --m-surface-3: #eceef2;
 
-  --m-border: rgba(15, 23, 42, 0.09);
-  --m-border-strong: rgba(15, 23, 42, 0.18);
+  --m-border: rgba(15, 23, 42, 0.10);
+  --m-border-strong: rgba(15, 23, 42, 0.20);
 
-  --m-text: #0f172a;
-  --m-muted: #5b6475;
-  --m-muted-2: #8b93a7;
+  --m-text: #0b1220;
+  --m-muted: #3f4a5a;
+  --m-muted-2: #5c677a;
 
-  --m-accent: #1f4d3d;
-  --m-accent-hover: #163a2e;
+  --m-accent: #1a4537;
+  --m-accent-hover: #123328;
   --m-accent-deep: #ffffff;
-  --m-accent-soft: rgba(31, 77, 61, 0.09);
-  --m-accent-line: rgba(31, 77, 61, 0.28);
+  --m-accent-soft: rgba(26, 69, 55, 0.10);
+  --m-accent-line: rgba(26, 69, 55, 0.32);
   --m-accent-glow: transparent;
-  --m-accent-text: #1f4d3d;
+  --m-accent-text: #1a4537;
 
-  --m-sidebar: #111827;
-  --m-sidebar-border: rgba(255, 255, 255, 0.07);
-  --m-sidebar-text: #9aa3b5;
-  --m-sidebar-active-bg: rgba(255, 255, 255, 0.08);
+  --m-sidebar: #0c1118;
+  --m-sidebar-border: rgba(255, 255, 255, 0.08);
+  --m-sidebar-text: #c5ccd8;
+  --m-sidebar-muted: #9aa6b8;
+  --m-sidebar-muted-2: #7b8799;
+  --m-sidebar-active-bg: rgba(159, 227, 192, 0.12);
   --m-sidebar-active-text: #f8fafc;
+  --m-sidebar-panel: rgba(255, 255, 255, 0.04);
 
   --m-ok: #1f4d3d;
   --m-warn: #9a6700;
@@ -64,16 +67,25 @@ html {
     color: var(--m-text);
     background: var(--m-bg);
     font-feature-settings: 'ss01' on, 'cv01' on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
-  h1, h2, h3, .m-serif {
+  /* App UI stays sans — serif is landing / brand only (avoids Times clash). */
+  h1, h2, h3 {
+    font-family: var(--m-font);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--m-text);
+  }
+  .m-serif {
     font-family: var(--m-serif);
     font-weight: 400;
     letter-spacing: -0.02em;
   }
 
   ::selection {
-    background: rgba(31, 77, 61, 0.18);
+    background: rgba(26, 69, 55, 0.18);
     color: var(--m-text);
   }
 
@@ -282,19 +294,25 @@ html {
     100% { transform: translateX(420%); }
   }
 
-  /* ═══ Landing — cinematic dark (General Magic / Cursor caliber) ═══ */
+  /* ═══ Landing — cinematic dark (pine + ink, no purple) ═══ */
   .m-landing {
-    --ml-bg: #08090c;
-    --ml-panel: rgba(255, 255, 255, 0.035);
-    --ml-panel-2: rgba(255, 255, 255, 0.06);
-    --ml-text: #f5f6f8;
-    --ml-muted: #a4aab6;
-    --ml-muted-2: #6b7280;
-    --ml-line: rgba(255, 255, 255, 0.09);
-    --ml-line-strong: rgba(255, 255, 255, 0.17);
-    --ml-accent: #9fe3c0;
+    --ml-bg: #07090c;
+    --ml-panel: rgba(255, 255, 255, 0.045);
+    --ml-panel-2: rgba(255, 255, 255, 0.07);
+    --ml-text: #f4f6f8;
+    --ml-muted: #c2c8d2;
+    --ml-muted-2: #9aa3b2;
+    --ml-line: rgba(255, 255, 255, 0.10);
+    --ml-line-strong: rgba(255, 255, 255, 0.20);
+    --ml-accent: #a6e6c6;
     background: var(--ml-bg);
     color: var(--ml-text);
+  }
+  .m-landing h1,
+  .m-landing h2,
+  .m-landing h3 {
+    font-family: var(--m-serif);
+    font-weight: 400;
   }
   .m-landing-bg {
     @apply pointer-events-none absolute inset-0 overflow-hidden;
@@ -302,14 +320,13 @@ html {
   .m-landing-gradient {
     @apply absolute inset-0;
     background:
-      radial-gradient(58% 42% at 50% -6%, rgba(74, 158, 126, 0.24), transparent 68%),
-      radial-gradient(44% 40% at 84% 6%, rgba(58, 96, 148, 0.16), transparent 70%),
-      radial-gradient(42% 44% at 6% 14%, rgba(126, 96, 168, 0.10), transparent 72%),
-      linear-gradient(180deg, #0b0e12 0%, #08090c 52%, #08090c 100%);
+      radial-gradient(56% 40% at 48% -8%, rgba(74, 158, 126, 0.22), transparent 70%),
+      radial-gradient(40% 36% at 88% 8%, rgba(48, 78, 110, 0.14), transparent 72%),
+      linear-gradient(180deg, #0a0d12 0%, #07090c 55%, #07090c 100%);
   }
   .m-landing-grid { display: none; }
   .m-landing-grain {
-    @apply absolute inset-0 opacity-[0.05];
+    @apply absolute inset-0 opacity-[0.04];
     mix-blend-mode: soft-light;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
@@ -317,7 +334,7 @@ html {
   .m-landing-hairline {
     @apply pointer-events-none absolute inset-x-0 h-px;
     top: 4rem;
-    background: linear-gradient(90deg, transparent, rgba(159, 227, 192, 0.32), transparent);
+    background: linear-gradient(90deg, transparent, rgba(166, 230, 198, 0.22), transparent);
   }
 
   .m-nav-landing {
@@ -341,7 +358,6 @@ html {
   .m-landing-eyebrow-dot {
     @apply h-1.5 w-1.5 rounded-full;
     background: var(--ml-accent);
-    box-shadow: 0 0 8px 1px rgba(159, 227, 192, 0.7);
   }
   .m-landing-brand {
     font-family: var(--m-serif);
@@ -364,10 +380,11 @@ html {
     color: var(--ml-accent);
   }
   .m-landing-lead {
-    @apply mt-6 text-[17px] leading-relaxed;
+    @apply mt-6 text-[17px] leading-[1.55];
     color: var(--ml-muted);
-    max-width: 33rem;
+    max-width: 32rem;
     font-family: var(--m-font);
+    font-weight: 400;
   }
 
   .m-landing .m-kicker { color: var(--ml-accent); }
@@ -383,16 +400,21 @@ html {
   }
   .m-landing-sub { color: var(--ml-muted); }
 
-  .m-proof-strip { @apply flex flex-wrap items-baseline gap-x-9 gap-y-3; }
+  .m-proof-strip {
+    @apply flex flex-wrap items-baseline gap-x-10 gap-y-4;
+    border-top: 1px solid var(--ml-line);
+    padding-top: 1.75rem;
+  }
   .m-proof-stat {
     font-family: var(--m-serif);
-    font-size: 1.7rem;
+    font-size: 1.85rem;
     letter-spacing: -0.02em;
     color: var(--ml-text);
   }
   .m-proof-label {
-    @apply mt-0.5 text-[12px];
-    color: var(--ml-muted-2);
+    @apply mt-1 text-[13px] leading-snug;
+    color: var(--ml-muted);
+    max-width: 9.5rem;
   }
 
   .m-step-num {
@@ -583,6 +605,18 @@ html {
   .m-workspace-sidebar {
     background: var(--m-sidebar);
     border-right: 1px solid var(--m-sidebar-border);
+    color: var(--m-sidebar-text);
+  }
+  .m-workspace-sidebar .m-nav-desc {
+    color: var(--m-sidebar-muted-2);
+  }
+  .m-workspace-sidebar .m-nav-item-active .m-nav-desc {
+    color: var(--m-sidebar-muted);
+  }
+  .m-sidebar-panel {
+    border: 1px solid var(--m-sidebar-border);
+    background: var(--m-sidebar-panel);
+    border-radius: var(--m-radius);
   }
   .m-nav-item {
     @apply flex items-center gap-2.5 rounded-md px-3 py-2 text-[13px] font-medium transition-colors duration-150;
@@ -590,20 +624,20 @@ html {
     font-family: var(--m-font);
   }
   .m-nav-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.06);
     color: #fff;
   }
   .m-nav-item-active {
     background: var(--m-sidebar-active-bg) !important;
     color: var(--m-sidebar-active-text) !important;
     font-weight: 600;
-    box-shadow: none;
+    box-shadow: inset 0 0 0 1px rgba(166, 230, 198, 0.18);
   }
   .m-nav-item-rich { @apply items-start py-2.5; }
   .m-nav-badge {
     @apply inline-flex h-4 min-w-[16px] items-center justify-center rounded px-1 text-[10px] font-semibold tabular-nums;
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    background: rgba(166, 230, 198, 0.18);
+    color: #d8f5e6;
   }
 
   .m-workflow-step { color: var(--m-muted); }
@@ -626,14 +660,15 @@ html {
     color: var(--m-text);
   }
   .m-workflow-link-active {
-    background: var(--m-accent);
-    color: #fff;
+    background: var(--m-accent-soft);
+    color: var(--m-accent);
+    box-shadow: inset 0 0 0 1px var(--m-accent-line);
   }
   .m-workflow-sep {
-    @apply mx-1.5 text-[10px];
+    @apply mx-1 text-[10px];
     color: var(--m-muted-2);
   }
-  .m-workflow-sep-past { color: var(--m-accent); }
+  .m-workflow-sep-past { color: var(--m-accent-line); }
 
   .m-context-chip {
     @apply inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-[12px] transition;
@@ -728,6 +763,18 @@ html {
     border-color: var(--m-border);
     border-radius: var(--m-radius);
     background: var(--m-surface);
+  }
+  .m-flow-hero h2 {
+    font-family: var(--m-font);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    color: var(--m-text);
+  }
+  .m-workspace-section-title,
+  .m-empty-state-title,
+  .m-workspace-sidebar h1,
+  .m-workspace-sidebar h2 {
+    font-family: var(--m-font);
   }
 
   .m-ok { color: var(--m-ok); }

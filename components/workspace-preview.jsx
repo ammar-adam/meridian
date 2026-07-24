@@ -30,8 +30,8 @@ export default function WorkspacePreview() {
           <div className="min-w-0 flex-1 p-5" style={{ background: 'var(--m-bg)' }}>
             <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
               <div>
-                <div className="text-[15px] font-semibold" style={{ color: 'var(--m-text)' }}>Deal Flow</div>
-                <div className="text-[12px]" style={{ color: 'var(--m-muted)' }}>Canadian pre-seed · community sources</div>
+                <div className="text-[15px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-font)' }}>Deal Flow</div>
+                <div className="mt-0.5 text-[12px]" style={{ color: 'var(--m-muted)' }}>Canadian pre-seed · community sources</div>
               </div>
               <span className="m-stat-pill-success">12 new</span>
             </div>
@@ -48,7 +48,7 @@ export default function WorkspacePreview() {
             ].map((row) => (
               <div
                 key={row.name}
-                className="mb-2 border px-3 py-2.5"
+                className="mb-2 border px-3.5 py-3"
                 style={{
                   borderColor: 'var(--m-border)',
                   background: 'var(--m-surface)',
@@ -56,17 +56,17 @@ export default function WorkspacePreview() {
                 }}
               >
                 <div className="flex items-start justify-between gap-2">
-                  <div>
+                  <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <div className="text-[13px] font-semibold" style={{ color: 'var(--m-text)' }}>{row.name}</div>
+                      <div className="text-[13px] font-semibold" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-font)' }}>{row.name}</div>
                       <span className="m-badge-high">{row.fit}</span>
                     </div>
-                    <div className="mt-0.5 text-[11px]" style={{ color: 'var(--m-muted)' }}>
-                      Founders: {row.founders}
+                    <div className="mt-1 text-[12px]" style={{ color: 'var(--m-muted)' }}>
+                      {row.founders}
                     </div>
                   </div>
                   <span
-                    className="shrink-0 px-1.5 py-0.5 font-mono text-[9px] font-medium"
+                    className="shrink-0 px-1.5 py-0.5 font-mono text-[10px] font-medium"
                     style={{
                       borderRadius: 'var(--m-radius-sm)',
                       border: '1px solid var(--m-accent-line)',
@@ -77,11 +77,11 @@ export default function WorkspacePreview() {
                     {row.src}
                   </span>
                 </div>
-                <div className="mt-1 font-mono text-[10px]" style={{ color: 'var(--m-muted-2)' }}>{row.domain}</div>
+                <div className="mt-1.5 font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>{row.domain}</div>
               </div>
             ))}
 
-            <div className="mt-3 text-[11px]" style={{ color: 'var(--m-muted-2)' }}>
+            <div className="mt-3 text-[12px]" style={{ color: 'var(--m-muted)' }}>
               Provenance from cohort pages — not a Crunchbase scrape.
             </div>
           </div>

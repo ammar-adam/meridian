@@ -36,24 +36,29 @@ export default function LandingPage() {
                   See the proof
                 </a>
               </div>
-              <div className="m-proof-strip mt-12">
-                <div>
-                  <div className="m-proof-stat">3×</div>
-                  <div className="m-proof-label">companies screened / week</div>
-                </div>
-                <div>
-                  <div className="m-proof-stat">50+</div>
-                  <div className="m-proof-label">verified index misses</div>
-                </div>
-                <div>
-                  <div className="m-proof-stat">&lt;60s</div>
-                  <div className="m-proof-label">URL → forwardable brief</div>
-                </div>
-              </div>
             </div>
 
             <div className="lg:col-span-6">
               <WorkspacePreview />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="m-landing-section py-14">
+        <div className="mx-auto max-w-6xl px-6">
+          <div className="m-proof-strip !border-0 !pt-0">
+            <div>
+              <div className="m-proof-stat">3×</div>
+              <div className="m-proof-label">companies screened / week</div>
+            </div>
+            <div>
+              <div className="m-proof-stat">50+</div>
+              <div className="m-proof-label">verified index misses</div>
+            </div>
+            <div>
+              <div className="m-proof-stat">&lt;60s</div>
+              <div className="m-proof-label">URL → forwardable brief</div>
             </div>
           </div>
         </div>

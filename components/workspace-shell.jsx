@@ -16,19 +16,19 @@ const NAV_GROUPS = [
   {
     label: 'Core',
     items: [
-      { href: '/flow', label: 'Deal Flow', desc: 'Community companies before indexes', primary: true },
-      { href: '/discover', label: 'Discover', desc: 'Thesis → ranked companies' },
-      { href: '/brief', label: 'Brief', desc: 'URL → memo' },
+      { href: '/flow', label: 'Deal Flow', desc: 'Campus companies → mandate', primary: true },
+      { href: '/discover', label: 'Discover', desc: 'Thesis search' },
+      { href: '/brief', label: 'Brief', desc: 'URL → one-pager' },
       { href: '/library', label: 'Library', desc: 'Saved briefs', badgeKey: 'pendingReview' },
-      { href: '/thesis', label: 'Thesis', desc: 'Pursue/pass signals', badgeKey: 'reviewedCount' },
+      { href: '/thesis', label: 'Thesis', desc: 'Pursue / pass', badgeKey: 'reviewedCount' },
     ],
   },
   {
     label: 'More',
     items: [
-      { href: '/schools', label: 'Schools', desc: 'Campus ecosystems → graph' },
-      { href: '/demo', label: 'Demo checklist', desc: 'Preflight before you record' },
-      { href: '/pilot', label: 'Coverage proof', desc: 'Data wedge, measured' },
+      { href: '/schools', label: 'Schools', desc: 'Tier-1 ecosystems' },
+      { href: '/demo', label: 'Demo', desc: 'Recording checklist' },
+      { href: '/pilot', label: 'Coverage', desc: 'Proof numbers' },
     ],
   },
 ]
@@ -66,8 +66,8 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
             <Link href="/" className="mb-3 flex items-center gap-3">
               <div className="m-logo text-[12px]">M</div>
               <div className="min-w-0">
-                <div className="text-[14px] font-semibold text-white" style={{ fontFamily: 'var(--m-serif)' }}>Meridian</div>
-                <div className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>Change firm anytime</div>
+                <div className="m-serif text-[15px] text-white">Meridian</div>
+                <div className="text-[11px]" style={{ color: 'var(--m-sidebar-muted)' }}>Change firm anytime</div>
               </div>
             </Link>
             <FundSwitcher variant="sidebar" onChange={refreshSnap} />
@@ -76,7 +76,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
           <nav className="flex-1 overflow-y-auto px-3 py-4">
             {NAV_GROUPS.map(group => (
               <div key={group.label} className="mb-5 last:mb-0">
-                <div className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--m-muted-2)' }}>
+                <div className="mb-1.5 px-2 text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--m-sidebar-muted)' }}>
                   {group.label}
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -94,7 +94,7 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                             <span className="text-[13px]">{item.label}</span>
                             {badge != null && <span className="m-nav-badge">{badge}</span>}
                           </div>
-                          <div className="text-[11px] font-normal" style={{ color: 'var(--m-muted-2)' }}>{item.desc}</div>
+                          <div className="m-nav-desc mt-0.5 text-[11px] font-normal leading-snug">{item.desc}</div>
                         </div>
                       </Link>
                     )
@@ -108,13 +108,13 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
             <Link href="/fund" className="m-nav-item m-nav-item-rich">
               <div className="min-w-0 flex-1">
                 <div className="text-[13px] font-medium">Fund settings</div>
-                <div className="truncate text-[11px]" style={{ color: 'var(--m-muted-2)' }}>Thesis & portfolio</div>
+                <div className="m-nav-desc truncate text-[11px]">Thesis & portfolio</div>
               </div>
             </Link>
 
             {health && (
-              <div className="mt-3 rounded-lg border px-3 py-2.5" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface-2)' }}>
-                <div className="mb-2 text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--m-muted-2)' }}>
+              <div className="m-sidebar-panel mt-3 px-3 py-2.5">
+                <div className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: 'var(--m-sidebar-muted)' }}>
                   Status
                 </div>
                 {(() => {
@@ -135,11 +135,11 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
                     return (
                       <>
                         <div className="flex justify-between py-0.5 text-[11px]">
-                          <span style={{ color: 'var(--m-muted)' }}>Core systems</span>
-                          <span className="font-medium" style={{ color: '#6ee7b7' }}>ok</span>
+                          <span style={{ color: 'var(--m-sidebar-text)' }}>Core systems</span>
+                          <span className="font-medium" style={{ color: '#a6e6c6' }}>ok</span>
                         </div>
                         {optionalOn.length > 0 && (
-                          <div className="mt-1 text-[10px] leading-relaxed" style={{ color: 'var(--m-muted-2)' }}>
+                          <div className="mt-1 text-[10px] leading-relaxed" style={{ color: 'var(--m-sidebar-muted)' }}>
                             {optionalOn.join(' · ')}
                           </div>
                         )}
@@ -149,8 +149,8 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
 
                   return failing.map(s => (
                     <div key={s.label} className="flex justify-between py-0.5 text-[11px]">
-                      <span style={{ color: 'var(--m-muted)' }}>{s.label}</span>
-                      <span className="font-medium" style={{ color: '#fcd34d' }}>off</span>
+                      <span style={{ color: 'var(--m-sidebar-text)' }}>{s.label}</span>
+                      <span className="font-medium" style={{ color: '#f0c674' }}>off</span>
                     </div>
                   ))
                 })()}
@@ -163,11 +163,11 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
           <header className="flex min-h-14 shrink-0 items-center justify-between gap-4 border-b px-5 py-2.5 sm:px-6" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
             <div className="min-w-0 flex-1">
               {title && (
-                <h1 className="truncate text-[16px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-font)' }}>
+                <h1 className="truncate text-[17px] font-semibold tracking-tight" style={{ color: 'var(--m-text)' }}>
                   {title}
                 </h1>
               )}
-              {subtitle && <p className="mt-0.5 truncate text-[13px]" style={{ color: 'var(--m-muted)' }}>{subtitle}</p>}
+              {subtitle && <p className="mt-0.5 truncate text-[13px] leading-snug" style={{ color: 'var(--m-muted)' }}>{subtitle}</p>}
             </div>
             <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
               {actions}

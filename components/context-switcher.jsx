@@ -94,8 +94,8 @@ export function FundSwitcher({ onChange, variant = 'bar' }) {
     <div className={dark ? 'space-y-2.5' : 'flex flex-wrap items-end gap-3'}>
       <label className={dark ? 'block' : 'flex flex-col gap-1'}>
         <span
-          className="text-[10px] font-semibold uppercase tracking-wider"
-          style={{ color: dark ? 'rgba(255,255,255,0.4)' : 'var(--m-muted-2)' }}
+          className="text-[10px] font-semibold uppercase tracking-[0.12em]"
+          style={{ color: dark ? 'var(--m-sidebar-muted)' : 'var(--m-muted-2)' }}
         >
           Firm
         </span>
@@ -115,8 +115,8 @@ export function FundSwitcher({ onChange, variant = 'bar' }) {
       {strategies.length > 0 && (
         <label className={dark ? 'block' : 'flex flex-col gap-1'}>
           <span
-            className="text-[10px] font-semibold uppercase tracking-wider"
-            style={{ color: dark ? 'rgba(255,255,255,0.4)' : 'var(--m-muted-2)' }}
+            className="text-[10px] font-semibold uppercase tracking-[0.12em]"
+            style={{ color: dark ? 'var(--m-sidebar-muted)' : 'var(--m-muted-2)' }}
           >
             Investing from
           </span>
