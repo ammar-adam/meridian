@@ -142,7 +142,18 @@ GET https://meridian-stg.vercel.app/api/cron/flow-digest
 Authorization: Bearer <CRON_SECRET>
 ```
 
-(Mondays preferred. Vercel Hobby allows **at most 2 crons** in `vercel.json` — extra schedules live in GitHub Actions: `prod-corpus-pump.yml`, `bulk-corpus.yml`, `index-check.yml`, `ingest.yml`.)
+(Mondays preferred. Vercel Hobby allows **at most 2 crons** in `vercel.json` — currently:
+`/api/cron/school-coverage` every 12h + `/api/cron/ingest` daily 06:30 UTC.
+Extra schedules live in GitHub Actions: `school-coverage.yml` (every 6h), `prod-corpus-pump.yml`, `bulk-corpus.yml`, `index-check.yml`, `ingest.yml`.)
+
+**Continuous school scraping (mentor thesis):** Set `CRON_SECRET` on Vercel **and** as a GitHub Actions secret. Jobs scout Tier-1 CA/US/UK campuses, run emerging-school discovery, and scrape university/incubator sources (Velocity/DMZ/CDL-style seeds). StartupHub bulk queries are school-ecosystem scoped — not generic world fill. Coverage compounds via cron + job log on `/schools`; do not pitch “agents” in the demo.
+
+| Job | Cadence | Auth |
+|---|---|---|
+| `/api/cron/school-coverage` | Vercel 12h + GHA 6h | `CRON_SECRET` |
+| `/api/cron/ingest` | Vercel daily | `CRON_SECRET` |
+| `/api/cron/scout-sweep` | GHA via school-coverage | `CRON_SECRET` + `PERPLEXITY_API_KEY` |
+| `bulk-corpus.yml` | Nightly (progressive, soft target) | `DATABASE_URL`, `STARTUPHUB_API_KEY` |
 
 Production: **https://meridian-stg.vercel.app**
 

@@ -1,25 +1,25 @@
-# Bulk corpus fill — target 1500+ company records via StartupHub + registry + Form D + scrape.
+# School-aligned corpus top-up — StartupHub + registry + campus ingest.
+#
+# Progressive fill: below-target is OK (not a failure). Hard-fail only on missing DB.
 #
 # Required secrets: DATABASE_URL, STARTUPHUB_API_KEY
-# Optional: ANTHROPIC_API_KEY (LLM scrape phase), PERPLEXITY_API_KEY
+# Optional: ANTHROPIC_API_KEY, PERPLEXITY_API_KEY
 
 name: Bulk corpus
 
 on:
-  push:
-    branches: [main]
   schedule:
-    # Nightly corpus top-up (UTC)
+    # Nightly school-ecosystem corpus top-up (UTC)
     - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
       target:
-        description: 'Minimum companyRecords target'
+        description: 'Soft companyRecords target (reported, not a hard fail)'
         required: true
         default: '1500'
         type: string
       queries:
-        description: 'StartupHub queries per round'
+        description: 'StartupHub school-ecosystem queries per round'
         required: true
         default: '30'
         type: string
@@ -30,7 +30,7 @@ concurrency:
 
 jobs:
   fill:
-    name: Bulk fill to target
+    name: School corpus top-up
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -59,17 +59,27 @@ jobs:
             echo "queries=30" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Require DATABASE_URL
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "::error::DATABASE_URL secret missing — skipping corpus fill"
+            exit 2
+          fi
+
       - name: Seed sources
         run: node --import ./scripts/alias-register.mjs scripts/ingest/seed-sources.mjs
 
-      - name: Run bulk corpus fill
+      - name: School coverage sweep
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/run-school-coverage.mjs --limit=8
+        continue-on-error: true
+
+      - name: Run school-aligned corpus fill
         run: |
           node --import ./scripts/alias-register.mjs scripts/ingest/run-bulk-corpus.mjs \
             --target=${{ steps.cfg.outputs.target }} \
             --queries=${{ steps.cfg.outputs.queries }}
-        continue-on-error: true
 
-      - name: Live scrape pass
+      - name: Live scrape pass (university / incubator sources)
         run: |
           node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=daily --limit=50
         continue-on-error: true

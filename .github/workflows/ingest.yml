@@ -72,6 +72,10 @@ jobs:
       - name: Seed sources
         run: node --import ./scripts/alias-register.mjs scripts/ingest/seed-sources.mjs
 
+      - name: School coverage sweep
+        run: node --import ./scripts/alias-register.mjs scripts/ingest/run-school-coverage.mjs --limit=6
+        continue-on-error: true
+
       - name: Run ingestion
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=${{ steps.cadence.outputs.value }} --limit=50
 

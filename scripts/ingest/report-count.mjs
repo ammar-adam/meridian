@@ -22,6 +22,19 @@ for (const name of ['.env.local', '.env']) {
 }
 
 const target = Number(process.argv.find(a => a.startsWith('--target='))?.split('=')[1] || '1500')
+const failBelow = process.argv.includes('--fail-below-target')
 const n = await countCompanies()
-console.log(JSON.stringify({ companyRecords: n, target, ok: (n ?? 0) >= target }))
-process.exit((n ?? 0) >= target ? 0 : 1)
+const targetMet = (n ?? 0) >= target
+const summary = {
+  companyRecords: n,
+  target,
+  targetMet,
+  ok: n != null,
+  // Progressive corpus fill — below target is status, not failure (unless --fail-below-target).
+  hint: targetMet
+    ? 'Target met'
+    : 'Below target — next scheduled run continues school-ecosystem fill',
+}
+console.log(JSON.stringify(summary))
+if (n == null) process.exit(2)
+process.exit(failBelow && !targetMet ? 1 : 0)

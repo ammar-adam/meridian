@@ -1,4 +1,14 @@
 {
+  "crons": [
+    {
+      "path": "/api/cron/school-coverage",
+      "schedule": "0 */12 * * *"
+    },
+    {
+      "path": "/api/cron/ingest",
+      "schedule": "30 6 * * *"
+    }
+  ],
   "functions": {
     "app/api/scrape/route.js": {
       "maxDuration": 30
@@ -79,6 +89,9 @@
       "maxDuration": 60
     },
     "app/api/cron/bulk-fill/route.js": {
+      "maxDuration": 300
+    },
+    "app/api/cron/school-coverage/route.js": {
       "maxDuration": 300
     },
     "app/api/team/route.js": {

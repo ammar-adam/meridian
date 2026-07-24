@@ -1,0 +1,109 @@
+# Continuous school coverage — Tier-1 scout + emerging discovery + campus ingest.
+# Hits deployed cron routes (no repo DB secrets required for the HTTP path).
+#
+# Optional secrets:
+#   CRON_SECRET          — Authorization bearer for /api/cron/*
+#   MERIDIAN_STAGING_URL — default https://meridian-stg.vercel.app
+#   MERIDIAN_PROD_URL    — optional second host
+
+name: School coverage
+
+on:
+  schedule:
+    # Every 6 hours — continuous campus ecosystem coverage
+    - cron: '15 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: school-coverage
+  cancel-in-progress: false
+
+jobs:
+  coverage:
+    name: Scout schools + ingest campus sources
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        host:
+          - staging
+    steps:
+      - name: Resolve host
+        id: host
+        run: |
+          if [ "${{ matrix.host }}" = "staging" ]; then
+            echo "url=${MERIDIAN_STAGING_URL:-https://meridian-stg.vercel.app}" >> "$GITHUB_OUTPUT"
+          else
+            echo "url=${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: School coverage cron
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          URL: ${{ steps.host.outputs.url }}
+        run: |
+          set -e
+          echo "Hitting $URL/api/cron/school-coverage"
+          if [ -z "$CRON_SECRET" ]; then
+            echo "::warning::CRON_SECRET not set — school coverage HTTP cron skipped (set repo secret)"
+            exit 0
+          fi
+          CODE=$(curl -sS -o coverage.json -w "%{http_code}" -m 280 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$URL/api/cron/school-coverage" || true)
+          echo "HTTP $CODE"
+          head -c 2000 coverage.json || true
+          echo
+          # 503 = CRON_SECRET not on Vercel; treat as soft skip (not a noisy failure)
+          if [ "$CODE" = "503" ] || [ "$CODE" = "401" ]; then
+            echo "::warning::school-coverage auth/config issue ($CODE) — set CRON_SECRET on Vercel + GitHub"
+            exit 0
+          fi
+          if [ "$CODE" != "200" ]; then
+            echo "::error::school-coverage failed HTTP $CODE"
+            exit 1
+          fi
+
+      - name: Campus source ingest
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          URL: ${{ steps.host.outputs.url }}
+        run: |
+          set -e
+          if [ -z "$CRON_SECRET" ]; then
+            echo "skip ingest — no CRON_SECRET"
+            exit 0
+          fi
+          CODE=$(curl -sS -o ingest.json -w "%{http_code}" -m 90 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$URL/api/cron/ingest?cadence=daily&limit=12&indexCheck=1" || true)
+          echo "ingest HTTP $CODE"
+          head -c 1500 ingest.json || true
+          echo
+          if [ "$CODE" = "503" ] || [ "$CODE" = "401" ]; then
+            echo "::warning::ingest auth/config ($CODE)"
+            exit 0
+          fi
+          if [ "$CODE" != "200" ]; then
+            echo "::warning::ingest soft-fail HTTP $CODE (coverage already attempted)"
+            exit 0
+          fi
+
+      - name: Mandate scout sweep
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          URL: ${{ steps.host.outputs.url }}
+        run: |
+          set -e
+          if [ -z "$CRON_SECRET" ]; then
+            exit 0
+          fi
+          CODE=$(curl -sS -o scout.json -w "%{http_code}" -m 280 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "$URL/api/cron/scout-sweep" || true)
+          echo "scout HTTP $CODE"
+          head -c 1200 scout.json || true
+          echo
+          # Soft: scout needs Perplexity; never fail the workflow for optional scout
+          exit 0

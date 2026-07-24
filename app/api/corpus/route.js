@@ -13,15 +13,33 @@ export const dynamic = 'force-dynamic'
  * Query: ?force=1 bypasses 60s throttle (still capped by Vercel maxDuration).
  */
 export async function GET(req) {
-  const force = new URL(req.url).searchParams.get('force') === '1'
-  const target = Number(new URL(req.url).searchParams.get('target') || 2500) || 2500
+  const params = new URL(req.url).searchParams
+  const force = params.get('force') === '1'
+  const statusOnly = params.get('status') === '1'
+  const target = Number(params.get('target') || 2500) || 2500
 
   const before = await countCompanies()
+
+  // Fast path for smoke / dashboards — no StartupHub or scrape work.
+  if (statusOnly) {
+    return Response.json({
+      ok: true,
+      target,
+      companyRecords: before,
+      delta: 0,
+      bulkFill: { ran: false, reason: 'status_only' },
+      at: new Date().toISOString(),
+      hint: before != null && before < target
+        ? 'Corpus below target — use ?force=1 or school-coverage cron'
+        : 'Target met',
+    })
+  }
+
   let bulkFill = null
   let indexCheck = null
 
   try {
-    indexCheck = await indexCheckIfStale({ limit: force ? 40 : 15, force })
+    indexCheck = await indexCheckIfStale({ limit: force ? 40 : 10, force })
   } catch (e) {
     indexCheck = { ran: false, error: e.message }
   }
@@ -29,8 +47,8 @@ export async function GET(req) {
   try {
     bulkFill = await bulkFillIfBelowTarget({
       target,
-      queryBatch: force ? 35 : 30,
-      scrapeLimit: force ? 15 : 12,
+      queryBatch: force ? 25 : 12,
+      scrapeLimit: force ? 12 : 6,
       force,
     })
   } catch (e) {
@@ -67,7 +85,7 @@ export async function GET(req) {
     indexCheck,
     at: new Date().toISOString(),
     hint: before != null && before < target
-      ? 'Corpus below target — Vercel crons and /api/pilot also advance bulk fill'
+      ? 'Corpus below target — school-coverage cron + /api/pilot advance fill'
       : 'Target met',
   })
 }

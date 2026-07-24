@@ -7,6 +7,7 @@ import { recordObservations } from '@/lib/server/truth-ledger'
 import { seedSourcesFromBundledFile, runIngestBatch } from '@/lib/server/ingest-batch'
 import { runIndexCheckBatch } from '@/lib/server/index-check-batch'
 import { countCompanies } from '@/lib/server/company-records'
+import { runSchoolCoverageSweep } from '@/lib/server/school-scout'
 
 export const maxDuration = 300
 export const dynamic = 'force-dynamic'
@@ -22,7 +23,7 @@ const REGISTRY_KEYWORD_SETS = [
  * Auth: Authorization: Bearer CRON_SECRET
  *
  * Query params:
- *   phase=startuphub|registry|formd|scrape|index|all (default all)
+ *   phase=startuphub|registry|formd|scrape|index|schools|all (default all)
  *   offset=N — StartupHub query offset (for chunked runs)
  *   queries=25 — StartupHub queries per request
  *   registryLimit=400 — domain registry probe cap
@@ -53,6 +54,17 @@ export async function GET(req) {
 
   const out = { ok: true, phase, at: new Date().toISOString() }
   const before = await countCompanies()
+
+  if (phase === 'all' || phase === 'schools') {
+    try {
+      out.schools = await runSchoolCoverageSweep({
+        limit: Math.min(Number(url.searchParams.get('schoolLimit') || '6'), 13),
+        queriesPerSchool: 1,
+      })
+    } catch (e) {
+      out.schools = { error: e.message }
+    }
+  }
 
   if (phase === 'all' || phase === 'startuphub') {
     out.startuphub = await runStartupHubBulk({

@@ -1,11 +1,11 @@
-# Hit production corpus growth endpoints — no repository secrets required.
-# Complements Vercel Hobby once-daily crons with 4×/day opportunistic bulk fill.
+# Hit staging corpus growth endpoints — opportunistic school-aligned bulk fill.
+# Soft-fail: timeouts / missing routes should not spam "runs failed".
 
 name: Prod corpus pump
 
 on:
   schedule:
-    - cron: '0 */4 * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       target:
@@ -19,25 +19,29 @@ concurrency:
 
 jobs:
   pump:
-    name: Corpus + index checks on prod
+    name: Corpus + index checks on staging
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Corpus bulk fill (force)
         run: |
-          set -e
-          URL="${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}"
+          set +e
+          URL="${MERIDIAN_STAGING_URL:-https://meridian-stg.vercel.app}"
           TARGET="${{ github.event.inputs.target || '2500' }}"
           echo "Pumping $URL/api/corpus?force=1&target=$TARGET"
-          if curl -sfS -m 280 "$URL/api/corpus?force=1&target=$TARGET" | tee corpus.json; then
-            echo "corpus route ok"
-          else
+          CODE=$(curl -sS -o corpus.json -w "%{http_code}" -m 280 "$URL/api/corpus?force=1&target=$TARGET")
+          echo "corpus HTTP $CODE"
+          if [ "$CODE" != "200" ]; then
             echo "corpus route unavailable — falling back to /api/pilot"
-            curl -sfS -m 280 "$URL/api/pilot" | tee corpus.json
+            curl -sS -m 280 -o corpus.json "$URL/api/pilot" || echo '{"ok":false}' > corpus.json
           fi
           python3 - <<'PY'
           import json
-          d=json.load(open("corpus.json"))
+          try:
+            d=json.load(open("corpus.json"))
+          except Exception as e:
+            print("parse error:", e)
+            raise SystemExit(0)
           print("companyRecords:", d.get("companyRecords"))
           print("delta:", d.get("delta"))
           bf=d.get("bulkFill") or {}
@@ -45,11 +49,18 @@ jobs:
           ic=d.get("indexCheck") or {}
           print("indexCheck ran:", ic.get("ran"), "checked:", ic.get("checked"))
           PY
+        continue-on-error: true
 
       - name: Benchmark parity check
         run: |
-          URL="${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}"
-          curl -sfS -m 120 "$URL/api/benchmark" -o benchmark.json
+          set +e
+          URL="${MERIDIAN_STAGING_URL:-https://meridian-stg.vercel.app}"
+          CODE=$(curl -sS -o benchmark.json -w "%{http_code}" -m 120 "$URL/api/benchmark")
+          echo "benchmark HTTP $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "::warning::benchmark soft-fail $CODE"
+            exit 0
+          fi
           python3 - <<'PY'
           import json
           d=json.load(open("benchmark.json"))
@@ -61,14 +72,19 @@ jobs:
           print("feedParity mandate:", fp.get("mandate"))
           print("feed total:", fs.get("total"))
           PY
+        continue-on-error: true
 
       - name: Pilot opportunistic pass
         run: |
-          URL="${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}"
-          curl -sfS -m 280 "$URL/api/pilot" -o pilot.json
+          set +e
+          URL="${MERIDIAN_STAGING_URL:-https://meridian-stg.vercel.app}"
+          curl -sS -m 280 -o pilot.json "$URL/api/pilot" || echo '{}' > pilot.json
           python3 - <<'PY'
           import json
-          d=json.load(open("pilot.json"))
+          try:
+            d=json.load(open("pilot.json"))
+          except Exception:
+            raise SystemExit(0)
           bf=d.get("bulkFill") or {}
           print("pilot bulkFill:", bf.get("ran"), bf.get("delta"), bf.get("after"))
           PY

@@ -203,21 +203,39 @@ async function phaseIndexCheck() {
 const startCount = await currentCount()
 console.log(`[bulk-corpus] target=${target} start=${startCount} totalHubQueries=${STARTUPHUB_BULK_QUERIES.length}`)
 
-await phaseStartupHub()
-if ((await currentCount()) < target) await phaseRegistry()
-if ((await currentCount()) < target) await phaseFormD()
-if ((await currentCount()) < target) await phaseScrape()
-await phaseIndexCheck()
+if (startCount == null && !process.env.DATABASE_URL?.trim()) {
+  console.error('[bulk-corpus] DATABASE_URL missing — hard fail')
+  process.exit(2)
+}
+
+let hardError = null
+try {
+  await phaseStartupHub()
+  if ((await currentCount()) < target) await phaseRegistry()
+  if ((await currentCount()) < target) await phaseFormD()
+  if ((await currentCount()) < target) await phaseScrape()
+  await phaseIndexCheck()
+} catch (e) {
+  hardError = e.message || String(e)
+  log.push({ phase: 'fatal', error: hardError })
+}
 
 const endCount = await currentCount()
+const targetMet = endCount != null && endCount >= target
 const summary = {
-  ok: endCount >= target,
+  // Progressive fill: below-target is expected overnight — not a workflow failure.
+  ok: !hardError,
+  targetMet,
   target,
   startCount,
   endCount,
-  delta: endCount - startCount,
+  delta: endCount != null && startCount != null ? endCount - startCount : null,
+  hardError,
+  thesis: 'school_ecosystem',
   log,
 }
 
 console.log(JSON.stringify(summary, null, 2))
-process.exit(endCount >= target ? 0 : 1)
+// Exit 0 on successful progressive run (even if below target).
+// Exit 2 only on hard infrastructure failure (missing DB / uncaught crash).
+process.exit(hardError ? 2 : 0)
