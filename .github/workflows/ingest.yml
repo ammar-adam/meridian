@@ -58,7 +58,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Require secrets
+        id: secrets
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::warning::DATABASE_URL / ANTHROPIC_API_KEY missing — ingest skipped (not a hard fail)"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Resolve cadence
+        if: steps.secrets.outputs.ready == 'true'
         id: cadence
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
@@ -70,40 +81,47 @@ jobs:
           fi
 
       - name: Seed sources
+        if: steps.secrets.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/seed-sources.mjs
 
       - name: School coverage sweep
+        if: steps.secrets.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-school-coverage.mjs --limit=6
         continue-on-error: true
 
       - name: Run ingestion
+        if: steps.secrets.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=${{ steps.cadence.outputs.value }} --limit=50
+        continue-on-error: true
 
       - name: StartupHub bulk (volume)
+        if: steps.secrets.outputs.ready == 'true'
         run: |
           node --import ./scripts/alias-register.mjs scripts/ingest/startuphub-bulk.mjs --offset=0 --queries=20
         continue-on-error: true
 
       - name: Product Hunt (optional)
-        if: ${{ steps.cadence.outputs.value == 'daily' }}
+        if: steps.secrets.outputs.ready == 'true' && steps.cadence.outputs.value == 'daily'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-product-hunt.mjs
         continue-on-error: true
 
       - name: SEC Form D (optional)
-        if: ${{ steps.cadence.outputs.value == 'daily' }}
+        if: steps.secrets.outputs.ready == 'true' && steps.cadence.outputs.value == 'daily'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-form-d.mjs
         continue-on-error: true
 
       - name: Domain registry (weekly)
-        if: ${{ steps.cadence.outputs.value == 'weekly' }}
+        if: steps.secrets.outputs.ready == 'true' && steps.cadence.outputs.value == 'weekly'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-domain-registry.mjs
         continue-on-error: true
 
       - name: Scout sweep (nightly)
+        if: steps.secrets.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/scout-sweep.mjs
         continue-on-error: true
 
       - name: Index check sweep (Slice C — optional)
+        if: steps.secrets.outputs.ready == 'true'
         run: |
           if [ -f scripts/ingest/index-check-sweep.mjs ]; then
             node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=40

@@ -31,7 +31,13 @@ jobs:
         run: npm ci
 
       - name: Run index-check sweep
-        run: node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=80
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           STARTUPHUB_API_KEY: ${{ secrets.STARTUPHUB_API_KEY }}
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$STARTUPHUB_API_KEY" ]; then
+            echo "::warning::DATABASE_URL / STARTUPHUB_API_KEY missing — index-check skipped"
+            exit 0
+          fi
+          node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=80
+        continue-on-error: true

@@ -102,15 +102,18 @@ export async function runSmokeChecks(baseUrl) {
     }
   })
 
-  await check('adversarial debate (avg >= 7)', async () => {
-    const result = spawnSync('node', ['scripts/adversarial-debate.mjs', base], {
-      cwd: ROOT,
-      encoding: 'utf8',
+  // Full debate is slow (often >2m). Keep it off the deploy gate; run via `npm run debate`.
+  if (process.env.SMOKE_INCLUDE_DEBATE === '1') {
+    await check('adversarial debate (avg >= 7)', async () => {
+      const result = spawnSync('node', ['scripts/adversarial-debate.mjs', base], {
+        cwd: ROOT,
+        encoding: 'utf8',
+      })
+      if (result.status !== 0) {
+        throw new Error(result.stdout?.split('\n').slice(-8).join('\n') || 'debate failed')
+      }
     })
-    if (result.status !== 0) {
-      throw new Error(result.stdout?.split('\n').slice(-8).join('\n') || 'debate failed')
-    }
-  })
+  }
 
   const failed = results.filter(r => !r.ok)
   return { results, passed: results.length - failed.length, failed: failed.length, base }

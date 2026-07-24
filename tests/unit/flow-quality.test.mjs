@@ -36,4 +36,25 @@ describe('flow-quality', () => {
     expect(companies).toHaveLength(2)
     expect(hiddenCount).toBe(1)
   })
+
+  it('hides thin unverified university_scout fluff', () => {
+    const rows = [
+      {
+        name: 'SCADABLE',
+        source: 'incubator',
+        domain: 'scadable.com',
+        personName: 'Ada',
+        cohortDate: '2026-05-01',
+      },
+      {
+        name: 'Setori',
+        source: 'university_scout',
+        unverified: true,
+        provenance: 'AI-researched, unverified',
+      },
+    ]
+    const { companies, hiddenCount } = filterFlowFeed(rows)
+    expect(companies.map(c => c.name)).toEqual(['SCADABLE'])
+    expect(hiddenCount).toBe(1)
+  })
 })

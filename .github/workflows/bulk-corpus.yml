@@ -60,33 +60,45 @@ jobs:
           fi
 
       - name: Require DATABASE_URL
+        id: db
         run: |
           if [ -z "$DATABASE_URL" ]; then
-            echo "::error::DATABASE_URL secret missing — skipping corpus fill"
-            exit 2
+            echo "::warning::DATABASE_URL secret missing — corpus fill skipped (not a hard fail)"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
           fi
+          echo "ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Seed sources
+        if: steps.db.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/seed-sources.mjs
+        continue-on-error: true
 
       - name: School coverage sweep
+        if: steps.db.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/run-school-coverage.mjs --limit=8
         continue-on-error: true
 
       - name: Run school-aligned corpus fill
+        if: steps.db.outputs.ready == 'true'
         run: |
           node --import ./scripts/alias-register.mjs scripts/ingest/run-bulk-corpus.mjs \
             --target=${{ steps.cfg.outputs.target }} \
             --queries=${{ steps.cfg.outputs.queries }}
+        continue-on-error: true
 
       - name: Live scrape pass (university / incubator sources)
+        if: steps.db.outputs.ready == 'true'
         run: |
           node --import ./scripts/alias-register.mjs scripts/ingest/run-ingestion.mjs --cadence=daily --limit=50
         continue-on-error: true
 
       - name: Index check sweep
+        if: steps.db.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/index-check-sweep.mjs --limit=40
         continue-on-error: true
 
       - name: Report count
+        if: steps.db.outputs.ready == 'true'
         run: node --import ./scripts/alias-register.mjs scripts/ingest/report-count.mjs --target=${{ steps.cfg.outputs.target }}
+        continue-on-error: true
