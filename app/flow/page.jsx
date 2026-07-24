@@ -60,7 +60,7 @@ function FlowContent() {
   const [lastVisit, setLastVisit] = useState(null)
   const [watching, setWatching] = useState(false)
   const [sourceFilter, setSourceFilter] = useState('all')
-  const [briefableOnly, setBriefableOnly] = useState(true)
+  const [briefableOnly, setBriefableOnly] = useState(false)
 
   const loadContext = useCallback(() => {
     const profile = getFundProfile()
@@ -120,13 +120,18 @@ function FlowContent() {
 
   useEffect(() => {
     loadContext()
+    let debounceTimer = null
     const onCtx = () => {
       loadContext()
-      loadFlow()
+      // Debounce: firm/vehicle switches + seed events can fire in a burst;
+      // one Flow fetch is enough and protects the rate-limit budget.
+      if (debounceTimer) clearTimeout(debounceTimer)
+      debounceTimer = setTimeout(() => loadFlow(), 180)
     }
     window.addEventListener('meridian-context-change', onCtx)
     window.addEventListener('meridian-flow-change', loadContext)
     return () => {
+      if (debounceTimer) clearTimeout(debounceTimer)
       window.removeEventListener('meridian-context-change', onCtx)
       window.removeEventListener('meridian-flow-change', loadContext)
     }
@@ -427,6 +432,24 @@ function FlowContent() {
             primaryLabel="Open Discover"
             secondaryHref="/fund"
             secondaryLabel="Edit mandate"
+          />
+        )}
+
+        {!loading && companies?.length > 0 && feedRows.length === 0 && (
+          <EmptyState
+            title="All rows are filtered out"
+            description={
+              briefableOnly
+                ? 'Brief-ready is on — showing only companies with a domain. Turn it off to see founder-only rows, or clear the source filter.'
+                : 'No companies match this source filter. Switch back to All sources.'
+            }
+            primaryLabel={briefableOnly ? 'Show all rows' : 'Clear source filter'}
+            onPrimary={() => {
+              if (briefableOnly) setBriefableOnly(false)
+              else setSourceFilter('all')
+            }}
+            secondaryHref="/discover"
+            secondaryLabel="Open Discover"
           />
         )}
 

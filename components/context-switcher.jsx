@@ -34,22 +34,22 @@ function useFundContext(onChange) {
 
   function changeFirm(id) {
     if (!id) return
+    // setActiveFundId → writeStore already dispatches meridian-context-change.
     setActiveFundId(id)
     const next = getFundProfile(id)
     setActiveId(id)
     setFund(next)
     setStrategyId(next?.activeStrategyId || getActiveStrategy(next)?.id || '')
     onChange?.()
-    window.dispatchEvent(new Event('meridian-context-change'))
   }
 
   function changeVehicle(id) {
     if (!id) return
+    // setActiveStrategyId → writeStore already dispatches meridian-context-change.
     setActiveStrategyId(id)
     setStrategyId(id)
     setFund(getFundProfile())
     onChange?.()
-    window.dispatchEvent(new Event('meridian-context-change'))
   }
 
   return { funds, fund, activeId, strategyId, changeFirm, changeVehicle }

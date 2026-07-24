@@ -30,9 +30,9 @@ export default function OnboardingHost() {
   function handleStart() {
     markWelcomeDone()
     setOpen(false)
-    // No active fund yet → fund setup; otherwise Brief with empty URL
-    if (!getFundProfile()) router.push('/fund/setup?next=/flow')
-    else router.push('/flow')
+    // Hard navigate — same hydration-safe pattern as landing CTAs.
+    if (!getFundProfile()) window.location.assign('/fund/setup?next=/flow')
+    else window.location.assign('/flow')
   }
 
   return (

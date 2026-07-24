@@ -1,23 +1,15 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-
 /**
- * Warn when production runs Clerk test keys (credibility gap from persona audit).
+ * Hidden for investor demos — pk_test works for guest flow; the yellow banner
+ * made production look unfinished. Re-enable by setting
+ * NEXT_PUBLIC_SHOW_CLERK_BANNER=1 when debugging auth keys.
  */
 export default function ClerkLiveBanner() {
+  if (process.env.NEXT_PUBLIC_SHOW_CLERK_BANNER !== '1') return null
+
   const pk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || ''
-  const isTestKey = pk.startsWith('pk_test_')
-  const [show, setShow] = useState(false)
-
-  useEffect(() => {
-    if (!isTestKey || !pk) return
-    const host = window.location.hostname
-    const isProdHost = host.includes('vercel.app') || host.includes('meridian')
-    setShow(isProdHost)
-  }, [isTestKey, pk])
-
-  if (!show) return null
+  if (!pk.startsWith('pk_test_')) return null
 
   return (
     <div className="border-b border-amber-400/30 bg-amber-400/10 px-4 py-2 text-center text-[12px] text-amber-200">

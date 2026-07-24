@@ -1,9 +1,13 @@
 'use client'
 
 import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import { useMeridianClerk } from '@/app/providers'
 
 export default function AuthBar({ variant = 'default' }) {
-  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) return null
+  const { clerkEnabled } = useMeridianClerk()
+  // Only render Clerk UI when ClerkProvider is actually mounted — mismatched
+  // keys used to crash the landing/workspace with "useAuth outside provider".
+  if (!clerkEnabled) return null
 
   const isLanding = variant === 'landing'
 

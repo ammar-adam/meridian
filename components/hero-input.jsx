@@ -15,8 +15,17 @@ export default function HeroInput({ variant = 'default' }) {
 
   function routeInput(raw) {
     const text = raw?.trim()
+    const go = (path) => {
+      // Landing: hard navigate so submit is never swallowed during Clerk hydration.
+      if (isLanding && typeof window !== 'undefined') {
+        window.location.assign(path)
+        return
+      }
+      router.push(path)
+    }
+
     if (!text) {
-      router.push('/brief')
+      go('/brief')
       return
     }
 
@@ -25,7 +34,7 @@ export default function HeroInput({ variant = 'default' }) {
     if (intake.kind === 'company_url' || intake.kind === 'company_urls') {
       const url = intake.companyUrls?.[0]
       if (url) {
-        router.push(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
+        go(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
         return
       }
     }
@@ -33,7 +42,7 @@ export default function HeroInput({ variant = 'default' }) {
     if (intake.kind === 'fund_url') {
       sessionStorage.setItem('meridian_setup_url', intake.fundUrl)
       if (intake.fundName) sessionStorage.setItem('meridian_setup_name', intake.fundName)
-      router.push('/fund/setup')
+      go('/fund/setup')
       return
     }
 
@@ -42,7 +51,7 @@ export default function HeroInput({ variant = 'default' }) {
       const first = intake.pipeline.find(c => c.url || c.domain)
       if (first) {
         const url = first.url || `https://${first.domain}`
-        router.push(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
+        go(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
         return
       }
     }
@@ -50,14 +59,14 @@ export default function HeroInput({ variant = 'default' }) {
     if (intake.kind === 'thesis') {
       setPendingThesis(text, true)
       if (!hasFundProfile()) {
-        router.push('/fund/setup?next=' + encodeURIComponent('/flow'))
+        go('/fund/setup?next=' + encodeURIComponent('/flow'))
         return
       }
-      router.push('/flow')
+      go('/flow')
       return
     }
 
-    router.push(`/brief?url=${encodeURIComponent(text)}&autogen=1`)
+    go(`/brief?url=${encodeURIComponent(text)}&autogen=1`)
   }
 
   function handleSubmit(e) {
@@ -66,15 +75,23 @@ export default function HeroInput({ variant = 'default' }) {
   }
 
   async function handleIntake(payload) {
+    const go = (path) => {
+      if (isLanding && typeof window !== 'undefined') {
+        window.location.assign(path)
+        return
+      }
+      router.push(path)
+    }
+
     if (payload.kind === 'company_url' || payload.kind === 'company_urls') {
       const url = payload.companyUrls?.[0]
-      if (url) router.push(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
+      if (url) go(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
       return
     }
     if (payload.kind === 'fund_url') {
       sessionStorage.setItem('meridian_setup_url', payload.fundUrl)
       if (payload.fundName) sessionStorage.setItem('meridian_setup_name', payload.fundName)
-      router.push('/fund/setup')
+      go('/fund/setup')
       return
     }
     if (payload.kind === 'pipeline' && payload.pipeline?.length) {
@@ -82,17 +99,17 @@ export default function HeroInput({ variant = 'default' }) {
       const first = payload.pipeline.find(c => c.url || c.domain)
       if (first) {
         const url = first.url || `https://${first.domain}`
-        router.push(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
+        go(`/brief?url=${encodeURIComponent(url)}&autogen=1`)
       }
       return
     }
     if (payload.kind === 'thesis') {
       setPendingThesis(payload.thesis, true)
       if (!hasFundProfile()) {
-        router.push('/fund/setup?next=' + encodeURIComponent('/flow'))
+        go('/fund/setup?next=' + encodeURIComponent('/flow'))
         return
       }
-      router.push('/flow')
+      go('/flow')
     }
   }
 
@@ -113,6 +130,7 @@ export default function HeroInput({ variant = 'default' }) {
       {isLanding && (
         <IntakeDropzone
           compact
+          variant="landing"
           onIntake={handleIntake}
           hint="Drop company URL, contacts, or fund website"
         />

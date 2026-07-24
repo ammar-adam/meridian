@@ -28,10 +28,14 @@ function sourceCacheKey(thesis, fundContext) {
 }
 
 export async function POST(req) {
-  const limited = await enforceRateLimit(req, 'source')
-  if (limited) return limited
-
   const { thesis, fundContext, forceRegenerate, fastPath } = await req.json()
+
+  // Fast path is local incubator matching — don't burn the Discover rate budget.
+  // Full refine still counts so rehearsal spam can't runaway Anthropic spend.
+  if (!fastPath) {
+    const limited = await enforceRateLimit(req, 'source')
+    if (limited) return limited
+  }
 
   if (!thesis?.trim()) {
     return Response.json({ error: 'Thesis is required' }, { status: 400 })

@@ -9,7 +9,7 @@ export const maxDuration = 30
  * Incubator seeds + durable company records (including scout), mandate-matched.
  */
 export async function POST(req) {
-  const limited = await enforceRateLimit(req, 'source')
+  const limited = await enforceRateLimit(req, 'flow')
   if (limited) return limited
 
   const { thesis, fundContext } = await req.json()

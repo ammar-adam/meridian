@@ -1,9 +1,10 @@
 'use client'
 
 import { useAuth } from '@clerk/nextjs'
+import { useMeridianClerk } from '@/app/providers'
 
 export default function DeviceOnlyNotice({ className = '' }) {
-  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+  const { clerkEnabled } = useMeridianClerk()
 
   if (!clerkEnabled) {
     return (

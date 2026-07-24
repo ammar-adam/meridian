@@ -62,4 +62,18 @@ describe('fund seeds + ensureActiveFund', () => {
     expect(panache.strategies.length).toBeGreaterThanOrEqual(2)
     expect(panache.strategies.map(s => s.name)).toContain('First check')
   })
+
+  it('reseeds when marker is set but funds store is empty', async () => {
+    const { seedFundProfilesIfEmpty, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
+    const { getAllFunds, getFundProfile } = await import('../../lib/fund-profile.js')
+
+    seedFundProfilesIfEmpty()
+    localStorage.setItem('meridian_fund_seeds_applied', '1')
+    localStorage.removeItem('meridian_funds_store')
+
+    expect(getAllFunds().length).toBe(0)
+    seedFundProfilesIfEmpty()
+    expect(getAllFunds().length).toBe(2)
+    expect(getFundProfile()?.id).toBe(PANACHE_VENTURES.id)
+  })
 })

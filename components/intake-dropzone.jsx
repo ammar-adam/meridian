@@ -8,10 +8,12 @@ export default function IntakeDropzone({
   accept = '.csv,.txt,.vcf,text/plain',
   hint = 'Drop a file, paste a URL, portfolio CSV, or contact export',
   compact = false,
+  variant = 'default',
   className = '',
 }) {
   const [dragging, setDragging] = useState(false)
   const [busy, setBusy] = useState(false)
+  const isLanding = variant === 'landing'
 
   const handle = useCallback(async (payload) => {
     if (!payload || payload.kind === 'empty' || payload.kind === 'unknown') return
@@ -53,6 +55,13 @@ export default function IntakeDropzone({
     }
   }
 
+  const idleBorder = isLanding ? 'var(--ml-line-strong)' : 'var(--m-border-strong)'
+  const idleBg = isLanding ? 'var(--ml-panel)' : 'var(--m-surface-2)'
+  const dragBorder = isLanding ? 'var(--ml-accent)' : 'var(--m-accent)'
+  const dragBg = isLanding ? 'rgba(159, 227, 192, 0.1)' : 'var(--m-accent-soft)'
+  const titleColor = isLanding ? 'var(--ml-text)' : 'var(--m-text)'
+  const hintColor = isLanding ? 'var(--ml-muted)' : 'var(--m-muted)'
+
   return (
     <div
       onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
@@ -60,22 +69,22 @@ export default function IntakeDropzone({
       onDrop={onDrop}
       onPaste={onPaste}
       tabIndex={0}
-      className={`rounded-md border border-dashed transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--m-accent-soft)] ${
+      className={`rounded-lg border border-dashed transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--m-accent-soft)] ${
         compact ? 'px-4 py-5' : 'px-6 py-8'
       } ${className}`}
       style={{
-        borderColor: dragging ? 'var(--m-accent)' : 'var(--m-border-strong)',
-        background: dragging ? 'var(--m-accent-soft)' : 'var(--m-surface-2)',
+        borderColor: dragging ? dragBorder : idleBorder,
+        background: dragging ? dragBg : idleBg,
       }}
     >
       <div className="text-center">
         <p
           className={`font-medium ${compact ? 'text-[13px]' : 'text-[14px]'}`}
-          style={{ color: 'var(--m-text)' }}
+          style={{ color: titleColor }}
         >
           {busy ? 'Reading…' : 'Drop or paste here'}
         </p>
-        <p className={`mt-1 ${compact ? 'text-[11px]' : 'text-[12px]'}`} style={{ color: 'var(--m-muted)' }}>
+        <p className={`mt-1 ${compact ? 'text-[11px]' : 'text-[12px]'}`} style={{ color: hintColor }}>
           {hint}
         </p>
       </div>

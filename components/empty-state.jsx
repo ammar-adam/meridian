@@ -8,6 +8,7 @@ export default function EmptyState({
   description,
   primaryHref,
   primaryLabel,
+  onPrimary,
   secondaryHref,
   secondaryLabel,
   steps,
@@ -17,9 +18,14 @@ export default function EmptyState({
       {title && <h2 className="m-empty-state-title">{title}</h2>}
       {description && <p className="m-empty-state-desc">{description}</p>}
 
-      {(primaryHref || secondaryHref) && (
+      {(primaryHref || onPrimary || secondaryHref) && (
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          {primaryHref && (
+          {onPrimary && primaryLabel && (
+            <button type="button" onClick={onPrimary} className="m-btn-primary">
+              {primaryLabel}
+            </button>
+          )}
+          {!onPrimary && primaryHref && (
             <Link href={primaryHref} className="m-btn-primary">
               {primaryLabel}
             </Link>

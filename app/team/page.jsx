@@ -6,9 +6,10 @@ import { SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
 import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import { getTeamContext, setTeamContext, clearTeamContext } from '@/lib/team-workspace'
+import { useMeridianClerk } from '@/app/providers'
 
 export default function TeamPage() {
-  const clerkEnabled = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+  const { clerkEnabled } = useMeridianClerk()
   const [ctx, setCtx] = useState(null)
   const [name, setName] = useState('')
   const [memberName, setMemberName] = useState('')
