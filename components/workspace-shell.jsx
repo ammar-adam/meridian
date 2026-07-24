@@ -26,7 +26,7 @@ const NAV_GROUPS = [
   {
     label: 'More',
     items: [
-      { href: '/schools', label: 'Schools', desc: 'Tier-1 ecosystems' },
+      { href: '/schools', label: 'Schools', desc: 'Campus ecosystems' },
       { href: '/pilot', label: 'Coverage', desc: 'Proof numbers' },
     ],
   },

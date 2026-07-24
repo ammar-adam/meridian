@@ -9,7 +9,7 @@ export default function WorkspacePreview() {
             <span className="h-2 w-2 rounded-full" style={{ background: 'var(--m-border-strong)' }} />
           </div>
           <span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>
-            meridian.app/flow · Your firm
+            meridian.app/flow · Meridian Ventures
           </span>
         </div>
 
@@ -31,7 +31,7 @@ export default function WorkspacePreview() {
             <div className="mb-4 flex flex-wrap items-end justify-between gap-2">
               <div>
                 <div className="text-[15px] font-semibold tracking-tight" style={{ color: 'var(--m-text)', fontFamily: 'var(--m-font)' }}>Deal Flow</div>
-                <div className="mt-0.5 text-[12px]" style={{ color: 'var(--m-muted)' }}>Canadian pre-seed · community sources</div>
+                <div className="mt-0.5 text-[12px]" style={{ color: 'var(--m-muted)' }}>Meridian Ventures · pre-seed · campus sources</div>
               </div>
               <span className="m-stat-pill-success">12 new</span>
             </div>

@@ -121,7 +121,7 @@ function SceneHeadline({ frame, fps }: { frame: number; fps: number }) {
           maxWidth: 980,
         }}
       >
-        Campus deal flow, with receipts.
+        Deal velocity, with receipts.
       </div>
     </AbsoluteFill>
   );
@@ -185,7 +185,7 @@ function SceneFlow({ frame, fps }: { frame: number; fps: number }) {
                 Deal Flow
               </div>
               <div style={{ fontFamily: fontSans, fontSize: 13, color: brand.muted, marginTop: 4 }}>
-                Panache Ventures · Canadian pre-seed
+                Meridian Ventures · Pre-seed · campus
               </div>
             </div>
             <div
@@ -358,7 +358,7 @@ function SceneClose({ frame, fps }: { frame: number; fps: number }) {
           marginBottom: 36,
         }}
       >
-        School ecosystems → fund mandates.
+        Deal velocity · with receipts.
       </div>
       <div
         style={{
@@ -372,7 +372,7 @@ function SceneClose({ frame, fps }: { frame: number; fps: number }) {
           padding: "14px 28px",
         }}
       >
-        Open Deal Flow
+        Sign in →
       </div>
     </AbsoluteFill>
   );
