@@ -9,7 +9,7 @@ import WorkflowStrip from '@/components/workflow-strip'
 import WorkspaceContextBar from '@/components/workspace-context-bar'
 import AuthBar from '@/components/auth-bar'
 import ClerkLiveBanner from '@/components/clerk-live-banner'
-import { FundSwitcher, StrategySwitcher, ActiveContextLabel } from '@/components/context-switcher'
+import { FundSwitcher, StrategySwitcher } from '@/components/context-switcher'
 
 const NAV_GROUPS = [
   {
@@ -60,13 +60,14 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
       <div className="flex h-screen overflow-hidden" style={{ background: 'var(--m-bg)' }}>
         <aside className="m-workspace-sidebar flex w-[248px] shrink-0 flex-col">
           <div className="border-b px-4 py-4" style={{ borderColor: 'var(--m-sidebar-border)' }}>
-            <Link href="/" className="flex items-center gap-3">
+            <Link href="/" className="mb-3 flex items-center gap-3">
               <div className="m-logo text-[12px]">M</div>
               <div className="min-w-0">
                 <div className="text-[14px] font-semibold text-white" style={{ fontFamily: 'var(--m-serif)' }}>Meridian</div>
-                <ActiveContextLabel />
+                <div className="text-[10px]" style={{ color: 'rgba(255,255,255,0.4)' }}>Change firm anytime</div>
               </div>
             </Link>
+            <FundSwitcher variant="sidebar" onChange={refreshSnap} />
           </div>
 
           <nav className="flex-1 overflow-y-auto px-3 py-4">

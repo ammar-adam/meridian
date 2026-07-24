@@ -39,4 +39,27 @@ describe('fund seeds + ensureActiveFund', () => {
     expect(recovered?.fundName).toBeTruthy()
     expect(getAllFunds().length).toBe(2)
   })
+
+  it('keeps the user firm after switching away from Panache', async () => {
+    const { seedFundProfilesIfEmpty, SAGARD_AI_FUND } = await import('../../lib/fund-seeds.js')
+    const { setActiveFundId, getFundProfile, ensureActiveFund } = await import('../../lib/fund-profile.js')
+
+    seedFundProfilesIfEmpty()
+    setActiveFundId(SAGARD_AI_FUND.id)
+    expect(getFundProfile()?.id).toBe(SAGARD_AI_FUND.id)
+
+    seedFundProfilesIfEmpty()
+    ensureActiveFund()
+    expect(getFundProfile()?.id).toBe(SAGARD_AI_FUND.id)
+  })
+
+  it('seeds multi-vehicle strategies on canned firms', async () => {
+    const { seedFundProfilesIfEmpty, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
+    const { getFundProfile } = await import('../../lib/fund-profile.js')
+
+    seedFundProfilesIfEmpty()
+    const panache = getFundProfile(PANACHE_VENTURES.id)
+    expect(panache.strategies.length).toBeGreaterThanOrEqual(2)
+    expect(panache.strategies.map(s => s.name)).toContain('First check')
+  })
 })
