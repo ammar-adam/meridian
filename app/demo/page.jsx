@@ -6,7 +6,8 @@ import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import PageLoader from '@/components/page-loader'
 import { getFundProfile, getActiveStrategy, setActiveFundId } from '@/lib/fund-profile'
-import { PANACHE_VENTURES } from '@/lib/fund-seeds'
+import { PANACHE_VENTURES, seedDemoFunds } from '@/lib/fund-seeds'
+import { markWelcomeDone } from '@/lib/onboarding'
 
 function StatusRow({ ok, label, detail, action }) {
   return (
@@ -71,6 +72,9 @@ export default function DemoPage() {
   }, [])
 
   useEffect(() => {
+    // Demo kit explicitly loads Panache — never the default for normal visitors.
+    seedDemoFunds({ activateId: PANACHE_VENTURES.id })
+    markWelcomeDone()
     refreshLocal()
     loadRemote()
     window.addEventListener('meridian-context-change', refreshLocal)
@@ -101,6 +105,8 @@ export default function DemoPage() {
   }
 
   function activatePanache() {
+    seedDemoFunds({ activateId: PANACHE_VENTURES.id })
+    markWelcomeDone()
     setActiveFundId(PANACHE_VENTURES.id)
     refreshLocal()
   }

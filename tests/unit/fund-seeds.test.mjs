@@ -3,77 +3,72 @@ import { installLocalStorageMock } from '../helpers/local-storage.mjs'
 
 const ls = installLocalStorageMock()
 
-describe('fund seeds + ensureActiveFund', () => {
+describe('fund seeds + staging identity', () => {
   beforeEach(() => {
     ls.clear()
-    // Fresh module state is not required — functions read localStorage each call.
   })
 
-  it('seeds both funds and activates a real profile', async () => {
-    const { seedFundProfilesIfEmpty, SAGARD_AI_FUND, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
-    const { getAllFunds, getFundProfile, hasFundProfile } = await import('../../lib/fund-profile.js')
+  it('does not auto-seed Panache on empty store', async () => {
+    const { seedFundProfilesIfEmpty } = await import('../../lib/fund-seeds.js')
+    const { getAllFunds, hasUserFundProfile } = await import('../../lib/fund-profile.js')
 
     const seeded = seedFundProfilesIfEmpty()
-    expect(seeded).toBe(true)
-
-    const funds = getAllFunds()
-    expect(funds.map(f => f.id).sort()).toEqual([PANACHE_VENTURES.id, SAGARD_AI_FUND.id].sort())
-    expect(getFundProfile()?.id).toBe(PANACHE_VENTURES.id)
-    expect(getFundProfile()?.fundName).toBe(PANACHE_VENTURES.fundName)
-    expect(getFundProfile()?.fundName).not.toBe('Your Fund')
-    expect(hasFundProfile()).toBe(true)
+    expect(seeded).toBe(false)
+    expect(getAllFunds()).toHaveLength(0)
+    expect(hasUserFundProfile()).toBe(false)
   })
 
-  it('recovers missing activeFundId without reseeding', async () => {
-    const { seedFundProfilesIfEmpty } = await import('../../lib/fund-seeds.js')
-    const { getFundProfile, ensureActiveFund, getAllFunds } = await import('../../lib/fund-profile.js')
+  it('clears unclaimed Panache/Sagard defaults', async () => {
+    const { seedDemoFunds, seedFundProfilesIfEmpty, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
+    const { getAllFunds, hasUserFundProfile } = await import('../../lib/fund-profile.js')
+    const { clearUserFundClaimed } = await import('../../lib/investor-identity.js')
 
+    seedDemoFunds({ activateId: PANACHE_VENTURES.id })
+    expect(getAllFunds().length).toBe(2)
+    expect(hasUserFundProfile()).toBe(true)
+
+    clearUserFundClaimed()
     seedFundProfilesIfEmpty()
+    expect(getAllFunds()).toHaveLength(0)
+    expect(hasUserFundProfile()).toBe(false)
+  })
+
+  it('seedDemoFunds activates Panache for /demo only', async () => {
+    const { seedDemoFunds, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
+    const { getFundProfile, hasUserFundProfile } = await import('../../lib/fund-profile.js')
+
+    seedDemoFunds({ activateId: PANACHE_VENTURES.id })
+    expect(getFundProfile()?.id).toBe(PANACHE_VENTURES.id)
+    expect(hasUserFundProfile()).toBe(true)
+  })
+
+  it('claimUserFund marks identity and activates firm', async () => {
+    const { claimUserFund, hasUserFundProfile, getFundProfile } = await import('../../lib/fund-profile.js')
+
+    claimUserFund({
+      fundName: 'Rivermark Capital',
+      investorType: 'venture_fund',
+      thesis: 'Rivermark invests in campus AI pre-seed.',
+    })
+    expect(hasUserFundProfile()).toBe(true)
+    expect(getFundProfile()?.fundName).toBe('Rivermark Capital')
+    expect(getFundProfile()?.investorType).toBe('venture_fund')
+  })
+
+  it('ensureActiveFund uses first fund, not Panache preference', async () => {
+    const { claimUserFund, ensureActiveFund, setActiveFundId, getFundProfile } = await import('../../lib/fund-profile.js')
+
+    claimUserFund({
+      fundName: 'Alpha Fund',
+      thesis: 'Alpha thesis',
+    })
     const store = JSON.parse(localStorage.getItem('meridian_funds_store'))
     store.activeFundId = null
     localStorage.setItem('meridian_funds_store', JSON.stringify(store))
 
     expect(getFundProfile()).toBeNull()
     const recovered = ensureActiveFund()
-    expect(recovered?.id).toBe('panache_ventures')
-    expect(recovered?.fundName).toBeTruthy()
-    expect(getAllFunds().length).toBe(2)
-  })
-
-  it('keeps the user firm after switching away from Panache', async () => {
-    const { seedFundProfilesIfEmpty, SAGARD_AI_FUND } = await import('../../lib/fund-seeds.js')
-    const { setActiveFundId, getFundProfile, ensureActiveFund } = await import('../../lib/fund-profile.js')
-
-    seedFundProfilesIfEmpty()
-    setActiveFundId(SAGARD_AI_FUND.id)
-    expect(getFundProfile()?.id).toBe(SAGARD_AI_FUND.id)
-
-    seedFundProfilesIfEmpty()
-    ensureActiveFund()
-    expect(getFundProfile()?.id).toBe(SAGARD_AI_FUND.id)
-  })
-
-  it('seeds multi-vehicle strategies on canned firms', async () => {
-    const { seedFundProfilesIfEmpty, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
-    const { getFundProfile } = await import('../../lib/fund-profile.js')
-
-    seedFundProfilesIfEmpty()
-    const panache = getFundProfile(PANACHE_VENTURES.id)
-    expect(panache.strategies.length).toBeGreaterThanOrEqual(2)
-    expect(panache.strategies.map(s => s.name)).toContain('First check')
-  })
-
-  it('reseeds when marker is set but funds store is empty', async () => {
-    const { seedFundProfilesIfEmpty, PANACHE_VENTURES } = await import('../../lib/fund-seeds.js')
-    const { getAllFunds, getFundProfile } = await import('../../lib/fund-profile.js')
-
-    seedFundProfilesIfEmpty()
-    localStorage.setItem('meridian_fund_seeds_applied', '1')
-    localStorage.removeItem('meridian_funds_store')
-
-    expect(getAllFunds().length).toBe(0)
-    seedFundProfilesIfEmpty()
-    expect(getAllFunds().length).toBe(2)
-    expect(getFundProfile()?.id).toBe(PANACHE_VENTURES.id)
+    expect(recovered?.fundName).toBe('Alpha Fund')
+    setActiveFundId(recovered.id)
   })
 })

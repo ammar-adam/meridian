@@ -2,13 +2,31 @@
 
 import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
-import { hasFundProfile } from '@/lib/fund-profile'
+import { hasUserFundProfile } from '@/lib/fund-profile'
 
-const ALWAYS_OPEN = ['/', '/brief', '/memo', '/library', '/lists', '/discover', '/flow', '/pilot', '/schools', '/demo', '/thesis', '/fund', '/fund/setup', '/team']
+/** Public / setup surfaces — everything else needs a claimed firm. */
+const ALWAYS_OPEN = [
+  '/',
+  '/welcome',
+  '/fund/setup',
+  '/demo',
+  '/pilot',
+  '/about',
+  '/pricing',
+  '/privacy',
+  '/terms',
+  '/earliness',
+  '/sign-in',
+  '/sign-up',
+]
 
 function isAlwaysOpen(pathname) {
   if (ALWAYS_OPEN.includes(pathname)) return true
-  if (pathname.startsWith('/fund/')) return true
+  if (pathname.startsWith('/fund/setup')) return true
+  if (pathname.startsWith('/sign-in')) return true
+  if (pathname.startsWith('/sign-up')) return true
+  if (pathname.startsWith('/share/')) return true
+  if (pathname.startsWith('/claim/')) return true
   return false
 }
 
@@ -22,9 +40,9 @@ export default function FundGate({ children }) {
       setReady(true)
       return
     }
-    if (!hasFundProfile()) {
+    if (!hasUserFundProfile()) {
       setReady(false)
-      router.replace('/fund/setup?next=' + encodeURIComponent(pathname))
+      router.replace('/welcome?next=' + encodeURIComponent(pathname || '/flow'))
       return
     }
     setReady(true)
@@ -35,16 +53,11 @@ export default function FundGate({ children }) {
       <div className="flex h-screen items-center justify-center" style={{ background: 'var(--m-bg)' }}>
         <div className="text-center">
           <div className="m-logo mx-auto mb-3">M</div>
-          <p className="text-[12px]" style={{ color: 'var(--m-muted)' }}>Loading workspace…</p>
+          <p className="text-[13px]" style={{ color: 'var(--m-muted)' }}>Opening sign-in…</p>
         </div>
       </div>
     )
   }
 
   return children
-}
-
-/** Frozen until fund sync ships — guest context is default */
-export function FundPersonalizeBanner() {
-  return null
 }

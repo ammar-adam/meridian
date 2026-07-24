@@ -7,7 +7,6 @@ import GpValidationCard from '@/components/gp-validation-card'
 import WorkspaceShell from '@/components/workspace-shell'
 import WorkspacePage, { WorkspaceSection } from '@/components/workspace-page'
 import EmptyState from '@/components/empty-state'
-import { StrategySwitcher } from '@/components/context-switcher'
 import { getEditLog, getEditSummary } from '@/lib/edit-tracker'
 import { getStatEditInsight } from '@/lib/metric-preferences'
 import { generatePromptFeedback } from '@/lib/prompt-feedback'
@@ -64,7 +63,6 @@ export default function ThesisPage() {
     <WorkspaceShell
       title="Thesis"
       subtitle={contextLabel ? `Signals for ${contextLabel}` : 'Signals from team review'}
-      actions={<StrategySwitcher onChange={loadSummary} />}
     >
       <WorkspacePage width="medium">
         <DeviceOnlyNotice className="mb-4" />

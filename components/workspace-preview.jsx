@@ -9,7 +9,7 @@ export default function WorkspacePreview() {
             <span className="h-2 w-2 rounded-full" style={{ background: 'var(--m-border-strong)' }} />
           </div>
           <span className="font-mono text-[11px]" style={{ color: 'var(--m-muted)' }}>
-            meridian.app/flow · Panache Ventures
+            meridian.app/flow · Your firm
           </span>
         </div>
 

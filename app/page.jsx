@@ -29,8 +29,8 @@ export default function LandingPage() {
                 dated proof. We only claim what we can source.
               </p>
               <div className="mt-9 flex flex-wrap items-center gap-3">
-                <a href="/flow" className="m-btn-invert">
-                  Open Deal Flow →
+                <a href="/welcome?next=/flow" className="m-btn-invert">
+                  Sign in →
                 </a>
                 <a href="/pilot" className="m-btn-ghost-landing">
                   See the proof
@@ -95,7 +95,7 @@ export default function LandingPage() {
 
           <div className="grid gap-10 sm:grid-cols-3">
             <Step num="01" title="Set your mandate" desc="Fund thesis or personal focus. Meridian watches Velocity, DMZ, CDL, and grants against it." />
-            <Step num="02" title="Open Deal Flow" desc="Net-new companies with founders and domains. Community sources, not a Crunchbase scrape." />
+            <Step num="02" title="Open Deal Flow" desc="Campus companies with founders and domains — dated incubator proof, not a Crunchbase scrape." />
             <Step num="03" title="Brief and decide" desc="One-pager against your thesis. Pursue or pass — signals compound on Thesis." />
           </div>
         </div>
@@ -109,23 +109,23 @@ export default function LandingPage() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <a href="/flow" className="group m-bento">
+            <a href="/welcome?next=/flow" className="group m-bento">
               <span className="m-bento-icon">Deal Flow</span>
               <h3 className="m-bento-title">What’s new this week</h3>
-              <p className="m-bento-desc">Community companies matched to your mandate — the reason to open Meridian every Monday.</p>
-              <span className="m-bento-link">Open Flow →</span>
+              <p className="m-bento-desc">Campus companies matched to your mandate — the reason to open Meridian every Monday.</p>
+              <span className="m-bento-link">Sign in to Flow →</span>
             </a>
-            <a href="/brief" className="group m-bento">
+            <a href="/welcome?next=/brief" className="group m-bento">
               <span className="m-bento-icon">Brief</span>
               <h3 className="m-bento-title">URL to one-pager</h3>
               <p className="m-bento-desc">Any company domain → fund-native memo you can forward.</p>
-              <span className="m-bento-link">Generate a brief →</span>
+              <span className="m-bento-link">Sign in to brief →</span>
             </a>
-            <a href="/fund" className="group m-bento">
-              <span className="m-bento-icon">Fund</span>
+            <a href="/welcome?next=/flow" className="group m-bento">
+              <span className="m-bento-icon">Your firm</span>
               <h3 className="m-bento-title">Your mandate</h3>
-              <p className="m-bento-desc">Choose or add a fund. Every thesis band is specific to you.</p>
-              <span className="m-bento-link">Choose a fund →</span>
+              <p className="m-bento-desc">Name your fund, family office, angel book, or CVC — then we match campus deal flow to it.</p>
+              <span className="m-bento-link">Set your firm →</span>
             </a>
           </div>
         </div>

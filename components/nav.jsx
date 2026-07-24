@@ -6,12 +6,11 @@ import AuthBar from '@/components/auth-bar'
 
 export default function Nav({ variant = 'default' }) {
   const pathname = usePathname()
-  const inWorkspace = ['/discover', '/flow', '/brief', '/lists', '/library', '/thesis', '/fund'].some(
+  const inWorkspace = ['/discover', '/flow', '/brief', '/lists', '/library', '/thesis', '/fund', '/schools'].some(
     p => pathname === p || pathname.startsWith(p + '/')
   )
   const isLanding = variant === 'landing'
-  // On the public landing, use native anchors so navigation is never swallowed
-  // by the client hydration window (Clerk/provider mount can take seconds).
+  // Native anchors on landing so clicks work before hydration.
   const A = isLanding ? 'a' : Link
 
   return (
@@ -30,18 +29,8 @@ export default function Nav({ variant = 'default' }) {
         {!inWorkspace && (
           <div className="flex items-center gap-2">
             <AuthBar variant={isLanding ? 'landing' : 'default'} />
-            {isLanding && (
-              <>
-                <a href="/library" className="m-btn-ghost-landing hidden md:inline-flex">
-                  Library
-                </a>
-                <a href="/discover" className="m-btn-ghost-landing hidden md:inline-flex">
-                  Discover
-                </a>
-              </>
-            )}
-            <A href="/flow" className={isLanding ? 'm-btn-invert' : 'm-btn-primary'}>
-              Open Deal Flow
+            <A href="/welcome?next=/flow" className={isLanding ? 'm-btn-invert' : 'm-btn-primary'}>
+              Get started
             </A>
           </div>
         )}

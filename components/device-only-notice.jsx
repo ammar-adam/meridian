@@ -32,7 +32,7 @@ function SignedInNotice({ className }) {
 
   return (
     <p className={`text-[11px] ${className}`} style={{ color: 'var(--m-muted)' }}>
-      <a href="/sign-in" className="font-medium underline">Sign in</a> to sync pursue/pass signals and fund profile across devices.
+      <a href="/welcome?next=/flow" className="font-medium underline">Sign in</a> to set your firm and sync signals on this device.
     </p>
   )
 }

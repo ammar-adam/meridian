@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import IntakeDropzone from '@/components/intake-dropzone'
-import { createFundProfile, saveFundProfile } from '@/lib/fund-profile'
+import { claimUserFund } from '@/lib/fund-profile'
+import { markWelcomeDone } from '@/lib/onboarding'
 import { DEFAULT_METRIC_PREFERENCES } from '@/lib/metric-preferences'
 import MetricPreferencesPicker from '@/components/metric-preferences-picker'
 import { MEMO_TEMPLATE_OPTIONS } from '@/lib/memo-template'
@@ -103,9 +104,10 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
       return
     }
 
-    const profile = createFundProfile({
+    const profile = claimUserFund({
       fundName: preview?.fundName || fundName || guessFundNameFromUrl(fundUrl),
       fundWebsiteUrl: fundUrl,
+      investorType: 'venture_fund',
       thesis: preview?.thesis || '',
       portfolio: preview?.portfolio || [],
       mandate: preview?.mandate,
@@ -121,8 +123,7 @@ export default function FundQuickSetup({ initialUrl = '', initialName = '', auto
         metricPreferences,
       }],
     })
-
-    saveFundProfile(profile)
+    markWelcomeDone()
     window.dispatchEvent(new Event('meridian-context-change'))
     if (onSaved) {
       onSaved(profile)

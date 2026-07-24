@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { createFundProfile, saveFundProfile } from '@/lib/fund-profile'
+import { claimUserFund } from '@/lib/fund-profile'
+import { markWelcomeDone } from '@/lib/onboarding'
 
 const CHECK_SIZES = [
   'Up to $50k',
@@ -45,8 +46,9 @@ export default function AllocatorSetup({ onSaved }) {
       geoText ? `Geography: ${geoText}.` : '',
     ].filter(Boolean).join(' ')
 
-    const profile = createFundProfile({
+    const profile = claimUserFund({
       fundName: displayName,
+      investorType: 'angel',
       thesis,
       mandate: {
         stages: [],
@@ -54,8 +56,7 @@ export default function AllocatorSetup({ onSaved }) {
         sectors: splitList(interests),
       },
     })
-
-    saveFundProfile(profile)
+    markWelcomeDone()
     window.dispatchEvent(new Event('meridian-context-change'))
     onSaved?.(profile)
   }

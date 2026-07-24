@@ -45,14 +45,19 @@ function FundSetupContent() {
       </header>
 
       <main className="mx-auto w-full max-w-lg px-6 py-16 lg:py-24">
-        <p className="font-mono text-[12px] font-medium text-[color:var(--m-accent)]">Personalize</p>
+        <p className="font-mono text-[12px] font-medium text-[color:var(--m-accent)]">Optional setup</p>
         <h1 className="mt-3 text-[28px] font-bold tracking-tight text-[color:var(--m-text)]">
           {returning ? 'Sharpen what we watch for you' : 'Tell us what you invest in'}
         </h1>
         <p className="mt-3 text-[15px] leading-relaxed" style={{ color: 'var(--m-muted)' }}>
+          Prefer the staging Sign in form?{' '}
+          <Link href="/welcome?next=/flow" className="font-medium underline-offset-2 hover:underline" style={{ color: 'var(--m-accent)' }}>
+            Name your firm →
+          </Link>
+          {' '}
           {mode === 'personal'
-            ? 'Family offices and angels: a few words about your interests is enough — no fund website required.'
-            : 'Have a fund site? We pull mandate, portfolio, and stage focus automatically (optional).'}
+            ? 'Family offices and angels can also use this short form.'
+            : 'Or paste a fund site and we pull mandate details.'}
         </p>
 
         <div className="mt-8 flex flex-wrap gap-2">
