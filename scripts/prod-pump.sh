@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-BASE="${1:-https://meridian-eight-sandy.vercel.app}"
+BASE="${1:-https://meridian-stg.vercel.app}"
 RUNS="${2:-3}"
 
 echo "Prod pump — $BASE ($RUNS runs via /api/pilot + /api/benchmark)"

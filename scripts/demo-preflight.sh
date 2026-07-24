@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-BASE="${1:-https://meridian-eight-sandy.vercel.app}"
+BASE="${1:-https://meridian-stg.vercel.app}"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 AMBER='\033[0;33m'

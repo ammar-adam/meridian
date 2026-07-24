@@ -26,7 +26,7 @@ jobs:
       - name: Corpus bulk fill (force)
         run: |
           set -e
-          URL="${MERIDIAN_PROD_URL:-https://meridian-mentor.vercel.app}"
+          URL="${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}"
           TARGET="${{ github.event.inputs.target || '2500' }}"
           echo "Pumping $URL/api/corpus?force=1&target=$TARGET"
           if curl -sfS -m 280 "$URL/api/corpus?force=1&target=$TARGET" | tee corpus.json; then
@@ -48,7 +48,7 @@ jobs:
 
       - name: Benchmark parity check
         run: |
-          URL="${MERIDIAN_PROD_URL:-https://meridian-mentor.vercel.app}"
+          URL="${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}"
           curl -sfS -m 120 "$URL/api/benchmark" -o benchmark.json
           python3 - <<'PY'
           import json
@@ -64,7 +64,7 @@ jobs:
 
       - name: Pilot opportunistic pass
         run: |
-          URL="${MERIDIAN_PROD_URL:-https://meridian-mentor.vercel.app}"
+          URL="${MERIDIAN_PROD_URL:-https://meridian-stg.vercel.app}"
           curl -sfS -m 280 "$URL/api/pilot" -o pilot.json
           python3 - <<'PY'
           import json

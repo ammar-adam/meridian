@@ -1,6 +1,6 @@
 /**
  * Run: npm run smoke
- * Optional: BASE_URL=https://meridian-eight-sandy.vercel.app npm run smoke
+ * Optional: BASE_URL=https://meridian-stg.vercel.app npm run smoke
  */
 import { runSmokeChecks, resolveSmokeBaseUrl, DEFAULT_PRODUCTION } from '../tests/lib/smoke-checks.mjs'
 

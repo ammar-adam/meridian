@@ -57,7 +57,7 @@ jobs:
       - name: Verify deploy freshness
         if: steps.secrets.outputs.ready == 'true'
         run: |
-          URL="${{ vars.PRODUCTION_URL || 'https://meridian-mentor.vercel.app' }}"
+          URL="${{ vars.PRODUCTION_URL || 'https://meridian-stg.vercel.app' }}"
           CODE=$(curl -sS -o /dev/null -w "%{http_code}" "$URL/api/corpus")
           echo "/api/corpus HTTP $CODE"
           curl -sS "$URL/api/benchmark" | python3 - <<'PY'
