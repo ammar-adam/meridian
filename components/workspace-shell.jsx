@@ -9,7 +9,7 @@ import WorkflowStrip from '@/components/workflow-strip'
 import WorkspaceContextBar from '@/components/workspace-context-bar'
 import AuthBar from '@/components/auth-bar'
 import ClerkLiveBanner from '@/components/clerk-live-banner'
-import { FundSwitcher, StrategySwitcher } from '@/components/context-switcher'
+import { FundSwitcher } from '@/components/context-switcher'
 
 const NAV_GROUPS = [
   {
@@ -172,11 +172,6 @@ export default function WorkspaceShell({ children, title, subtitle, actions }) {
               <Link href="/brief" className="m-btn-primary m-btn-sm">New brief</Link>
             </div>
           </header>
-
-          <div className="flex shrink-0 flex-wrap items-center gap-2 border-b px-6 py-2" style={{ borderColor: 'var(--m-border)', background: 'var(--m-surface)' }}>
-            <FundSwitcher onChange={refreshSnap} />
-            <StrategySwitcher onChange={refreshSnap} />
-          </div>
 
           <WorkflowStrip />
           <WorkspaceContextBar />

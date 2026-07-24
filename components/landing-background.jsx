@@ -5,6 +5,7 @@ export default function LandingBackground() {
     <div className="m-landing-bg" aria-hidden>
       <div className="m-landing-gradient" />
       <div className="m-landing-grain" />
+      <div className="m-landing-hairline" />
     </div>
   )
 }
