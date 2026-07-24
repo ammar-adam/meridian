@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron/school-coverage",
-      "schedule": "0 */12 * * *"
+      "schedule": "0 4 * * *"
     },
     {
       "path": "/api/cron/ingest",
